@@ -1,5 +1,9 @@
 package com.ironpanthers.scouting.common
 
+import com.ironpanthers.scouting.util.ALT
+import com.ironpanthers.scouting.util.CTRL
+import com.ironpanthers.scouting.util.KeyCombo
+import com.ironpanthers.scouting.util.SHIFT
 import javafx.scene.input.KeyCode
 
 object GameDef2018 : GameDef("Power Up", "2018", 0) {
@@ -8,58 +12,30 @@ object GameDef2018 : GameDef("Power Up", "2018", 0) {
     }
 
     init {
-        addEventDef("pick_up_floor", "Picked Up Cube from Floor", GameStage.ANY) {
-            it.code == KeyCode.F
-        }
-        addEventDef("pick_up_exchange", "Picked Up Cube from Exchange", GameStage.ANY) {
-            it.code == KeyCode.K
-        }
-        addEventDef("pick_up_portal", "Picked Up Cube from Portal", GameStage.ANY) {
-            it.code == KeyCode.P
-        }
+        addEventDef("baseline", "Passed Baseline", AUTO, KeyCombo(KeyCode.B))
 
-        addEventDef("hit_vault", "Added Cube to Vault", GameStage.ANY) {
-            it.code == KeyCode.V && !it.isShiftDown
-        }
-        addEventDef("hit_scale", "Added Cube to Scale", GameStage.ANY) {
-            it.code == KeyCode.C && !it.isShiftDown
-        }
-        addEventDef("hit_switch", "Added Cube to Switch", GameStage.ANY){
-            it.code == KeyCode.S && !it.isShiftDown
-        }
+        addEventDef("pick_up_floor", "Picked Up Cube from Floor", ANY, KeyCombo(KeyCode.F))
+        addEventDef("pick_up_exchange", "Picked Up Cube from Exchange", ANY, KeyCombo(KeyCode.E))
+        addEventDef("pick_up_portal", "Picked Up Cube from Portal", ANY, KeyCombo(KeyCode.P))
 
-        addEventDef("miss_vault", "Missed Cube at Vault", GameStage.ANY) {
-            it.code == KeyCode.V && it.isShiftDown
-        }
-        addEventDef("miss_scale", "Missed Cube at Scale", GameStage.ANY) {
-            it.code == KeyCode.C && it.isShiftDown
-        }
-        addEventDef("miss_switch", "Missed Cube at Switch", GameStage.ANY) {
-            it.code == KeyCode.S && it.isShiftDown
-        }
+        addEventDef("hit_vault", "Added Cube to Vault", ANY, KeyCombo(KeyCode.V))
+        addEventDef("hit_scale", "Added Cube to Scale", ANY, KeyCombo(KeyCode.C))
+        addEventDef("hit_switch", "Added Cube to Switch", ANY, KeyCombo(KeyCode.W))
 
-        addEventDef("baseline", "Passed Baseline", GameStage.AUTO, 1) {
-            it.code == KeyCode.B
-        }
+        addEventDef("miss_vault", "Missed Vault", ANY, KeyCombo(KeyCode.V, SHIFT))
+        addEventDef("miss_scale", "Missed Scale", ANY, KeyCombo(KeyCode.C, SHIFT))
+        addEventDef("miss_switch", "Missed Switch", ANY, KeyCombo(KeyCode.W, SHIFT))
 
-        addEventDef("climb_fail", "Fail Climb", GameStage.ENDGAME, 1) {
-            it.code == KeyCode.K && !it.isAltDown && it.isShiftDown
-        }
-        addEventDef("climb_self", "Self Climb", GameStage.ENDGAME, 1) {
-            it.code == KeyCode.K && !it.isAltDown && !it.isShiftDown
-        }
-        addEventDef("climb_assist_1", "Climb Assist 1", GameStage.ENDGAME, 1) {
-            it.code == KeyCode.K && it.isAltDown && !it.isShiftDown
-        }
-        addEventDef("climb_assist_2", "Climb Assist 2", GameStage.ENDGAME, 1) {
-            it.code == KeyCode.K && it.isAltDown && it.isShiftDown
-        }
-        addEventDef("park", "Park", GameStage.ENDGAME, 1) {
-            it.code == KeyCode.L
-        }
+        addEventDef("pushed_scale", "Pushed Cube Out of Scale", ANY, KeyCombo(KeyCode.C, ALT))
+        addEventDef("pushed_switch", "Pushed Cube Out of Switch", ANY, KeyCombo(KeyCode.W, ALT))
+        addEventDef("foul_scale", "Scale Foul", ANY, KeyCombo(KeyCode.C, CTRL or SHIFT))
 
-        addEventDef("defense", "Defense", GameStage.ENDGAME) {
-            it.code == KeyCode.D
-        }
+        addEventDef("defense", "Defense", ENDGAME, KeyCombo(KeyCode.D))
+
+        addEndState("climb_fail", "Attempted and Failed to Climb")
+        addEndState("park", "Parked")
+        addEndState("climb_self", "Self Climb")
+        addEndState("climb_assist_1", "Climb Assist 1")
+        addEndState("climb_assist_2", "Climb Assist 2")
     }
 }

@@ -15,7 +15,15 @@
             onKeyPressed="#handleOnKeyPressed"
             prefHeight="720" prefWidth="1280">
 
-    <Canvas fx:id="robotTimeline"/>
-    <FlowPane fx:id="targetButtons"/>
+    <GridPane >
+        <Canvas fx:id="robotTimeline"
+                GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+
+        <FlowPane fx:id="targetButtons"
+                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <VBox fx:id="endgameStates"
+              GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    </GridPane>
 
 </AnchorPane>
