@@ -1,4 +1,3 @@
 rootProject.name = 'scout-system'
 include 'common'
 include 'desktop'
-include 'info-2018'
