@@ -19,7 +19,11 @@ enum class MatchResult {
     RED_VICTORY, BLUE_VICTORY, DRAW, OTHER
 }
 
-data class RobotEventDef(val id: String, val name: String, val stage: Int, val keyCombo: KeyCombo, val maxTimes: Int = -1, val icon: String? = null)
+data class RobotEventDef(val id: String, val name: String, val stage: Int, val keyCombo: KeyCombo, val maxTimes: Int = -1, val icon: String? = null) {
+    fun createEventInstance(team: Int): RobotEvent {
+        return RobotEvent(id, team)
+    }
+}
 
 data class RobotEndState(val id: String, val name: String, val icon: String? = null)
 
@@ -29,9 +33,7 @@ data class RobotEvent(val id: String, val team: Int) {
 
 data class Team(val number: Int, val name: String)
 
-data class RobotPerformance(val team: Int) {
-    val events: MutableList<RobotEvent> = mutableListOf()
-}
+data class RobotPerformance(val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String)
 
 data class Alliance(val teams: List<RobotPerformance>) {
 

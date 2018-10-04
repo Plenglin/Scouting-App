@@ -38,4 +38,5 @@ object GameDef2018 : GameDef("Power Up", "2018", 0) {
         addEndState("climb_assist_1", "Climb Assist 1")
         addEndState("climb_assist_2", "Climb Assist 2")
     }
+
 }

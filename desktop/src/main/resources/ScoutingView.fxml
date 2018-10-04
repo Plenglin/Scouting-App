@@ -8,6 +8,9 @@
 
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.ironpanthers.scouting.desktop.ScoutingController"
@@ -15,15 +18,51 @@
             onKeyPressed="#handleOnKeyPressed"
             prefHeight="720" prefWidth="1280">
 
-    <GridPane >
-        <Canvas fx:id="robotTimeline"
-                GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+    <GridPane>
+        <ScrollPane fx:id="robotTimelinePane"
+                    prefViewportWidth="1280"
+                    prefViewportHeight="300"
+                    GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+
+        </ScrollPane>
+
+        <VBox>
+            <Label text="Controls"/>
+            <HBox>
+                <Button fx:id="btnStart">
+                    <graphic>
+                        <ImageView>
+                            <Image url="/play.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="Start Recording"/> </tooltip>
+                </Button>
+                <Button fx:id="btnDisconnect">
+                    <graphic>
+                        <ImageView>
+                            <Image url="/disconnect.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="Robot Disconnected"/> </tooltip>
+                </Button>
+                <Button fx:id="btnFieldError">
+                    <graphic>
+                        <ImageView>
+                            <Image url="/field-error.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="Field Error"/> </tooltip>
+                </Button>
+            </HBox>
+        </VBox>
 
         <FlowPane fx:id="targetButtons"
-                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                  GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-        <VBox fx:id="endgameStates"
-              GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="Endgame State"/>
+            <VBox fx:id="endgameStates"/>
+        </VBox>
     </GridPane>
 
 </AnchorPane>
