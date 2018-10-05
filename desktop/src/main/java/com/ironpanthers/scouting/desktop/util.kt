@@ -6,9 +6,13 @@ import com.ironpanthers.scouting.util.ALT
 import com.ironpanthers.scouting.util.CTRL
 import com.ironpanthers.scouting.util.KeyCombo
 import com.ironpanthers.scouting.util.SHIFT
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.ReadOnlyProperty
+import javafx.beans.value.WritableValue
 import javafx.scene.control.Button
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyEvent
+import kotlin.reflect.KProperty
 
 fun KeyCombo.test(event: KeyEvent): Boolean {
     return event.code == keyCode
@@ -30,3 +34,20 @@ fun RobotEndState.createButton(): Button =
         } else {
             Button(name)
         }
+
+operator fun <T> ReadOnlyProperty<T>.getValue(thisRef: Any?, property: KProperty<*>): T? {
+    return value
+}
+
+operator fun <T> WritableValue<T>.setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
+    this.value = value
+}
+
+operator fun BooleanProperty.getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+    return value
+}
+
+operator fun BooleanProperty.setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
+    this.value = value
+}
+

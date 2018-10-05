@@ -5,12 +5,11 @@ import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.common.RobotEventDef
 import com.ironpanthers.scouting.common.RobotPerformance
 import com.ironpanthers.scouting.util.UNDO
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML
-import javafx.scene.control.Label
-import javafx.scene.control.RadioButton
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.ToggleGroup
+import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
@@ -28,11 +27,29 @@ class ScoutingController {
     @FXML private lateinit var targetButtons: FlowPane
     @FXML private lateinit var robotTimelinePane: ScrollPane
     @FXML private lateinit var endgameStates: VBox
+    @FXML private lateinit var btnStart: Button
+    @FXML private lateinit var btnStop: Button
+    //@FXML private lateinit var btnFieldError: Button
+
+    private val eventButtons: MutableList<Button> = mutableListOf()
 
     private val endgameToggle = ToggleGroup()
     private var startTime: Long = 0
 
     var team: Int = 5026
+
+    private val isRecordingProperty = SimpleBooleanProperty(false)
+    private val isStoppedProperty = isRecordingProperty.not()
+    private var isRecording by isRecordingProperty
+
+    @FXML
+    fun initialize() {
+        logger.info("Initializing")
+        btnStart.disableProperty().bind(isRecordingProperty)
+        btnStop.disableProperty().bind(isStoppedProperty)
+        //btnFieldError.disableProperty().bind(isStoppedProperty)
+    }
+
 
     private fun addRobotEvent(def: RobotEventDef) {
         val event = def.createEventInstance(team)
@@ -52,38 +69,44 @@ class ScoutingController {
 
     var gameDef: GameDef? = null
         set(value) {
+            if (isRecording) throw IllegalStateException("Cannot change gameDef while recording!")
             logger.info("setting GameDef to {}", value)
             field = value
-
-            targetButtons.children.apply {
-                clear()
-                addAll(value?.events?.map { eventDef ->
-                    val btn = eventDef.createButton()
-                    btn.setOnMouseClicked {
-                        logger.debug("triggered event: {}", eventDef)
-                        addRobotEvent(eventDef)
-                    }
-                    btn
-                } ?: emptyList())
-            }
-
-            endgameToggle.toggles.clear()
-            endgameStates.children.apply {
-                clear()
-                addAll(value?.endStates?.map { endState ->
-                    val radio = RadioButton(endState.name)
-                    radio.toggleGroup = endgameToggle
-                    radio.userData = endState.id
-                    radio
-                } ?: emptyList())
-            }
-
+            value?.let { createGameDefButtons(it) }
         }
 
-    @FXML
-    fun initialize() {
-        logger.info("Initializing")
+    private fun createGameDefButtons(value: GameDef) {
+        val events = value.events.map { eventDef ->
+            val btn = eventDef.createButton()
+            btn.setOnMouseClicked {
+                logger.debug("triggered event: {}", eventDef)
+                addRobotEvent(eventDef)
+            }
+            btn.disableProperty().bind(isStoppedProperty)
+            btn
+        }
+        val endings = value.endStates.map { endState ->
+            val radio = RadioButton(endState.name)
+            radio.toggleGroup = endgameToggle
+            radio.userData = endState.id
+            radio
+        }
 
+        eventButtons.apply {
+            clear()
+            addAll(events)
+        }
+
+        targetButtons.children.apply {
+            clear()
+            addAll(events)
+        }
+
+        endgameToggle.toggles.clear()
+        endgameStates.children.apply {
+            clear()
+            addAll(endings)
+        }
     }
 
     @FXML
@@ -102,6 +125,18 @@ class ScoutingController {
                 addRobotEvent(eventDef)
             }
         }
+    }
+
+    fun onBtnRecordPressed(event: MouseEvent) {
+        if (isRecording) throw IllegalStateException("Already recording!")
+        logger.info("Begin recording")
+        isRecording = true
+    }
+
+    fun onBtnStopPressed(event: MouseEvent) {
+        if (!isRecording) throw IllegalStateException("Not recording!")
+        logger.info("Stopped recording")
+        isRecording = false
     }
 
 }

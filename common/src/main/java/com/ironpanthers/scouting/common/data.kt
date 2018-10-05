@@ -1,8 +1,6 @@
 package com.ironpanthers.scouting.common
 
 import com.ironpanthers.scouting.util.KeyCombo
-import javafx.scene.control.Button
-import javafx.scene.image.ImageView
 
 
 const val AUTO = 0x1

@@ -29,7 +29,7 @@
         <VBox>
             <Label text="Controls"/>
             <HBox>
-                <Button fx:id="btnStart">
+                <Button fx:id="btnStart" onMouseClicked="#onBtnRecordPressed">
                     <graphic>
                         <ImageView>
                             <Image url="/play.png"/>
@@ -37,21 +37,13 @@
                     </graphic>
                     <tooltip><Tooltip text="Start Recording"/> </tooltip>
                 </Button>
-                <Button fx:id="btnDisconnect">
+                <Button fx:id="btnStop" onMouseClicked="#onBtnStopPressed">
                     <graphic>
                         <ImageView>
                             <Image url="/disconnect.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip><Tooltip text="Robot Disconnected"/> </tooltip>
-                </Button>
-                <Button fx:id="btnFieldError">
-                    <graphic>
-                        <ImageView>
-                            <Image url="/field-error.png"/>
-                        </ImageView>
-                    </graphic>
-                    <tooltip><Tooltip text="Field Error"/> </tooltip>
                 </Button>
             </HBox>
         </VBox>
