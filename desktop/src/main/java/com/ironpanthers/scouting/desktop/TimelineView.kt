@@ -22,7 +22,7 @@ class TimelineView : Canvas() {
         }
 
         onMouseEntered = EventHandler {
-
+            
         }
 
         widthProperty().addListener { _ -> redraw() }

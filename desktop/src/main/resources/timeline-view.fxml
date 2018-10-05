@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Pane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.ironpanthers.scouting.desktop.TimelineController">
+    <Canvas fx:id="backgroundMarkings" width="1280" height="270"/>
+    <!--ScrollPane fx:id="scrollPane">
+        <Pane fx:id="labelLayer"/>
+    </ScrollPane-->
+</StackPane>
