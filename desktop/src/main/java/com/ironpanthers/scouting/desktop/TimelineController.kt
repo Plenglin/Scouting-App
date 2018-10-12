@@ -1,92 +1,105 @@
 package com.ironpanthers.scouting.desktop
 
+import javafx.beans.binding.DoubleExpression
+import javafx.beans.property.DoubleProperty
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.event.EventHandler
 import javafx.fxml.FXML
-import javafx.geometry.Orientation
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ScrollBar
-import javafx.scene.control.ScrollPane
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.text.TextAlignment
 import org.slf4j.LoggerFactory
+import tornadofx.getValue
+import tornadofx.onChange
+import tornadofx.setValue
 
 class TimelineController {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-
     @FXML lateinit var backgroundMarkings: Canvas
-    //@FXML lateinit var labelLayer: Pane
-    //@FXML lateinit var scrollPane: ScrollPane
+    @FXML lateinit var labelLayer: Pane
+    @FXML lateinit var scrollBar: ScrollBar  // It will have the value of t0
 
-    private var zoom = 1.0
+    private val totalTimeExpression = SimpleDoubleProperty(MATCH_TIME_SECONDS)
+    private val visibleWindowProperty = SimpleDoubleProperty(MATCH_TIME_SECONDS)
+    private var visibleTimeWindow by visibleWindowProperty
 
     @FXML
     fun initialize() {
-        /*scrollPane.setOnScroll {
+        scrollBar.minProperty().set(0.0)
+        scrollBar.maxProperty().bind(visibleWindowProperty)
+        scrollBar.visibleAmountProperty().bind(visibleWindowProperty)
+
+        scrollBar.valueProperty().onChange {
+            log.debug("dragged scrollbar to t0={}", it)
+            redrawMarkings()
+        }
+        backgroundMarkings.setOnScroll {
             if (it.isControlDown) {
-                val delta = Math.signum(it.deltaY) * 1.5
-                log.debug("zooming by {}", delta)
-                zoom *= delta
+                val delta = Math.exp(Math.signum(it.deltaY) * -0.3)
+                visibleTimeWindow = (visibleTimeWindow * delta).coerceAtMost(MATCH_TIME_SECONDS)
+                log.debug("zooming to {}", visibleTimeWindow)
                 labelLayer.prefWidth *= delta
                 redrawMarkings()
             }
-        }*/
+        }
         redrawMarkings()
     }
 
     private fun redrawMarkings() {
-        backgroundMarkings.apply {
-            /*val scrollBar = scrollPane.lookupAll(".scroll-bar")
-                    .asSequence()
-                    .map { it as ScrollBar }
-                    .find { it.orientation == Orientation.HORIZONTAL }
-            val x = scrollPane.hmin*/
-            val x = 0
+        log.debug("redrawing the markings")
+        val x = 0
 
-            val w = width
-            val h = height
-            val h2 = h / 2
-            val p = 10
-            val pw = w - 2 * p
-            val ph = h - 2 * p
-            val ph2 = ph / 2
-            log.debug("Redrawing with x={} w={} h={}", x, w, h)
+        val w = backgroundMarkings.width
+        val h = backgroundMarkings.height
+        val h2 = h / 2
+        val p = 10.0
+        val pw = w - 2 * p
+        val ph = h - 2 * p
+        val ph2 = ph / 2
+        log.debug("Redrawing with x={} w={} h={}", x, w, h)
 
-            val g = graphicsContext2D
-            g.clearRect(0.0, 0.0, w, h)
+        backgroundMarkings.graphicsContext2D.apply {
+            clearRect(0.0, 0.0, w, h)
 
-            getTimeIntervals(pw).let { (tOffset, pOffset) ->
-                log.debug("tOffset={} pOffset={}", tOffset, pOffset)
-                var dx = p.toDouble()
-                var label = 0
-                g.textAlign = TextAlignment.CENTER
+            getTimeIntervals(w).let { (tOffset, pOffset) ->
+                var dx = scrollBar.value
+                var label = scrollBar.value
+                textAlign = TextAlignment.CENTER
+
+                log.debug("tOffset={} pOffset={}, x0={}, l0={}", tOffset, pOffset, dx, label)
                 while (dx < pw) {
-                    g.fillText("${label}s", dx, h)
+                    val text = "%.1fs".format(label)
+                    log.trace("tick {}: {}", text, dx)
+                    fillText(text, dx, h)
                     dx += pOffset
                     label += tOffset
-                    g.strokeLine(dx, h - 10.0, dx, h - 20.0)
-                    g.strokeLine(dx, 10.0, dx, 20.0)
+                    strokeLine(dx, h - 10.0, dx, h - 20.0)
+                    strokeLine(dx, 10.0, dx, 20.0)
                 }
             }
 
-            g.strokeLine(0.0, h2, w, h2)
+            strokeLine(0.0, h2, w, h2)
         }
     }
 
-    private fun getTimeIntervals(width: Double): Pair<Int, Double> {
-        var pixelOffset = width
-        var timeOffset = MATCH_TIME_SECONDS
-        val divide = MATCH_TIME_SECONDS / TIME_INTERVAL_ROUNDING
-        while (timeOffset > TIME_INTERVAL_ROUNDING && pixelOffset > MAX_TIME_INTERVAL_PIXEL_OFFSET) {
-            pixelOffset /= divide
-            timeOffset /= divide
+    private fun getTimeIntervals(width: Double): Pair<Double, Double> {
+        var minorTime = Math.pow(10.0, Math.floor(Math.log10(visibleTimeWindow)))
+        var minorPixel = width * minorTime / visibleTimeWindow
+        while (minorPixel > MAX_TICK_PIXEL_OFFSET) {
+            minorPixel /= 10
+            minorTime /= 10
         }
-        return timeOffset.coerceAtLeast(1) to pixelOffset
+        return minorTime to minorPixel
     }
 
     companion object {
-        const val MATCH_TIME_SECONDS = 150
-        const val MAX_TIME_INTERVAL_PIXEL_OFFSET = 200
-        const val TIME_INTERVAL_ROUNDING = 5
+        const val MATCH_TIME_SECONDS = 150.0
+        const val MAX_TICK_PIXEL_OFFSET = 200
+        private val log = LoggerFactory.getLogger(TimelineController::class.java)
     }
 
 }
+
+data class TickIntervals(val minorTime: Double, val minorPixel: Double, val majorTime: Double, val majorPixel: Double)

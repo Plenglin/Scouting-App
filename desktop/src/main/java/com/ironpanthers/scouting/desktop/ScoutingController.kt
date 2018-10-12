@@ -7,7 +7,6 @@ import com.ironpanthers.scouting.common.RobotPerformance
 import com.ironpanthers.scouting.util.UNDO
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML
-import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
