@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
+import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.ScrollBar
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
@@ -23,13 +24,16 @@ class TimelineController {
 
     private val totalTimeExpression = SimpleDoubleProperty(MATCH_TIME_SECONDS)
     private val visibleWindowProperty = SimpleDoubleProperty(MATCH_TIME_SECONDS)
+    private val maxXExtentProperty = totalTimeExpression.subtract(visibleWindowProperty).multiply(1270 / MATCH_TIME_SECONDS)
+
+    private val maxXExtent by maxXExtentProperty
     private var visibleTimeWindow by visibleWindowProperty
 
     @FXML
     fun initialize() {
         scrollBar.minProperty().set(0.0)
-        scrollBar.maxProperty().bind(visibleWindowProperty)
-        scrollBar.visibleAmountProperty().bind(visibleWindowProperty)
+        scrollBar.maxProperty().set(1.0)
+        scrollBar.visibleAmountProperty().bind(visibleWindowProperty.divide(MATCH_TIME_SECONDS))
 
         scrollBar.valueProperty().onChange {
             log.debug("dragged scrollbar to t0={}", it)
@@ -48,7 +52,6 @@ class TimelineController {
     }
 
     private fun redrawMarkings() {
-        log.debug("redrawing the markings")
         val x = 0
 
         val w = backgroundMarkings.width
@@ -64,11 +67,11 @@ class TimelineController {
             clearRect(0.0, 0.0, w, h)
 
             getTimeIntervals(w).let { (tOffset, pOffset) ->
-                var dx = scrollBar.value
+                var dx = -maxXExtent * scrollBar.value
                 var label = scrollBar.value
                 textAlign = TextAlignment.CENTER
 
-                log.debug("tOffset={} pOffset={}, x0={}, l0={}", tOffset, pOffset, dx, label)
+                log.debug("maxXExtent={} tOffset={} pOffset={} x0={} l0={}", maxXExtent, tOffset, pOffset, dx, label)
                 while (dx < pw) {
                     val text = "%.1fs".format(label)
                     log.trace("tick {}: {}", text, dx)

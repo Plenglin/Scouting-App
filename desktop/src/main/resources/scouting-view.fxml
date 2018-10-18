@@ -40,7 +40,7 @@
             </HBox>
         </VBox>
 
-        <FlowPane fx:id="targetButtons"
+        <Pane fx:id="gameDefTarget"
                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">

@@ -7,6 +7,7 @@ import com.ironpanthers.scouting.common.RobotPerformance
 import com.ironpanthers.scouting.util.UNDO
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML
+import javafx.fxml.FXMLLoader
 import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
@@ -24,7 +25,7 @@ class ScoutingController {
     private val events: LinkedList<RobotEvent> = LinkedList()
 
     @FXML private lateinit var root: Pane
-    @FXML private lateinit var targetButtons: FlowPane
+    @FXML private lateinit var gameDefTarget: Pane
     @FXML private lateinit var robotTimelinePane: ScrollPane
     @FXML private lateinit var robotTimelineCanvas: TimelineView
     @FXML private lateinit var endgameStates: VBox
@@ -32,7 +33,7 @@ class ScoutingController {
     @FXML private lateinit var btnStop: Button
     //@FXML private lateinit var btnFieldError: Button
 
-    private val eventButtons: MutableList<Button> = mutableListOf()
+    //private val eventButtons: MutableList<Button> = mutableListOf()
 
     private val endgameToggle = ToggleGroup()
     private var startTime: Long = 0
@@ -74,11 +75,16 @@ class ScoutingController {
             if (isRecording) throw IllegalStateException("Cannot change gameDef while recording!")
             logger.info("setting GameDef to {}", value)
             field = value
-            value?.let { createGameDefButtons(it) }
+            value?.let {
+                createGameDefButtons(it)
+                val loader = (it.getViewController("desktop")!! as FXMLLoader)
+                val pane = loader.load<Pane>()
+                gameDefTarget.children.add(pane)
+            }
         }
 
     private fun createGameDefButtons(value: GameDef) {
-        val events = value.events.map { eventDef ->
+        /*val events = value.events.map { eventDef ->
             val btn = eventDef.createButton()
             btn.setOnMouseClicked {
                 logger.debug("triggered event: {}", eventDef)
@@ -86,7 +92,7 @@ class ScoutingController {
             }
             btn.disableProperty().bind(isStoppedProperty)
             btn
-        }
+        }*/
         val endings = value.endStates.map { endState ->
             val radio = RadioButton(endState.name)
             radio.toggleGroup = endgameToggle
@@ -94,15 +100,15 @@ class ScoutingController {
             radio
         }
 
-        eventButtons.apply {
+        /*eventButtons.apply {
             clear()
             addAll(events)
-        }
+        }*/
 
-        targetButtons.children.apply {
+        /*targetButtons.children.apply {
             clear()
             addAll(events)
-        }
+        }*/
 
         endgameToggle.toggles.clear()
         endgameStates.children.apply {

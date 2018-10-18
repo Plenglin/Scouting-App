@@ -1,15 +1,17 @@
-package com.ironpanthers.scouting.common
+package com.ironpanthers.scouting.frc2018
 
+import com.ironpanthers.scouting.common.ANY
+import com.ironpanthers.scouting.common.AUTO
+import com.ironpanthers.scouting.common.ENDGAME
+import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.util.ALT
 import com.ironpanthers.scouting.util.CTRL
 import com.ironpanthers.scouting.util.KeyCombo
 import com.ironpanthers.scouting.util.SHIFT
+import javafx.fxml.FXMLLoader
 import javafx.scene.input.KeyCode
 
 object GameDef2018 : GameDef("Power Up", "2018", 0) {
-    override fun upgrade(event: RobotEvent, from: Int, to: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     init {
         addEventDef("baseline", "Passed Baseline", AUTO, KeyCombo(KeyCode.B))
@@ -37,6 +39,16 @@ object GameDef2018 : GameDef("Power Up", "2018", 0) {
         addEndState("climb_self", "Self Climb")
         addEndState("climb_assist_1", "Climb Assist 1")
         addEndState("climb_assist_2", "Climb Assist 2")
+    }
+
+    override fun getViewController(platform: String): Any? = when (platform) {
+        "desktop" -> {
+            val file = javaClass.classLoader.getResource("2018-power-up.fxml")
+            val loader = FXMLLoader()
+            loader.location = file
+            loader
+        }
+        else -> null
     }
 
 }

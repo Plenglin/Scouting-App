@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop
 
-import com.ironpanthers.scouting.common.GameDef2018
+import com.ironpanthers.scouting.frc2018.GameDef2018
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
