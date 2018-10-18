@@ -1,0 +1,23 @@
+.grid-miss-button {
+    -fx-pref-width: 50;
+}
+
+.grid-hit-button {
+    -fx-pref-width: 50;
+}
+
+.grid-push-button {
+    -fx-pref-width: 50;
+}
+
+.grid-foul-button {
+    -fx-pref-width: 50;
+}
+
+.grid-location-label {
+    -fx-alignment: CENTER;
+}
+
+.grid-status-label {
+    -fx-alignment: CENTER_RIGHT;
+}

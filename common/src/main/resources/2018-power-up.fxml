@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.ironpanthers.scouting.frc2018.PowerUpFXController"
+            stylesheets="2018-power-up.css"
             prefHeight="400.0" prefWidth="600.0">
 
-    <Label text="afd"/>
+    <GridPane gridLinesVisible="true">
+
+        <Label GridPane.halignment="RIGHT" styleClass="grid-location-label" text="Vault" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label GridPane.halignment="RIGHT" styleClass="grid-location-label" text="Switch" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label GridPane.halignment="RIGHT" styleClass="grid-location-label" text="Scale" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+
+        <Label GridPane.halignment="CENTER" styleClass="grid-status-label" text="Miss" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label GridPane.halignment="CENTER" styleClass="grid-status-label" text="Hit" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Label GridPane.halignment="CENTER" styleClass="grid-status-label" text="Push" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Label GridPane.halignment="CENTER" styleClass="grid-status-label" text="Foul" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+
+        <Button styleClass="grid-miss-button" id="miss_vault" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Button styleClass="grid-miss-button" id="miss_scale" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Button styleClass="grid-miss-button" id="miss_switch" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Button styleClass="grid-hit-button" id="hit_vault" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <Button styleClass="grid-hit-button" id="hit_scale" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <Button styleClass="grid-hit-button" id="hit_switch" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+        <Label text="X" GridPane.halignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Button styleClass="grid-push-button" id="pushed_switch" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+        <Button styleClass="grid-push-button" id="pushed_scale" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+        <Label text="X" GridPane.halignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+        <Label text="X" GridPane.halignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+        <Button styleClass="grid-foul-button" id="foul_scale" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+    </GridPane>
 
 </AnchorPane>
