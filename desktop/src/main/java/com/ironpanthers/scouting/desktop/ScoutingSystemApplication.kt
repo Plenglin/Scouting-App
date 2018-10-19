@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop
 
+import com.ironpanthers.scouting.desktop.controller.ScoutingController
 import com.ironpanthers.scouting.frc2018.GameDef2018
 import javafx.application.Application
 import javafx.application.Platform
@@ -11,7 +12,7 @@ import org.apache.log4j.PropertyConfigurator
 
 class ScoutingSystemApplication : Application() {
     override fun start(primaryStage: Stage) {
-        val file = javaClass.classLoader.getResource("scouting-view.fxml")
+        val file = javaClass.classLoader.getResource("views/scouting-view.fxml")
         val loader = FXMLLoader()
         loader.location = file
         val pane = loader.load<Pane>()

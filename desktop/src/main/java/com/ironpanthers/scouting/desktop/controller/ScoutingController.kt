@@ -1,9 +1,12 @@
-package com.ironpanthers.scouting.desktop
+package com.ironpanthers.scouting.desktop.controller
 
 import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.common.RobotEventDef
 import com.ironpanthers.scouting.common.RobotPerformance
+import com.ironpanthers.scouting.desktop.TimelineView
+import com.ironpanthers.scouting.desktop.getFXViewData
+import com.ironpanthers.scouting.desktop.test
 import com.ironpanthers.scouting.util.UNDO
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML
@@ -11,11 +14,11 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.FlowPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import org.slf4j.LoggerFactory
 import java.util.*
+import tornadofx.*
 
 class ScoutingController {
 
@@ -77,7 +80,7 @@ class ScoutingController {
             field = value
             value?.let {
                 createGameDefButtons(it)
-                val loader = (it.getViewController("desktop")!! as FXMLLoader)
+                val loader = it.getFXViewData()!!
                 val pane = loader.load<Pane>()
                 gameDefTarget.children.add(pane)
             }

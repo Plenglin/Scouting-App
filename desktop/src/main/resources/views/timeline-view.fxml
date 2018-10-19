@@ -8,7 +8,7 @@
 <AnchorPane fx:id="timelineRoot"
         xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
-        fx:controller="com.ironpanthers.scouting.desktop.TimelineController">
+        fx:controller="com.ironpanthers.scouting.desktop.controller.TimelineController">
 
     <Canvas fx:id="backgroundMarkings" width="1280" height="270"/>
     <Pane fx:id="labelLayer" style="-fx-background-color: rgba(0, 0, 0, 1.0)"/>

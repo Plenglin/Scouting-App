@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.ironpanthers.scouting.desktop.ScoutingController"
+            fx:controller="com.ironpanthers.scouting.desktop.controller.ScoutingController"
             fx:id="root"
             onKeyPressed="#handleOnKeyPressed"
             prefHeight="720" prefWidth="1280">
@@ -24,7 +24,7 @@
                 <Button fx:id="btnStart" onMouseClicked="#onBtnRecordPressed">
                     <graphic>
                         <ImageView>
-                            <Image url="/play.png"/>
+                            <Image url="/images/play.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip><Tooltip text="Start Recording"/> </tooltip>
@@ -32,7 +32,7 @@
                 <Button fx:id="btnStop" onMouseClicked="#onBtnStopPressed">
                     <graphic>
                         <ImageView>
-                            <Image url="/disconnect.png"/>
+                            <Image url="/images/disconnect.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip><Tooltip text="Robot Disconnected"/> </tooltip>

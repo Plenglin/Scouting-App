@@ -41,14 +41,4 @@ object GameDef2018 : GameDef("Power Up", "2018", 0) {
         addEndState("climb_assist_2", "Climb Assist 2")
     }
 
-    override fun getViewController(platform: String): Any? = when (platform) {
-        "desktop" -> {
-            val file = javaClass.classLoader.getResource("2018-power-up.fxml")
-            val loader = FXMLLoader()
-            loader.location = file
-            loader
-        }
-        else -> null
-    }
-
 }

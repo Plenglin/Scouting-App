@@ -1,7 +1,7 @@
 package com.ironpanthers.scouting.desktop
 
-import com.ironpanthers.scouting.common.RobotEndState
-import com.ironpanthers.scouting.common.RobotEventDef
+import com.ironpanthers.scouting.common.GameDef
+import com.ironpanthers.scouting.frc2018.GameDef2018
 import com.ironpanthers.scouting.util.ALT
 import com.ironpanthers.scouting.util.CTRL
 import com.ironpanthers.scouting.util.KeyCombo
@@ -9,8 +9,7 @@ import com.ironpanthers.scouting.util.SHIFT
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ReadOnlyProperty
 import javafx.beans.value.WritableValue
-import javafx.scene.control.Button
-import javafx.scene.image.ImageView
+import javafx.fxml.FXMLLoader
 import javafx.scene.input.KeyEvent
 import kotlin.reflect.KProperty
 
@@ -20,20 +19,6 @@ fun KeyCombo.test(event: KeyEvent): Boolean {
             && (event.isAltDown == (modifiers and ALT != 0))
             && (event.isControlDown == (modifiers and CTRL != 0))
 }
-
-fun RobotEventDef.createButton(): Button =
-        if (icon != null) {
-            Button("", ImageView(icon))
-        } else {
-            Button(name)
-        }
-
-fun RobotEndState.createButton(): Button =
-        if (icon != null) {
-            Button("", ImageView(icon))
-        } else {
-            Button(name)
-        }
 
 fun Double.lerp(a1: Double, b1: Double, a2: Double, b2: Double): Double {
     return (b2 - b1) * (this - a1) / (a2 - a1) + a2
@@ -55,3 +40,12 @@ operator fun BooleanProperty.setValue(thisRef: Any?, property: KProperty<*>, val
     this.value = value
 }
 
+fun GameDef.getFXViewData(): FXMLLoader? = when (this) {
+    is GameDef2018 -> {
+        val file = javaClass.classLoader.getResource("views/2018-power-up.fxml")
+        val loader = FXMLLoader()
+        loader.location = file
+        loader
+    }
+    else -> null
+}

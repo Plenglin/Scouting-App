@@ -1,14 +1,9 @@
-package com.ironpanthers.scouting.desktop
+package com.ironpanthers.scouting.desktop.controller
 
-import javafx.beans.binding.DoubleExpression
-import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
-import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
-import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.ScrollBar
-import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.text.TextAlignment
 import org.slf4j.LoggerFactory

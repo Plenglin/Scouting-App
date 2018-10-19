@@ -16,8 +16,4 @@ abstract class GameDef(val name: String, val id: String, val version: Int) {
         endStates.add(RobotEndState(createId(id), name, icon))
     }
 
-    /**
-     * @return the view controller for a given platform, or null if it doesn't exist
-     */
-    abstract fun getViewController(platform: String): Any?
 }
