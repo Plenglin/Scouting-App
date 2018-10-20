@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.io.client
 
-interface ServerCommStrategy {
+interface CommunicationStrategy {
     var client: ClientEngine?
 
     fun send(data: String)
