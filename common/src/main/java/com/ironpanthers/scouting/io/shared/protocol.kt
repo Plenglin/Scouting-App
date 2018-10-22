@@ -15,7 +15,6 @@ fun marshal(obj: Any): String {
     val node = JsonNodeFactory.instance.objectNode()
             .putPOJO("data", obj)
             .put("className", obj.javaClass.name)
-    println(node)
     return mapper.writeValueAsString(node)
 }
 
@@ -26,4 +25,8 @@ fun unmarshal(string: String): Any {
 
     val theClass: Class<*> = Class.forName(className)
     return mapper.treeToValue(tree.get("data"), theClass)
+}
+
+fun main(args: Array<String>) {
+    println("asdf")
 }
