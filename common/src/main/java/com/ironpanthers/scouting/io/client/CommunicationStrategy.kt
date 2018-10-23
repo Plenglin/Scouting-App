@@ -1,7 +1,8 @@
 package com.ironpanthers.scouting.io.client
 
+
 interface CommunicationStrategy {
     var client: ClientEngine?
 
-    fun send(data: String)
+    fun send(obj: Any)
 }

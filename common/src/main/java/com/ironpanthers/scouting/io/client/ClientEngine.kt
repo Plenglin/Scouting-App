@@ -14,24 +14,14 @@ class ClientEngine {
     private val jsonFactory = JsonFactory()
     private val mapper = ObjectMapper()
 
-    fun onReceived(data: String) {
-        log.trace("received %s", data)
-
-        val obj: Any
-        try {
-            obj = unmarshal(data)
-        } catch (e: Exception) {
-            when (e) {
-                is NoClassNameException -> log.error("Didn't receive a className!", e)
-                is ClassNotFoundException -> log.error("Unable to find class!", e)
-            }
-            return
-        }
-        log.trace("created object {}", obj)
-
+    fun onReceived(obj: Any) {
         when (obj) {
 
         }
+    }
+
+    fun onDisconnected() {
+
     }
 
     fun sendObject(obj: Any) {

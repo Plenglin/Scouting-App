@@ -6,13 +6,14 @@ abstract class Client {
 
     val id = UUID.randomUUID()!!
     abstract val displayName: String
+    abstract val connected: Boolean
 
     var listener: ClientListener? = null
 
     abstract fun begin()
-    abstract fun sendData(obj: String)
+    abstract fun sendData(obj: Any)
 
-    fun getInfo() = ClientInfo(id, displayName)
+    val info by lazy { ClientInfo(id, displayName) }
 
 }
 
@@ -21,7 +22,7 @@ interface ClientListener {
     /**
      * Called when the client sends over an object.
      */
-    fun onReceivedFromClient(client: Client, obj: String)
+    fun onReceivedFromClient(client: Client, obj: Any)
 
     /**
      * Called when the client socket is closed, either intentionally or not.
