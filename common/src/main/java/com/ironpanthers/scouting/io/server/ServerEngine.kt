@@ -1,11 +1,16 @@
 package com.ironpanthers.scouting.io.server
 
+import com.ironpanthers.scouting.common.Match
+
 object ServerEngine {
 
-    private val clients = mutableListOf<Client>()
+    lateinit var matchList: List<Match>
+    private val clients = mutableListOf<BaseClient>()
 
-    fun attachClient(client: Client) {
+    fun attachClient(client: BaseClient) {
         clients.add(client)
+        client.serverEngine = this
+        client.begin()
     }
 
 }

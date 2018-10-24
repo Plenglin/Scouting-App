@@ -1,7 +1,7 @@
 package com.ironpanthers.scouting.desktop.controller
 
 import com.ironpanthers.scouting.desktop.io.server.LocalClient
-import com.ironpanthers.scouting.io.server.Client
+import com.ironpanthers.scouting.io.server.BaseClient
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.fxml.FXML
@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory
 class ServerMonitorController {
 
     @FXML
-    lateinit var clients: TableView<Client>
+    lateinit var clients: TableView<BaseClient>
 
     @FXML
-    lateinit var colNames: TableColumn<Client, String>
+    lateinit var colNames: TableColumn<BaseClient, String>
     @FXML
-    lateinit var colType: TableColumn<Client, String>
+    lateinit var colType: TableColumn<BaseClient, String>
     @FXML
-    lateinit var colStatus: TableColumn<Client, Boolean>
+    lateinit var colStatus: TableColumn<BaseClient, Boolean>
 
     private val log = LoggerFactory.getLogger(javaClass)
 

@@ -1,7 +1,7 @@
 package com.ironpanthers.scouting.desktop.io.client
 
-import com.ironpanthers.scouting.io.client.ClientEngine
-import com.ironpanthers.scouting.io.client.CommunicationStrategy
+import com.ironpanthers.scouting.common.Match
+import com.ironpanthers.scouting.io.client.ClientStrategy
 import com.ironpanthers.scouting.io.shared.NoClassNameException
 import com.ironpanthers.scouting.io.shared.marshal
 import com.ironpanthers.scouting.io.shared.unmarshal
@@ -10,7 +10,11 @@ import java.io.BufferedReader
 import java.io.BufferedWriter
 import kotlin.concurrent.thread
 
-class BluetoothStrategy : CommunicationStrategy {
+class BluetoothStrategy : ClientStrategy {
+    override fun getMatchList(cb: (List<Match>) -> Unit) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override var client: ClientEngine? = null
 
     private val log = LoggerFactory.getLogger(javaClass)

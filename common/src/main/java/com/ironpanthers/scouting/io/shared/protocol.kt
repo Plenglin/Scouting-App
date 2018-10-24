@@ -1,20 +1,22 @@
 package com.ironpanthers.scouting.io.shared
 
-import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.ironpanthers.scouting.io.client.ClientEngine
+import com.fasterxml.jackson.databind.util.JSONPObject
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.lang.Exception
 
 
 class NoClassNameException : Exception("No class data attached to the JSON!")
 
-val mapper = ObjectMapper()
+val mapper = jacksonObjectMapper()
 
 fun marshal(obj: Any): String {
+    val serializedData = mapper.valueToTree<JsonNode>(obj)
     val node = JsonNodeFactory.instance.objectNode()
-            .putPOJO("data", obj)
             .put("className", obj.javaClass.name)
+    node.set("data",  serializedData)
     return mapper.writeValueAsString(node)
 }
 

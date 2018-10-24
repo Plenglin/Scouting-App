@@ -6,13 +6,12 @@ import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
-data class Person(var name: String, var age: Int, var id: UUID = UUID.randomUUID()) {
-    constructor() : this("", 0)
-}
+data class Person (
+        val name: String,
+        val age: Int,
+        val id: UUID = UUID.randomUUID())
 
-data class Company(var leader: Person?, var employees: Set<Person>, var properties: Map<String, String>) {
-    constructor() : this(null, emptySet(), emptyMap())
-}
+data class Company(val leader: Person, val employees: Set<Person>, val properties: Map<String, String>)
 
 class TestMarshalling {
 
@@ -23,7 +22,9 @@ class TestMarshalling {
         val alice = Person("alice", 43)
 
         val acme = Company(ted, setOf(bob, alice), properties = mapOf("memes" to "dreams"))
-        Assert.assertEquals(acme, unmarshal(marshal(acme)))
+        val marshaled = marshal(acme)
+        println(marshaled)
+        Assert.assertEquals(acme, unmarshal(marshaled))
     }
 
 }

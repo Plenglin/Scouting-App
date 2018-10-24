@@ -1,6 +1,7 @@
 package com.ironpanthers.scouting.common
 
 import com.ironpanthers.scouting.util.KeyCombo
+import java.util.*
 
 
 const val AUTO = 0x1
@@ -32,7 +33,12 @@ data class RobotEvent(val id: String, val team: Int) {
 
 data class Team(val number: Int, val name: String)
 
-data class RobotPerformance(val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String)
+/**
+ * A description of all the things a robot did during a match.
+ */
+data class RobotPerformance(val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String) {
+    val uuid = UUID.randomUUID()
+}
 
 data class Alliance(val teams: List<RobotPerformance>)
 

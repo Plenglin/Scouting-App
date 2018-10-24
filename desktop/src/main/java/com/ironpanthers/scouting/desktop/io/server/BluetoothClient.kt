@@ -1,11 +1,11 @@
 package com.ironpanthers.scouting.desktop.io.server
 
-import com.ironpanthers.scouting.io.server.Client
+import com.ironpanthers.scouting.io.server.BaseClient
 import com.ironpanthers.scouting.io.shared.marshal
 import java.io.BufferedReader
 import java.io.BufferedWriter
 
-class BluetoothClient : Client() {
+class BluetoothClient : BaseClient() {
     override val displayName: String = ""
     override val type = "Bluetooth"
 
