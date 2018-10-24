@@ -12,7 +12,7 @@ import org.apache.log4j.PropertyConfigurator
 
 class ScoutingSystemApplication : Application() {
     override fun start(primaryStage: Stage) {
-        val file = javaClass.classLoader.getResource("views/scouting-view.fxml")
+        val file = javaClass.classLoader.getResource("views/scouting-view.fxml")!!
         val loader = FXMLLoader()
         loader.location = file
         val pane = loader.load<Pane>()
@@ -29,7 +29,6 @@ class ScoutingSystemApplication : Application() {
 }
 
 fun main(args: Array<String>) {
-    val url = ScoutingSystemApplication::class.java.classLoader.getResourceAsStream("log4j.properties")
     PropertyConfigurator.configure("log4j.properties")
     Application.launch(ScoutingSystemApplication::class.java, *args)
 }

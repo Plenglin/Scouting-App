@@ -47,11 +47,11 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "1.6"
     }
 }
 
-sourceSets {
+/*sourceSets {
     main {
         java {
             srcDirs += "src/main/java"
@@ -59,17 +59,13 @@ sourceSets {
         }
         kotlin {
             srcDirs += "src/main/java"
-            outputDir = file("build/classes/java/main")
+        }
+        resources {
+            srcDirs += "src/main/resources"
         }
     }
-}
+}*/
 
-/*
-build.doLast {
-    logger.quiet("Moving kotlin things to Java")
-    copy {
-        from "build/classes/kotlin"
-        into "build/classes/java"
-    }
+task run(type: JavaExec) {
+    main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
 }
-*/
