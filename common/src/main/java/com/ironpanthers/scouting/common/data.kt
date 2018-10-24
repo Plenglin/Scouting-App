@@ -27,6 +27,7 @@ data class RobotEndState(val id: String, val name: String, val icon: String? = n
 
 data class RobotEvent(val id: String, val team: Int) {
     val time: Long = System.currentTimeMillis()
+    val extras: MutableMap<String, String> = mutableMapOf()
 }
 
 data class Team(val number: Int, val name: String)

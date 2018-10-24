@@ -50,7 +50,6 @@ class TimelineController {
         val h = backgroundMarkings.height
         val h2 = h / 2
 
-        val ph2 = h / 2
         log.debug("Redrawing with x={} w={} h={}", x, w, h)
 
         backgroundMarkings.graphicsContext2D.apply {
@@ -152,5 +151,3 @@ class TimelineController {
     }
 
 }
-
-data class TickIntervals(val minorTime: Double, val minorPixel: Double, val majorTime: Double, val majorPixel: Double)

@@ -10,7 +10,6 @@ import com.ironpanthers.scouting.desktop.test
 import com.ironpanthers.scouting.util.UNDO
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML
-import javafx.fxml.FXMLLoader
 import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
@@ -22,7 +21,7 @@ import tornadofx.*
 
 class ScoutingController {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
     private val timer = Timer()
 
     private val events: LinkedList<RobotEvent> = LinkedList()
@@ -49,13 +48,12 @@ class ScoutingController {
 
     @FXML
     fun initialize() {
-        logger.info("Initializing")
+        log.info("Initializing")
         btnStart.disableProperty().bind(isRecordingProperty)
         btnStop.disableProperty().bind(isStoppedProperty)
         //btnFieldError.disableProperty().bind(isStoppedProperty)
 
     }
-
 
     private fun addRobotEvent(def: RobotEventDef) {
         val event = def.createEventInstance(team)
@@ -76,43 +74,29 @@ class ScoutingController {
     var gameDef: GameDef? = null
         set(value) {
             if (isRecording) throw IllegalStateException("Cannot change gameDef while recording!")
-            logger.info("setting GameDef to {}", value)
+            log.info("setting GameDef to {}", value)
             field = value
             value?.let {
                 createGameDefButtons(it)
                 val loader = it.getFXViewData()!!
                 val pane = loader.load<Pane>()
+                val controller = loader.getController<RobotEventPanelController>()
+                controller.onEventOccurred = { onReceivedRobotEvent(it) }
                 gameDefTarget.children.add(pane)
             }
         }
 
+    private fun onReceivedRobotEvent(event: RobotEvent) {
+        log.info("Received robot event {}", event)
+    }
+
     private fun createGameDefButtons(value: GameDef) {
-        /*val events = value.events.map { eventDef ->
-            val btn = eventDef.createButton()
-            btn.setOnMouseClicked {
-                logger.debug("triggered event: {}", eventDef)
-                addRobotEvent(eventDef)
-            }
-            btn.disableProperty().bind(isStoppedProperty)
-            btn
-        }*/
         val endings = value.endStates.map { endState ->
             val radio = RadioButton(endState.name)
             radio.toggleGroup = endgameToggle
             radio.userData = endState.id
             radio
         }
-
-        /*eventButtons.apply {
-            clear()
-            addAll(events)
-        }*/
-
-        /*targetButtons.children.apply {
-            clear()
-            addAll(events)
-        }*/
-
         endgameToggle.toggles.clear()
         endgameStates.children.apply {
             clear()
@@ -121,17 +105,17 @@ class ScoutingController {
     }
 
     fun shutdown() {
-        logger.info("Stopping")
+        log.info("Stopping")
     }
 
     fun handleOnKeyPressed(keyEvent: KeyEvent) {
-        logger.debug("key event: {}", keyEvent)
+        log.debug("key event: {}", keyEvent)
         if (UNDO.test(keyEvent)) {
             undoRobotEvent()
         }
         gameDef?.apply {
             events.find { it.keyCombo.test(keyEvent) }?.let { eventDef ->
-                logger.debug("selected: {}", eventDef)
+                log.debug("selected: {}", eventDef)
                 addRobotEvent(eventDef)
             }
         }
@@ -139,13 +123,13 @@ class ScoutingController {
 
     fun onBtnRecordPressed(event: MouseEvent) {
         if (isRecording) throw IllegalStateException("Already recording!")
-        logger.info("Begin recording")
+        log.info("Begin recording")
         isRecording = true
     }
 
     fun onBtnStopPressed(event: MouseEvent) {
         if (!isRecording) throw IllegalStateException("Not recording!")
-        logger.info("Stopped recording")
+        log.info("Stopped recording")
         isRecording = false
     }
 

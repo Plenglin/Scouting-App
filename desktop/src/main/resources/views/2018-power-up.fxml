@@ -5,7 +5,7 @@
 <AnchorPane fx:id="root"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.ironpanthers.scouting.desktop.controller.frc2018.PowerUpFXController"
+            fx:controller="com.ironpanthers.scouting.desktop.controller.frc2018.PowerUpFXPanelController"
             stylesheets="/styles/2018-power-up.css"
             prefHeight="400.0" prefWidth="600.0">
 

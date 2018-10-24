@@ -10,8 +10,13 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ReadOnlyProperty
 import javafx.beans.value.WritableValue
 import javafx.fxml.FXMLLoader
+import javafx.scene.Node
 import javafx.scene.input.KeyEvent
 import kotlin.reflect.KProperty
+import javafx.scene.Parent
+import java.util.ArrayList
+
+
 
 fun KeyCombo.test(event: KeyEvent): Boolean {
     return event.code == keyCode
@@ -51,4 +56,18 @@ fun GameDef.getFXViewData(): FXMLLoader? = when (this) {
         loader
     }
     else -> null
+}
+
+fun getAllNodes(root: Parent): ArrayList<Node> {
+    val nodes = ArrayList<Node>()
+    addAllDescendents(root, nodes)
+    return nodes
+}
+
+private fun addAllDescendents(parent: Parent, nodes: ArrayList<Node>) {
+    for (node in parent.childrenUnmodifiable) {
+        nodes.add(node)
+        if (node is Parent)
+            addAllDescendents(node, nodes)
+    }
 }
