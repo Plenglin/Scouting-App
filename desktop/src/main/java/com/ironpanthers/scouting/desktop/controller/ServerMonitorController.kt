@@ -5,10 +5,10 @@ import com.ironpanthers.scouting.io.server.Client
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.fxml.FXML
-import javafx.scene.control.*
+import javafx.scene.control.TableColumn
+import javafx.scene.control.TableView
 import javafx.util.Callback
 import org.slf4j.LoggerFactory
-import tornadofx.rowItem
 
 class ServerMonitorController {
 

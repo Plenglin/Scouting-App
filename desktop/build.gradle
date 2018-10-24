@@ -24,7 +24,7 @@ dependencies {
     implementation 'no.tornado:tornadofx:1.7.17'
 
     // https://mvnrepository.com/artifact/org.controlsfx/controlsfx
-    implementation group: 'org.controlsfx', name: 'controlsfx', version: '9.0.0'
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.20.9'
 
     implementation 'net.sf.bluecove:bluecove:2.1.0'
 
