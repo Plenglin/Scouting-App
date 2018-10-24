@@ -18,16 +18,15 @@ class TimelineController {
     @FXML lateinit var labelLayer: Pane
     @FXML lateinit var scrollBar: ScrollBar  // It will have the value of t0
 
-    private val totalTimeExpression = SimpleDoubleProperty(MATCH_TIME_SECONDS)
-    private val visibleWindowProperty = SimpleDoubleProperty(MATCH_TIME_SECONDS)
+    private val visibleWindowProperty = SimpleDoubleProperty(ACTUAL_TIMELINE_LENGTH)
 
     private var visibleTimeWindow by visibleWindowProperty
 
     @FXML
     fun initialize() {
-        scrollBar.minProperty().set(0.0)
-        scrollBar.maxProperty().set(1.0)
-        scrollBar.visibleAmountProperty().bind(visibleWindowProperty.divide(MATCH_TIME_SECONDS))
+        scrollBar.minProperty().set(-TIMELINE_TEMPORAL_PADDING / MATCH_TIME_SECONDS)
+        scrollBar.maxProperty().set(ACTUAL_TIMELINE_LENGTH / MATCH_TIME_SECONDS)
+        scrollBar.visibleAmountProperty().bind(visibleWindowProperty.divide(ACTUAL_TIMELINE_LENGTH))
 
         scrollBar.valueProperty().onChange {
             log.debug("dragged scrollbar to t0={}", it)
@@ -36,7 +35,7 @@ class TimelineController {
         backgroundMarkings.setOnScroll {
             if (it.isControlDown) {
                 val delta = Math.exp(Math.signum(it.deltaY) * -0.3)
-                visibleTimeWindow = (visibleTimeWindow * delta).coerceAtMost(MATCH_TIME_SECONDS)
+                visibleTimeWindow = (visibleTimeWindow * delta).coerceAtMost(ACTUAL_TIMELINE_LENGTH)
                 log.debug("zooming to {}", visibleTimeWindow)
                 labelLayer.prefWidth *= delta
                 redrawMarkings()
@@ -51,13 +50,8 @@ class TimelineController {
         val w = backgroundMarkings.width
         val h = backgroundMarkings.height
         val h2 = h / 2
-        val pw = w - 2 * TIMELINE_PADDING
-        val ph = h - 2 * TIMELINE_PADDING
 
-        val px0 = TIMELINE_PADDING
-        val px1 = px0 + pw
-
-        val ph2 = ph / 2
+        val ph2 = h / 2
         log.debug("Redrawing with x={} w={} h={}", x, w, h)
 
         backgroundMarkings.graphicsContext2D.apply {
@@ -71,10 +65,10 @@ class TimelineController {
 
                 if (dp > MAX_USE_MAJOR_PIXEL_OFFSET) {
                     var label = Math.floor(scrollBar.value / dt) * dt  // round to lowest time increment
-                    var dx = label.lerp(t0, t1, px0, px1)  // initial position
+                    var dx = label.lerp(t0, t1, 0.0, w)  // initial position
                     log.debug("Not using major/minor pixels: t0={} t1={} dt={} dp={} x0={} l0={}", t0, t1, dt, dp, dx, label)
 
-                    while (dx < pw) {
+                    while (dx < w) {
                         val text = "%.1fs".format(label)
                         val height = 15.0
                         log.trace("tick {}: {}", text, dx)
@@ -87,11 +81,14 @@ class TimelineController {
                 } else {
                     val dtm = dt * TICK_TIME_DIVISIONS
                     var label = Math.floor(scrollBar.value / dtm) * dtm  // round to lowest time increment
-                    var dx = label.lerp(t0, t1, px0, px1)  // initial position
+                    var dx = label.lerp(t0, t1, 0.0, w)  // initial position
 
                     log.debug("Will use major/minor pixels: t0={} t1={} dt={} dp={} x0={} l0={}", t0, t1, dt, dp, dx, label)
                     var i = 1
-                    while (dx < pw) {
+                    while (dx < w) {
+                        i = if (i == TICK_TIME_DIVISIONS) 1 else i + 1
+                        dx += dp
+                        label += dt
                         var height = 10.0
 
                         if (i == 1) {
@@ -102,9 +99,6 @@ class TimelineController {
                         }
                         strokeLine(dx, h - 10.0, dx, h - 10 - height)
                         strokeLine(dx, 10.0, dx, 10 + height)
-                        i = if (i == TICK_TIME_DIVISIONS) 1 else i + 1
-                        dx += dp
-                        label += dt
                     }
                 }
             }
@@ -133,7 +127,16 @@ class TimelineController {
          * Major/minor ticks will be used if minor ticks are smaller than this
          */
         const val MAX_USE_MAJOR_PIXEL_OFFSET = 100
-        const val TIMELINE_PADDING = 20.0
+
+        /**
+         * Left and right time padding for the timeline, so you can see 0s and MATCH_TIME_SECONDS s markings
+         */
+        const val TIMELINE_TEMPORAL_PADDING = 5.0
+
+        /**
+         * How long the timeline is including padding
+         */
+        const val ACTUAL_TIMELINE_LENGTH = MATCH_TIME_SECONDS + 2 * TIMELINE_TEMPORAL_PADDING
 
         /**
          * What to split the ticks into
