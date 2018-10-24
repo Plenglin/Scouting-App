@@ -25,7 +25,7 @@ class TimelineController {
         scrollBar.minProperty().set(-TIMELINE_TEMPORAL_PADDING / MATCH_TIME_SECONDS)
         scrollBar.maxProperty().set(ACTUAL_TIMELINE_LENGTH / MATCH_TIME_SECONDS)
         scrollBar.visibleAmountProperty()
-                .bind((visibleWindowProperty / ACTUAL_TIMELINE_LENGTH) * (scrollBar.maxProperty() - scrollBar.minProperty()) + scrollBar.minProperty())
+                .bind((visibleWindowProperty / ACTUAL_TIMELINE_LENGTH) * (scrollBar.maxProperty() - scrollBar.minProperty()))
 
         scrollBar.valueProperty().onChange {
             log.debug("dragged scrollbar to t0={}", it)
@@ -34,7 +34,7 @@ class TimelineController {
         backgroundMarkings.setOnScroll {
             if (it.isControlDown && !it.isAltDown && !it.isShiftDown) {
                 val delta = Math.exp(Math.signum(it.deltaY) * -ZOOM_FACTOR)
-                visibleTimeWindow = (visibleTimeWindow * delta).coerceAtMost(ACTUAL_TIMELINE_LENGTH)
+                visibleTimeWindow = (visibleTimeWindow * delta).coerceIn(MIN_TIME_WINDOW, ACTUAL_TIMELINE_LENGTH)
                 log.debug("zooming to {}", visibleTimeWindow)
                 labelLayer.prefWidth *= delta
                 redrawMarkings()
@@ -129,9 +129,9 @@ class TimelineController {
         const val MAX_USE_MAJOR_PIXEL_OFFSET = 100
 
         /**
-         * Left and right time padding for the timeline, so you can see 0s and MATCH_TIME_SECONDS s markings
+         * Left and right time padding for the timeline, so you can see 0s and [MATCH_TIME_SECONDS]s markings
          */
-        const val TIMELINE_TEMPORAL_PADDING = 5.0
+        const val TIMELINE_TEMPORAL_PADDING = 2.0
 
         /**
          * How long the timeline is including padding
@@ -142,6 +142,11 @@ class TimelineController {
          * What to split the ticks into
          */
         const val TICK_TIME_DIVISIONS = 5
+
+        /**
+         * The time window will never be less than this
+         */
+        const val MIN_TIME_WINDOW = 1.0
 
         private val log = LoggerFactory.getLogger(TimelineController::class.java)
     }
