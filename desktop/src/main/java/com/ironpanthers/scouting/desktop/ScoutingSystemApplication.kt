@@ -21,6 +21,9 @@ class ScoutingSystemApplication : Application() {
         controller.gameDef = GameDef2018
 
         primaryStage.scene = scene
+        /*primaryStage.isResizable = false
+        primaryStage.width = 800.0
+        primaryStage.height = 600.0*/
         primaryStage.show()
         primaryStage.setOnCloseRequest {
             Platform.exit()

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.ScrollBar?>
-<AnchorPane fx:id="timelineRoot"
-        xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml"
-        fx:controller="com.ironpanthers.scouting.desktop.controller.TimelineController">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<AnchorPane fx:id="root"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ironpanthers.scouting.desktop.controller.TimelineController">
 
-    <Canvas fx:id="backgroundMarkings" width="1280" height="270"/>
+    <Canvas fx:id="backgroundCanvas" width="300" height="300"/>
+    <ScrollBar fx:id="scrollBar" prefWidth="${root.width}" AnchorPane.bottomAnchor="0.0"/>
     <Pane fx:id="labelLayer" style="-fx-background-color: rgba(0, 0, 0, 1.0)"/>
-    <ScrollBar fx:id="scrollBar" prefWidth="1280" AnchorPane.bottomAnchor="0.0"/>
 
 </AnchorPane>

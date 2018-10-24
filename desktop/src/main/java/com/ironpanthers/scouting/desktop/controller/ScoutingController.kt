@@ -4,7 +4,6 @@ import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.common.RobotEventDef
 import com.ironpanthers.scouting.common.RobotPerformance
-import com.ironpanthers.scouting.desktop.TimelineView
 import com.ironpanthers.scouting.desktop.getFXViewData
 import com.ironpanthers.scouting.desktop.test
 import com.ironpanthers.scouting.util.UNDO
@@ -14,6 +13,7 @@ import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
+import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -28,8 +28,6 @@ class ScoutingController {
 
     @FXML private lateinit var root: Pane
     @FXML private lateinit var gameDefTarget: Pane
-    @FXML private lateinit var robotTimelinePane: ScrollPane
-    @FXML private lateinit var robotTimelineCanvas: TimelineView
     @FXML private lateinit var endgameStates: VBox
     @FXML private lateinit var btnStart: Button
     @FXML private lateinit var btnStop: Button
@@ -76,18 +74,25 @@ class ScoutingController {
             if (isRecording) throw IllegalStateException("Cannot change gameDef while recording!")
             log.info("setting GameDef to {}", value)
             field = value
-            value?.let {
-                createGameDefButtons(it)
-                val loader = it.getFXViewData()!!
+            value?.apply {
+                createGameDefButtons(this)
+                val loader = getFXViewData()!!
                 val pane = loader.load<Pane>()
                 val controller = loader.getController<RobotEventPanelController>()
                 controller.onEventOccurred = { onReceivedRobotEvent(it) }
+                controller.teamNumber = team
+
                 gameDefTarget.children.add(pane)
             }
         }
 
     private fun onReceivedRobotEvent(event: RobotEvent) {
-        log.info("Received robot event {}", event)
+        if (isRecording) {
+            log.info("Received robot event {}", event)
+            events.push(event)
+        } else {
+            log.info("Did not push {} (not recording!)", event)
+        }
     }
 
     private fun createGameDefButtons(value: GameDef) {

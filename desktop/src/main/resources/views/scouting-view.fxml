@@ -4,49 +4,68 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.ironpanthers.scouting.desktop.controller.ScoutingController"
             fx:id="root"
-            onKeyPressed="#handleOnKeyPressed"
-            prefHeight="720" prefWidth="1280">
+            onKeyPressed="#handleOnKeyPressed">
 
-    <GridPane>
-        <fx:include
-                source="timeline-view.fxml"
-                prefWidth="1280"
-                prefHeight="300"
-                GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Save"/>
+            </Menu>
+        </MenuBar>
+    </top>
 
-        <VBox GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <Label text="Controls"/>
-            <HBox>
-                <Button fx:id="btnStart" onMouseClicked="#onBtnRecordPressed">
-                    <graphic>
-                        <ImageView>
-                            <Image url="/images/play.png"/>
-                        </ImageView>
-                    </graphic>
-                    <tooltip><Tooltip text="Start Recording"/> </tooltip>
-                </Button>
-                <Button fx:id="btnStop" onMouseClicked="#onBtnStopPressed">
-                    <graphic>
-                        <ImageView>
-                            <Image url="/images/disconnect.png"/>
-                        </ImageView>
-                    </graphic>
-                    <tooltip><Tooltip text="Robot Disconnected"/> </tooltip>
-                </Button>
-            </HBox>
-        </VBox>
+    <left>
+        <ToolBar orientation="VERTICAL">
+            <Button fx:id="btnStart" onMouseClicked="#onBtnRecordPressed">
+                <graphic>
+                    <ImageView>
+                        <Image url="/images/play.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip><Tooltip text="Start Recording"/> </tooltip>
+            </Button>
+            <Button fx:id="btnStop" onMouseClicked="#onBtnStopPressed">
+                <graphic>
+                    <ImageView>
+                        <Image url="/images/disconnect.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip><Tooltip text="Robot Disconnected"/> </tooltip>
+            </Button>
+        </ToolBar>
+    </left>
 
-        <Pane fx:id="gameDefTarget"
-                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <center>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="70"/>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="30"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" percentHeight="40"/>
+                <RowConstraints vgrow="ALWAYS" percentHeight="60"/>
+            </rowConstraints>
+            <fx:include
+                    source="timeline-view.fxml"
+                    GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
 
-        <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
-            <Label text="Endgame State"/>
-            <VBox fx:id="endgameStates"/>
-        </VBox>
-    </GridPane>
+            <Pane fx:id="gameDefTarget"
+                      GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-</AnchorPane>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Endgame State"/>
+                <VBox fx:id="endgameStates"/>
+            </VBox>
+
+        </GridPane>
+    </center>
+
+    <right>
+
+    </right>
+
+</BorderPane>

@@ -12,7 +12,8 @@ import tornadofx.*
 
 class TimelineController {
 
-    @FXML lateinit var backgroundMarkings: Canvas
+    @FXML lateinit var root: Pane
+    @FXML lateinit var backgroundCanvas: Canvas
     @FXML lateinit var labelLayer: Pane
     @FXML lateinit var scrollBar: ScrollBar  // It will have the value of t0
 
@@ -31,7 +32,7 @@ class TimelineController {
             log.debug("dragged scrollbar to t0={}", it)
             redrawMarkings()
         }
-        backgroundMarkings.setOnScroll {
+        backgroundCanvas.setOnScroll {
             if (it.isControlDown && !it.isAltDown && !it.isShiftDown) {
                 val delta = Math.exp(Math.signum(it.deltaY) * -ZOOM_FACTOR)
                 visibleTimeWindow = (visibleTimeWindow * delta).coerceIn(MIN_TIME_WINDOW, ACTUAL_TIMELINE_LENGTH)
@@ -40,19 +41,32 @@ class TimelineController {
                 redrawMarkings()
             }
         }
+
+        root.widthProperty().onChange {
+            log.debug("resized: w={}", it)
+            backgroundCanvas.width = it
+            redrawMarkings()
+        }
+
+        root.heightProperty().onChange {
+            log.debug("resized: h={}", it)
+            backgroundCanvas.height = it - scrollBar.height
+            redrawMarkings()
+        }
+
         redrawMarkings()
     }
 
     private fun redrawMarkings() {
         val x = 0
 
-        val w = backgroundMarkings.width
-        val h = backgroundMarkings.height
+        val w = backgroundCanvas.width
+        val h = backgroundCanvas.height
         val h2 = h / 2
 
         log.debug("Redrawing with x={} w={} h={}", x, w, h)
 
-        backgroundMarkings.graphicsContext2D.apply {
+        backgroundCanvas.graphicsContext2D.apply {
             clearRect(0.0, 0.0, w, h)
 
             getTimeIntervals(w).let { (dt, dp) ->
