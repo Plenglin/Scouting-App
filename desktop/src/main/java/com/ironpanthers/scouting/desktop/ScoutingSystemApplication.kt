@@ -12,13 +12,13 @@ import org.apache.log4j.PropertyConfigurator
 
 class ScoutingSystemApplication : Application() {
     override fun start(primaryStage: Stage) {
-        val file = javaClass.classLoader.getResource("views/scouting-view.fxml")!!
+        val file = javaClass.classLoader.getResource("views/main-menu-view.fxml")!!
         val loader = FXMLLoader()
         loader.location = file
         val pane = loader.load<Pane>()
-        val controller = loader.getController<ScoutingController>()
+        //val controller = loader.getController<ScoutingController>()
         val scene = Scene(pane, 1280.0, 720.0)
-        controller.gameDef = GameDef2018
+        //controller.gameDef = GameDef2018
 
         primaryStage.scene = scene
         /*primaryStage.isResizable = false

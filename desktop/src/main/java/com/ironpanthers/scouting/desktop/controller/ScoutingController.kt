@@ -31,9 +31,6 @@ class ScoutingController {
     @FXML private lateinit var endgameStates: VBox
     @FXML private lateinit var btnStart: Button
     @FXML private lateinit var btnStop: Button
-    //@FXML private lateinit var btnFieldError: Button
-
-    //private val eventButtons: MutableList<Button> = mutableListOf()
 
     private val endgameToggle = ToggleGroup()
     private var startTime: Long = 0

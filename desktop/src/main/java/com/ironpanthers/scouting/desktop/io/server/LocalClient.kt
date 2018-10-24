@@ -5,6 +5,7 @@ import com.ironpanthers.scouting.io.server.Client
 import org.slf4j.LoggerFactory
 
 class LocalClient : Client() {
+    override val type: String = "Local"
     lateinit var boundClient: LocalStrategy
     override val displayName: String = "Local Client"
 

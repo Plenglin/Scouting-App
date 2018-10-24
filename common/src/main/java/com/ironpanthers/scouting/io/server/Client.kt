@@ -7,6 +7,7 @@ abstract class Client {
     val id = UUID.randomUUID()!!
     abstract val displayName: String
     abstract val connected: Boolean
+    abstract val type: String
 
     var listener: ClientListener? = null
 

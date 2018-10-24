@@ -7,6 +7,7 @@ import java.io.BufferedWriter
 
 class BluetoothClient : Client() {
     override val displayName: String = ""
+    override val type = "Bluetooth"
 
     private lateinit var rx: BufferedReader
     private lateinit var tx: BufferedWriter
