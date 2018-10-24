@@ -8,9 +8,7 @@ import javafx.scene.control.ScrollBar
 import javafx.scene.layout.Pane
 import javafx.scene.text.TextAlignment
 import org.slf4j.LoggerFactory
-import tornadofx.getValue
-import tornadofx.onChange
-import tornadofx.setValue
+import tornadofx.*
 
 class TimelineController {
 
@@ -26,15 +24,16 @@ class TimelineController {
     fun initialize() {
         scrollBar.minProperty().set(-TIMELINE_TEMPORAL_PADDING / MATCH_TIME_SECONDS)
         scrollBar.maxProperty().set(ACTUAL_TIMELINE_LENGTH / MATCH_TIME_SECONDS)
-        scrollBar.visibleAmountProperty().bind(visibleWindowProperty.divide(ACTUAL_TIMELINE_LENGTH))
+        scrollBar.visibleAmountProperty()
+                .bind((visibleWindowProperty / ACTUAL_TIMELINE_LENGTH) * (scrollBar.maxProperty() - scrollBar.minProperty()) + scrollBar.minProperty())
 
         scrollBar.valueProperty().onChange {
             log.debug("dragged scrollbar to t0={}", it)
             redrawMarkings()
         }
         backgroundMarkings.setOnScroll {
-            if (it.isControlDown) {
-                val delta = Math.exp(Math.signum(it.deltaY) * -0.3)
+            if (it.isControlDown && !it.isAltDown && !it.isShiftDown) {
+                val delta = Math.exp(Math.signum(it.deltaY) * -ZOOM_FACTOR)
                 visibleTimeWindow = (visibleTimeWindow * delta).coerceAtMost(ACTUAL_TIMELINE_LENGTH)
                 log.debug("zooming to {}", visibleTimeWindow)
                 labelLayer.prefWidth *= delta
@@ -58,7 +57,7 @@ class TimelineController {
             clearRect(0.0, 0.0, w, h)
 
             getTimeIntervals(w).let { (dt, dp) ->
-                val t0 = scrollBar.value * (MATCH_TIME_SECONDS - visibleTimeWindow)
+                val t0 = scrollBar.value * (ACTUAL_TIMELINE_LENGTH - visibleTimeWindow)
                 val t1 = t0 + visibleTimeWindow
 
                 textAlign = TextAlignment.CENTER
@@ -66,7 +65,7 @@ class TimelineController {
                 if (dp > MAX_USE_MAJOR_PIXEL_OFFSET) {
                     var label = Math.floor(scrollBar.value / dt) * dt  // round to lowest time increment
                     var dx = label.lerp(t0, t1, 0.0, w)  // initial position
-                    log.debug("Not using major/minor pixels: t0={} t1={} dt={} dp={} x0={} l0={}", t0, t1, dt, dp, dx, label)
+                    log.debug("Not using major/minor pixels: t0={} t1={} x0={} l0={} dt={} dp={}", t0, t1, dt, dp, dx, label)
 
                     while (dx < w) {
                         val text = "%.1fs".format(label)
@@ -83,7 +82,7 @@ class TimelineController {
                     var label = Math.floor(scrollBar.value / dtm) * dtm  // round to lowest time increment
                     var dx = label.lerp(t0, t1, 0.0, w)  // initial position
 
-                    log.debug("Will use major/minor pixels: t0={} t1={} dt={} dp={} x0={} l0={}", t0, t1, dt, dp, dx, label)
+                    log.debug("Will use major/minor pixels: t0={} t1={} x0={} l0={} dt={} dp={}", t0, t1, dt, dp, dx, label)
                     var i = 1
                     while (dx < w) {
                         i = if (i == TICK_TIME_DIVISIONS) 1 else i + 1
@@ -118,6 +117,7 @@ class TimelineController {
     }
 
     companion object {
+        const val ZOOM_FACTOR = 0.2
         const val MATCH_TIME_SECONDS = 150.0
         /**
          * Ticks will always be smaller than this
