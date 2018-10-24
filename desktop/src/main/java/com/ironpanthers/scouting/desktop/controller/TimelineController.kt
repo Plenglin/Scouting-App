@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop.controller
 
+import com.ironpanthers.scouting.desktop.lerp
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
@@ -19,9 +20,7 @@ class TimelineController {
 
     private val totalTimeExpression = SimpleDoubleProperty(MATCH_TIME_SECONDS)
     private val visibleWindowProperty = SimpleDoubleProperty(MATCH_TIME_SECONDS)
-    private val maxXExtentProperty = totalTimeExpression.subtract(visibleWindowProperty).multiply(1270 / MATCH_TIME_SECONDS)
 
-    private val maxXExtent by maxXExtentProperty
     private var visibleTimeWindow by visibleWindowProperty
 
     @FXML
@@ -61,18 +60,22 @@ class TimelineController {
         backgroundMarkings.graphicsContext2D.apply {
             clearRect(0.0, 0.0, w, h)
 
-            getTimeIntervals(w).let { (tOffset, pOffset) ->
-                var dx = -maxXExtent * scrollBar.value
-                var label = scrollBar.value
+            getTimeIntervals(w).let { (dt, dp) ->
+                val t0 = scrollBar.value * (MATCH_TIME_SECONDS - visibleTimeWindow)
+                val t1 = t0 + visibleTimeWindow
+
+                var label = Math.floor(scrollBar.value / dt) * dt  // round to lowest time increment
+                var dx = label.lerp(t0, t1, 0.0, w)  // initial position
+
                 textAlign = TextAlignment.CENTER
 
-                log.debug("maxXExtent={} tOffset={} pOffset={} x0={} l0={}", maxXExtent, tOffset, pOffset, dx, label)
+                log.debug("t0={} t1={} dt={} dp={} x0={} l0={}", t0, t1, dt, dp, dx, label)
                 while (dx < pw) {
                     val text = "%.1fs".format(label)
                     log.trace("tick {}: {}", text, dx)
                     fillText(text, dx, h)
-                    dx += pOffset
-                    label += tOffset
+                    dx += dp
+                    label += dt
                     strokeLine(dx, h - 10.0, dx, h - 20.0)
                     strokeLine(dx, 10.0, dx, 20.0)
                 }
@@ -94,7 +97,7 @@ class TimelineController {
 
     companion object {
         const val MATCH_TIME_SECONDS = 150.0
-        const val MAX_TICK_PIXEL_OFFSET = 200
+        const val MAX_TICK_PIXEL_OFFSET = 500
         private val log = LoggerFactory.getLogger(TimelineController::class.java)
     }
 

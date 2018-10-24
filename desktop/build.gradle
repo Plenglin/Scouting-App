@@ -66,6 +66,6 @@ compileTestKotlin {
     }
 }*/
 
-task run(type: JavaExec) {
+task run(type: JavaExec, dependsOn: build) {
     main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
 }

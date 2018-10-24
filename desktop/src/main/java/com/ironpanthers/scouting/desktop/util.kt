@@ -20,8 +20,11 @@ fun KeyCombo.test(event: KeyEvent): Boolean {
             && (event.isControlDown == (modifiers and CTRL != 0))
 }
 
+/**
+ * Takes the number from the range [a1, b1] and scales it to the range [a2, b2]
+ */
 fun Double.lerp(a1: Double, b1: Double, a2: Double, b2: Double): Double {
-    return (b2 - b1) * (this - a1) / (a2 - a1) + a2
+    return (b2 - a2) / (b1 - a1) * (this - a1) + a2
 }
 
 operator fun <T> ReadOnlyProperty<T>.getValue(thisRef: Any?, property: KProperty<*>): T? {
