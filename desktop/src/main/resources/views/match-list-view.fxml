@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ironpanthers.scouting.desktop.controller.MatchListViewController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <TableView>
+        <columns>
+            <TableColumn fx:id="colMatchNumber" text="#"/>
+            <TableColumn fx:id="colRed1" text="Red 1"/>
+            <TableColumn fx:id="colRed2" text="Red 2"/>
+            <TableColumn fx:id="colRed3" text="Red 3"/>
+            <TableColumn fx:id="colBlue1" text="Blue 1"/>
+            <TableColumn fx:id="colBlue2" text="Blue 2"/>
+            <TableColumn fx:id="colBlue3" text="Blue 3"/>
+        </columns>
+    </TableView>
+
+</AnchorPane>

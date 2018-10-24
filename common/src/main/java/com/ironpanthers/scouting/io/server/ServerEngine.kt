@@ -1,6 +1,11 @@
 package com.ironpanthers.scouting.io.server
 
-class ServerEngine {
+object ServerEngine {
 
-    val clients = mutableListOf<Client>()
+    private val clients = mutableListOf<Client>()
+
+    fun attachClient(client: Client) {
+        clients.add(client)
+    }
+
 }

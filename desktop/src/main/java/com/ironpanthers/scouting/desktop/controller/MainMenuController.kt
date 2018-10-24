@@ -2,19 +2,30 @@ package com.ironpanthers.scouting.desktop.controller
 
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
-import javafx.scene.Scene
-import javafx.scene.input.MouseEvent
-import javafx.stage.Stage
+import org.slf4j.LoggerFactory
 
 class MainMenuController {
 
-    fun openServerDialog(mouseEvent: MouseEvent) {
-        val resource = javaClass.classLoader.getResource("views/server-monitor-view.fxml")
-        val root = FXMLLoader.load<Parent>(resource)
-        val stage = Stage()
-        stage.title = "Server Monitor"
-        stage.scene = Scene(root, 450.0, 300.0)
-        stage.show()
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    fun showServerDialog() {
+        log.info("Opening server dialog")
+        Stages.serverMonitor.show()
+    }
+
+    fun startLocalClient() {
+        log.info("Opening local client")
+
+    }
+
+    fun showBluetoothDialog() {
+        log.info("Opening bluetooth dialog")
+        log.warn("Bluetooth not yet implemented!")
+    }
+
+    fun showTCPDialog() {
+        log.info("Opening TCP dialog")
+        log.warn("TCP not yet implemented!")
     }
 
 }

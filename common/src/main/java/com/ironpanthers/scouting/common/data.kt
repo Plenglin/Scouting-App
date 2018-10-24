@@ -34,14 +34,6 @@ data class Team(val number: Int, val name: String)
 
 data class RobotPerformance(val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String)
 
-data class Alliance(val teams: List<RobotPerformance>) {
+data class Alliance(val teams: List<RobotPerformance>)
 
-}
-
-data class Match(val red: Alliance, val blue: Alliance) {
-    val teams: List<RobotPerformance> by lazy { red.teams + blue.teams }
-}
-
-fun main(args: Array<String>) {
-
-}
+data class Match(val number: Int, val red: Alliance, val blue: Alliance)
