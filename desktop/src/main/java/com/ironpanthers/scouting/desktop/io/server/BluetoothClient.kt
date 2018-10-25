@@ -20,8 +20,4 @@ class BluetoothClient : BaseClient() {
         return false
     }
 
-    override fun sendData(obj: Any) {
-        tx.write(marshal(obj))
-    }
-
 }

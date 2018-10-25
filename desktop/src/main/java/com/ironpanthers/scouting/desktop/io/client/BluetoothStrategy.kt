@@ -1,6 +1,7 @@
 package com.ironpanthers.scouting.desktop.io.client
 
 import com.ironpanthers.scouting.common.Match
+import com.ironpanthers.scouting.common.RobotPerformance
 import com.ironpanthers.scouting.io.client.ClientStrategy
 import com.ironpanthers.scouting.io.shared.NoClassNameException
 import com.ironpanthers.scouting.io.shared.marshal
@@ -11,11 +12,13 @@ import java.io.BufferedWriter
 import kotlin.concurrent.thread
 
 class BluetoothStrategy : ClientStrategy {
-    override fun getMatchList(cb: (List<Match>) -> Unit) {
+    override fun sendRobotPerformance(rp: RobotPerformance) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override var client: ClientEngine? = null
+    override fun getMatchList(cb: (List<Match>) -> Unit) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -39,13 +42,9 @@ class BluetoothStrategy : ClientStrategy {
                     continue
                 }
                 log.trace("created object {}", obj)
-                client!!.onReceived(obj)
+                //client!!.onReceived(obj)
             }
         }
-    }
-
-    override fun send(obj: Any) {
-        tx.write(marshal(obj))
     }
 
 }

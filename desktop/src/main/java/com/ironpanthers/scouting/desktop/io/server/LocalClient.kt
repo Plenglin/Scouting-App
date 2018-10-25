@@ -18,13 +18,4 @@ class LocalClient : BaseClient() {
         log.info("Beginning LocalClient")
     }
 
-    override fun sendData(obj: Any) {
-        log.trace("Sending data %s", obj)
-        boundClient.client!!.onReceived(obj)
-    }
-
-    fun onDataReceived(data: Any) {
-        listener?.onReceivedFromClient(this, data)
-    }
-
 }

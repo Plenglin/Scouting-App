@@ -12,7 +12,6 @@ abstract class BaseClient {
     abstract val type: String
 
     abstract fun begin()
-    abstract fun sendData(obj: Any)
 
     val info by lazy { ClientInfo(id, displayName) }
 
