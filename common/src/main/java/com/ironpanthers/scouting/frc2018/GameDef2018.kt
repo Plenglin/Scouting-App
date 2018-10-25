@@ -11,7 +11,7 @@ import com.ironpanthers.scouting.util.SHIFT
 import javafx.fxml.FXMLLoader
 import javafx.scene.input.KeyCode
 
-object GameDef2018 : GameDef("Power Up", "2018", 0) {
+object GameDef2018 : GameDef("Power Up", "2018-power-up", 0) {
 
     init {
         addEventDef("baseline", "Passed Baseline", AUTO, KeyCombo(KeyCode.B))

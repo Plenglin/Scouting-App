@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.io.server
 
-import com.ironpanthers.scouting.common.CompetitionDescription
+import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.MatchRobot
 
 interface DatabaseBackend {
@@ -9,7 +9,7 @@ interface DatabaseBackend {
 
     fun close()
 
-    fun getCompetitionDescription(id: Int, cb: (CompetitionDescription) -> Unit)
+    fun getCompetitionDescription(id: Int, cb: (Competition) -> Unit)
 
     fun updateRobotPerformance(rp: MatchRobot)
 

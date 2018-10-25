@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.controller
 
-import com.ironpanthers.scouting.common.Match
+import com.ironpanthers.scouting.common.MatchDescription
 import javafx.beans.property.SimpleStringProperty
 import javafx.fxml.FXML
 import javafx.scene.control.TableColumn
@@ -8,13 +8,13 @@ import javafx.util.Callback
 
 class MatchListViewController {
 
-    @FXML lateinit var colMatchNumber: TableColumn<Match, String>
-    @FXML lateinit var colRed1: TableColumn<Match, String>
-    @FXML lateinit var colRed2: TableColumn<Match, String>
-    @FXML lateinit var colRed3: TableColumn<Match, String>
-    @FXML lateinit var colBlue1: TableColumn<Match, String>
-    @FXML lateinit var colBlue2: TableColumn<Match, String>
-    @FXML lateinit var colBlue3: TableColumn<Match, String>
+    @FXML lateinit var colMatchNumber: TableColumn<MatchDescription, String>
+    @FXML lateinit var colRed1: TableColumn<MatchDescription, String>
+    @FXML lateinit var colRed2: TableColumn<MatchDescription, String>
+    @FXML lateinit var colRed3: TableColumn<MatchDescription, String>
+    @FXML lateinit var colBlue1: TableColumn<MatchDescription, String>
+    @FXML lateinit var colBlue2: TableColumn<MatchDescription, String>
+    @FXML lateinit var colBlue3: TableColumn<MatchDescription, String>
 
     @FXML
     fun initialize() {

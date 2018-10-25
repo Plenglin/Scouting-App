@@ -1,13 +1,11 @@
 package com.ironpanthers.scouting.desktop.io.server
 
 import com.ironpanthers.scouting.common.*
-import com.ironpanthers.scouting.desktop.SqlScriptRunner
 import com.ironpanthers.scouting.desktop.ioExecutor
 import com.ironpanthers.scouting.io.server.DatabaseBackend
 import org.apache.log4j.PropertyConfigurator
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.InputStreamReader
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -34,7 +32,7 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
         conn.close()
     }
 
-    override fun getCompetitionDescription(id: Int, cb: (CompetitionDescription) -> Unit) {
+    override fun getCompetitionDescription(id: Int, cb: (Competition) -> Unit) {
         ioExecutor.execute {
             val st = conn.prepareStatement(STM_GET_COMP_DESC)
             st.setInt(1, id)
@@ -67,11 +65,11 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
 
             val matches = matchMap
                     .map { (id, desc) ->
-                        MatchDescription(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
+                        Match(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
                     }
                     .sortedBy { it.number }
             st.close()
-            cb(CompetitionDescription(id, date, gameDef, matches))
+            cb(Competition(id, date, gameDef, matches))
         }
     }
 

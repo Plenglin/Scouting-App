@@ -35,6 +35,11 @@ class ScoutingSystemApplication : Application() {
             val root = FXMLLoader.load<Parent>(cl.getResource("views/server-monitor-view.fxml"))
             setScene(Scene(root))
         }
+        Stages.competitionSelection = Stage().apply {
+            title = "Select competition..."
+            val root = FXMLLoader.load<Parent>(cl.getResource("views/competition-selection-view.fxml"))
+            setScene(Scene(root))
+        }
     }
 }
 

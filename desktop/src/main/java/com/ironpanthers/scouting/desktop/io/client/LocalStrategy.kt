@@ -1,7 +1,6 @@
 package com.ironpanthers.scouting.desktop.io.client
 
-import com.ironpanthers.scouting.common.CompetitionDescription
-import com.ironpanthers.scouting.common.Match
+import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.MatchRobot
 import com.ironpanthers.scouting.desktop.io.server.LocalClient
 import com.ironpanthers.scouting.io.client.ClientStrategy
@@ -14,7 +13,7 @@ class LocalStrategy : ClientStrategy {
         serverEngine.scheduleAction(UpdateRobotPerformance(rp))
     }
 
-    override fun getCompetitionDescription(cb: (CompetitionDescription) -> Unit) {
+    override fun getCompetitionDescription(cb: (Competition) -> Unit) {
         serverEngine.dbBackend.getCompetitionDescription(serverEngine.compId, cb)
     }
 

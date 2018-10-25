@@ -37,10 +37,10 @@ data class MatchRobot(val id: Int, val team: Int, val start: Long, val events: L
 
 data class Alliance(val color: TeamColor, val teams: List<MatchRobot>)
 
-data class Match(val number: Int, val red: Alliance, val blue: Alliance)
+data class MatchDescription(val number: Int, val red: Alliance, val blue: Alliance)
 
-data class Competition(val id: Int, val date: Date, val gameDef: String)
+data class CompetitionDescription(val id: Int, val date: Date, val gameDef: String)
 
-data class CompetitionDescription(val id: Int, val date: Date, val gameDef: String, val matches: List<MatchDescription>)
+data class Competition(val id: Int, val date: Date, val gameDef: String, val matches: List<Match>)
 
-data class MatchDescription(val id: Int, val number: Int, val red: List<Int>, val blue: List<Int>)
+data class Match(val id: Int, val number: Int, val red: List<Int>, val blue: List<Int>)
