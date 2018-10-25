@@ -1,4 +1,4 @@
-insert into Competition(id, date, game_def) values (1, '2018-10-24 00:00:00.000', '2018-power-up');
+insert into Competition(id, name, date, game_def) values (1, 'test competition', '2018-10-24 00:00:00.000', '2018-power-up');
 
 insert into FRCMatch(competition, number, time) VALUES (1, 1, 10);
 insert into FRCMatch(competition, number, time) VALUES (1, 2, 20);

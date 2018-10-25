@@ -6,18 +6,21 @@ const val TABLE_ROBOT = "MatchRobot"
 const val TABLE_COMPETITION = "Competition"
 const val TABLE_ROBOT_EVENT = "RobotEvent"
 
-const val STM_GET_COMP_DESC = "SELECT date, game_def, NULL, NULL FROM $TABLE_COMPETITION WHERE id = ? " +
+const val STM_GET_COMP_INFO = "SELECT date, game_def, NULL, NULL FROM $TABLE_COMPETITION WHERE id = ? " +
         "UNION ALL " +
         "SELECT $TABLE_MATCH.id, $TABLE_MATCH.number, $TABLE_ALLIANCE.color, $TABLE_ROBOT.team FROM $TABLE_ROBOT " +
         "INNER JOIN $TABLE_ALLIANCE ON $TABLE_ROBOT.alliance = $TABLE_ALLIANCE.id " +
         "INNER JOIN $TABLE_MATCH ON $TABLE_ALLIANCE.match = $TABLE_MATCH.id " +
         "WHERE $TABLE_MATCH.competition = ? "
 
+const val STM_LIST_COMP_DESC = "SELECT id, name, date, game_def FROM $TABLE_COMPETITION"
+
 val STM_INITIALIZE = listOf(
         "PRAGMA foreign_keys = ON;",
 
         """CREATE TABLE IF NOT EXISTS "Competition" (
         `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+        `name` TEXT,
         `date` TEXT,
         `game_def` TEXT
         );""",

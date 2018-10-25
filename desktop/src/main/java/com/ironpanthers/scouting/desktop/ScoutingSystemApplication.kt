@@ -4,7 +4,6 @@ import com.ironpanthers.scouting.desktop.controller.Stages
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
-import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
@@ -18,27 +17,30 @@ class ScoutingSystemApplication : Application() {
         val scene = Scene(pane)
 
         primaryStage.scene = scene
-        primaryStage.show()
-        primaryStage.setOnCloseRequest {
-            Platform.exit()
-        }
 
         Stages.mainMenu = primaryStage
         Stages.bluetoothDialog = Stage().apply {
             title = "Connect to Bluetooth Server..."
-            val file = cl.getResource("views/bluetooth-dialog-view.fxml")!!
+            val url = cl.getResource("views/bluetooth-dialog-view.fxml")!!
             val root = FXMLLoader.load<Parent>(file)
             setScene(Scene(root))
         }
         Stages.serverMonitor = Stage().apply {
             title = "Server Monitor"
-            val root = FXMLLoader.load<Parent>(cl.getResource("views/server-monitor-view.fxml"))
+            val url = cl.getResource("views/server-monitor-view.fxml")!!
+            val root = FXMLLoader.load<Parent>(url)
             setScene(Scene(root))
         }
         Stages.competitionSelection = Stage().apply {
             title = "Select competition..."
-            val root = FXMLLoader.load<Parent>(cl.getResource("views/competition-selection-view.fxml"))
+            val url = cl.getResource("views/competition-selection-dialog.fxml")!!
+            val root = FXMLLoader.load<Parent>(url)
             setScene(Scene(root))
+        }
+
+        primaryStage.show()
+        primaryStage.setOnCloseRequest {
+            Platform.exit()
         }
     }
 }

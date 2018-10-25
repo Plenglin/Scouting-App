@@ -52,7 +52,7 @@ class ServerMonitorController {
             SimpleBooleanProperty(it.value.connected)
         }
         btnSelectCompetition.setOnMouseClicked {
-            (btnSelectCompetition.scene as Stage).hide()
+            btnSelectCompetition.scene
             Stages.competitionSelection.showAndWait()
         }
     }

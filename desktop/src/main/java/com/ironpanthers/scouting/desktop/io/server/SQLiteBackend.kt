@@ -32,9 +32,15 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
         conn.close()
     }
 
+    override fun listCompetitions(cb: (CompetitionDescription) -> Unit) {
+        ioExecutor.execute {
+            conn.prepareStatement(STM_LIST_COMP_DESC)
+        }
+    }
+
     override fun getCompetitionDescription(id: Int, cb: (Competition) -> Unit) {
         ioExecutor.execute {
-            val st = conn.prepareStatement(STM_GET_COMP_DESC)
+            val st = conn.prepareStatement(STM_GET_COMP_INFO)
             st.setInt(1, id)
             st.setInt(2, id)
 

@@ -15,15 +15,18 @@
     <center>
         <TableView fx:id="listCompetitions">
             <columns>
-                <TableColumn fx:id="colName" text="Name" />
-                <TableColumn fx:id="colDate" text="Date" />
-                <TableColumn fx:id="colMatchCount" text="Matches" />
-                <TableColumn fx:id="colGameDef" text="Game" />
+                <TableColumn fx:id="colName" text="Name"/>
+                <TableColumn fx:id="colDate" text="Date"/>
+                <TableColumn fx:id="colMatchCount" text="Matches"/>
+                <TableColumn fx:id="colGameDef" text="Game"/>
             </columns>
         </TableView>
     </center>
     <bottom>
-        <Button fx:id="btnSubmit"/>
+        <HBox alignment="BOTTOM_RIGHT">
+            <Button text="Create" fx:id="btnCreate"/>
+            <Button text="Submit" fx:id="btnSubmit"/>
+        </HBox>
     </bottom>
 
 </BorderPane>
