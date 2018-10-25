@@ -1,12 +1,12 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE "Competition" (
+CREATE TABLE IF NOT EXISTS "Competition" (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `date` TEXT,
   `game_def` TEXT
 );
 
-CREATE TABLE "FRCMatch" (
+CREATE TABLE IF NOT EXISTS "FRCMatch" (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `competition` INTEGER NOT NULL,
   `number` INTEGER NOT NULL,
@@ -16,14 +16,14 @@ CREATE TABLE "FRCMatch" (
   FOREIGN KEY(`competition`) REFERENCES `Competition`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE `Alliance` (
+CREATE TABLE IF NOT EXISTS `Alliance` (
   `id`	INTEGER PRIMARY KEY AUTOINCREMENT,
   `match`	INTEGER NOT NULL,
   `color`	TEXT NOT NULL CHECK(color = 'RED' OR color = 'BLUE'),
   FOREIGN KEY(`match`) REFERENCES `FRCMatch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "MatchRobot" (
+CREATE TABLE IF NOT EXISTS "MatchRobot" (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `alliance` INTEGER NOT NULL,
   `team` INTEGER NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE "MatchRobot" (
   FOREIGN KEY(`alliance`) REFERENCES `Alliance`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "RobotEvent" (
+CREATE TABLE IF NOT EXISTS "RobotEvent" (
   `time` INTEGER NOT NULL,
   `robot` INTEGER NOT NULL,
   `event_type` TEXT NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE "RobotEvent" (
   FOREIGN KEY(`robot`) REFERENCES `MatchRobot`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TRIGGER create_alliances_when_insert_match AFTER INSERT ON FRCMatch
+CREATE TRIGGER IF NOT EXISTS create_alliances_when_insert_match AFTER INSERT ON FRCMatch
 BEGIN
   INSERT INTO Alliance("match", color) VALUES (NEW.id, "RED"), (NEW.id, "BLUE");
 END;

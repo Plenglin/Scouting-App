@@ -1,22 +1,31 @@
 package com.ironpanthers.scouting.desktop.io.server
 
 import com.ironpanthers.scouting.common.*
+import com.ironpanthers.scouting.desktop.SqlScriptRunner
 import com.ironpanthers.scouting.desktop.ioExecutor
 import com.ironpanthers.scouting.io.server.DatabaseBackend
 import org.apache.log4j.PropertyConfigurator
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.InputStreamReader
 import java.sql.Connection
 import java.sql.DriverManager
 
 class SQLiteBackend(private val url: String) : DatabaseBackend {
 
-    private lateinit var conn: Connection
+    lateinit var conn: Connection
+        private set
+
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun initialize() {
         log.info("Initializing connection to {}", url)
         conn = DriverManager.getConnection(url)
+
+        val cl = javaClass.classLoader
+
+        val runner = SqlScriptRunner(conn, true)
+        runner.runScript(InputStreamReader(cl.getResourceAsStream("sql/create_tables.sql")))
     }
 
     override fun close() {
@@ -26,13 +35,13 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
 
     override fun getCompetitionDescription(id: Int, cb: (CompetitionDescription) -> Unit) {
         ioExecutor.execute {
-            val stm = conn.prepareStatement(STM_GET_COMP_DESC)
-            stm.setInt(1, id)
-            stm.setInt(2, id)
+            val st = conn.prepareStatement(STM_GET_COMP_DESC)
+            st.setInt(1, id)
+            st.setInt(2, id)
 
-            log.debug("executing query {}", stm)
+            log.debug("executing query {}", st)
 
-            val results = stm.executeQuery()
+            val results = st.executeQuery()
             results.next()
             val date = results.getDate(1)
             val gameDef = results.getString(2)
@@ -55,9 +64,12 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
 
             log.debug("matchMap={}", matchMap)
 
-            val matches = matchMap.map { (id, desc) ->
-                MatchDescription(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
-            }
+            val matches = matchMap
+                    .map { (id, desc) ->
+                        MatchDescription(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
+                    }
+                    .sortedBy { it.number }
+            st.close()
             cb(CompetitionDescription(id, date, gameDef, matches))
         }
     }
@@ -80,8 +92,5 @@ fun main(args: Array<String>) {
     val path = File(".", "test.sqlite3").canonicalPath
     val b = SQLiteBackend("jdbc:sqlite:$path")
     b.initialize()
-    b.getCompetitionDescription(1) {
-        println(it)
-        b.close()
-    }
+
 }
