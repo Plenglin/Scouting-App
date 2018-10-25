@@ -22,7 +22,6 @@ class TestSQLiteBackend {
         backend = SQLiteBackend("jdbc:sqlite::memory:")
         backend.initialize()
 
-        println("asdf")
         val runner = SqlScriptRunner(backend.conn, false)
         runner.runScript(InputStreamReader(cl.getResourceAsStream("sql/insert_test.sql")))
     }
