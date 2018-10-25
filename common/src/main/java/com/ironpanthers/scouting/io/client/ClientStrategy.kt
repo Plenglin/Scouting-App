@@ -1,10 +1,10 @@
 package com.ironpanthers.scouting.io.client
 
-import com.ironpanthers.scouting.common.Match
-import com.ironpanthers.scouting.common.RobotPerformance
+import com.ironpanthers.scouting.common.CompetitionDescription
+import com.ironpanthers.scouting.common.MatchRobot
 
 
 interface ClientStrategy {
-    fun getMatchList(cb: (List<Match>) -> Unit)
-    fun sendRobotPerformance(rp: RobotPerformance)
+    fun getCompetitionDescription(cb: (CompetitionDescription) -> Unit)
+    fun sendRobotPerformance(rp: MatchRobot)
 }

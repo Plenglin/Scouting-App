@@ -14,9 +14,6 @@ enum class TeamColor {
     RED, BLUE
 }
 
-enum class MatchResult {
-    RED_VICTORY, BLUE_VICTORY, DRAW, OTHER
-}
 
 data class RobotEventDef(val id: String, val name: String, val stage: Int, val keyCombo: KeyCombo, val maxTimes: Int = -1, val icon: String? = null) {
     fun createEventInstance(team: Int): RobotEvent {
@@ -36,10 +33,14 @@ data class Team(val number: Int, val name: String)
 /**
  * A description of all the things a robot did during a match.
  */
-data class RobotPerformance(val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String) {
-    val uuid = UUID.randomUUID()
-}
+data class MatchRobot(val id: Int, val team: Int, val start: Long, val events: List<RobotEvent>, val endState: String)
 
-data class Alliance(val teams: List<RobotPerformance>)
+data class Alliance(val color: TeamColor, val teams: List<MatchRobot>)
 
 data class Match(val number: Int, val red: Alliance, val blue: Alliance)
+
+data class Competition(val id: Int, val date: Date, val gameDef: String)
+
+data class CompetitionDescription(val id: Int, val date: Date, val gameDef: String, val matches: List<MatchDescription>)
+
+data class MatchDescription(val id: Int, val number: Int, val red: List<Int>, val blue: List<Int>)

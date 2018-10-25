@@ -1,36 +1,35 @@
-BEGIN TRANSACTION;
-
-CREATE TABLE IF NOT EXISTS "Competition" (
-  `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE "Competition" (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `date` TEXT,
   `game_def` TEXT
 );
 
-CREATE TABLE IF NOT EXISTS "FRCMatch" (
+CREATE TABLE "FRCMatch" (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `competition` INTEGER NOT NULL,
-  `number` INTEGER,
+  `number` INTEGER NOT NULL,
   `time` INTEGER,
 
-  PRIMARY KEY(`number`, `competition`),
+  UNIQUE(`number`, `competition`),
   FOREIGN KEY(`competition`) REFERENCES `Competition`(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `Alliance` (
-  `id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE `Alliance` (
+  `id`	INTEGER PRIMARY KEY AUTOINCREMENT,
   `match`	INTEGER NOT NULL,
-  `color`	TEXT NOT NULL CHECK(color = 'red' OR color = 'blue'),
-  FOREIGN KEY(`match`) REFERENCES `FRCMatch`(`number`)
+  `color`	TEXT NOT NULL CHECK(color = 'RED' OR color = 'BLUE'),
+  FOREIGN KEY(`match`) REFERENCES `FRCMatch`(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS "MatchRobot" (
-  `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE "MatchRobot" (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `alliance` INTEGER NOT NULL,
   `team` INTEGER NOT NULL,
 
   FOREIGN KEY(`alliance`) REFERENCES `Alliance`(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS "RobotEvent" (
+CREATE TABLE "RobotEvent" (
   `time` INTEGER NOT NULL,
   `robot` INTEGER NOT NULL,
   `event_type` TEXT NOT NULL,
@@ -39,4 +38,8 @@ CREATE TABLE IF NOT EXISTS "RobotEvent" (
   FOREIGN KEY(`robot`) REFERENCES `MatchRobot`(`id`)
 );
 
-COMMIT;
+CREATE TRIGGER create_alliances_when_insert_match AFTER INSERT ON FRCMatch
+BEGIN
+  INSERT INTO Alliance("match", color) VALUES (NEW.id, "RED"), (NEW.id, "BLUE");
+  END;
+END;

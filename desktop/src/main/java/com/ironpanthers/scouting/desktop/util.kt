@@ -2,7 +2,6 @@ package com.ironpanthers.scouting.desktop
 
 import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.frc2018.GameDef2018
-import com.ironpanthers.scouting.io.server.ClientInfo
 import com.ironpanthers.scouting.util.ALT
 import com.ironpanthers.scouting.util.CTRL
 import com.ironpanthers.scouting.util.KeyCombo
@@ -12,14 +11,15 @@ import javafx.beans.property.ReadOnlyProperty
 import javafx.beans.value.WritableValue
 import javafx.fxml.FXMLLoader
 import javafx.scene.Node
-import javafx.scene.input.KeyEvent
-import kotlin.reflect.KProperty
 import javafx.scene.Parent
-import javafx.scene.control.ListCell
-import javafx.scene.control.TableRow
-import java.util.ArrayList
+import javafx.scene.input.KeyEvent
+import java.util.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import kotlin.reflect.KProperty
 
 
+val ioExecutor = Executors.newCachedThreadPool()
 
 fun KeyCombo.test(event: KeyEvent): Boolean {
     return event.code == keyCode

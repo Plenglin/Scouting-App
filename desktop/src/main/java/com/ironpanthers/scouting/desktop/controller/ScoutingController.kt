@@ -3,7 +3,7 @@ package com.ironpanthers.scouting.desktop.controller
 import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.common.RobotEventDef
-import com.ironpanthers.scouting.common.RobotPerformance
+import com.ironpanthers.scouting.common.MatchRobot
 import com.ironpanthers.scouting.desktop.getFXViewData
 import com.ironpanthers.scouting.desktop.test
 import com.ironpanthers.scouting.util.UNDO
@@ -13,7 +13,6 @@ import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
-import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -62,9 +61,9 @@ class ScoutingController {
         }
     }
 
-    fun createRobotPerformance(): RobotPerformance {
-        return RobotPerformance(team, startTime, events.sortedBy { it.time }, endgameToggle.selectedToggle.userData as String)
-    }
+    /*fun createRobotPerformance(): MatchRobot {
+        return MatchRobot(team, startTime, events.sortedBy { it.time }, endgameToggle.selectedToggle.userData as String)
+    }*/
 
     var gameDef: GameDef? = null
         set(value) {

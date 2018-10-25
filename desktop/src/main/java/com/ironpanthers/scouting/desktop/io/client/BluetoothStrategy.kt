@@ -1,10 +1,10 @@
 package com.ironpanthers.scouting.desktop.io.client
 
+import com.ironpanthers.scouting.common.CompetitionDescription
 import com.ironpanthers.scouting.common.Match
-import com.ironpanthers.scouting.common.RobotPerformance
+import com.ironpanthers.scouting.common.MatchRobot
 import com.ironpanthers.scouting.io.client.ClientStrategy
 import com.ironpanthers.scouting.io.shared.NoClassNameException
-import com.ironpanthers.scouting.io.shared.marshal
 import com.ironpanthers.scouting.io.shared.unmarshal
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
@@ -12,13 +12,14 @@ import java.io.BufferedWriter
 import kotlin.concurrent.thread
 
 class BluetoothStrategy : ClientStrategy {
-    override fun sendRobotPerformance(rp: RobotPerformance) {
+    override fun getCompetitionDescription(cb: (CompetitionDescription) -> Unit) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getMatchList(cb: (List<Match>) -> Unit) {
+    override fun sendRobotPerformance(rp: MatchRobot) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
     private val log = LoggerFactory.getLogger(javaClass)
 
