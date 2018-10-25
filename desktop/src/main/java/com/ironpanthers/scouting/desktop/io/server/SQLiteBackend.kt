@@ -22,10 +22,11 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
         log.info("Initializing connection to {}", url)
         conn = DriverManager.getConnection(url)
 
-        val cl = javaClass.classLoader
-
-        val runner = SqlScriptRunner(conn, true)
-        runner.runScript(InputStreamReader(cl.getResourceAsStream("sql/create_tables.sql")))
+        log.debug("creating tables")
+        STM_INITIALIZE.forEach {
+            log.debug("execute: {}", it)
+            conn.createStatement().execute(it)
+        }
     }
 
     override fun close() {

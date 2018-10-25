@@ -9,13 +9,14 @@ import org.junit.Before
 import org.junit.Test
 import java.io.FileReader
 import java.io.InputStreamReader
+import java.util.concurrent.CountDownLatch
 
 class TestSQLiteBackend {
 
     lateinit var backend: SQLiteBackend
 
     @Before
-    fun setup() {
+    fun setUp() {
         val cl = javaClass.classLoader
         PropertyConfigurator.configure(cl.getResource("log4j-test.properties"))
         backend = SQLiteBackend("jdbc:sqlite::memory:")
@@ -27,19 +28,24 @@ class TestSQLiteBackend {
     }
 
     @After
-    fun teardown() {
+    fun tearDown() {
         backend.close()
     }
 
     @Test
     fun testCompDesc() {
+        val latch = CountDownLatch(2)
         backend.getCompetitionDescription(1) {
             Assert.assertEquals(it.id, 1)
 
-            Assert.assertEquals(it.matches[0].red[0], 1)
-            Assert.assertEquals(it.matches[2].blue[2], 60)
+            Assert.assertTrue(it.matches[0].red.contains(1))
+            Assert.assertTrue(it.matches[2].blue.contains(60))
             Assert.assertEquals(it.gameDef, "2018-power-up")
-        }
 
+            latch.countDown()
+            latch.await()
+        }
+        latch.countDown()
+        latch.await()
     }
 }
