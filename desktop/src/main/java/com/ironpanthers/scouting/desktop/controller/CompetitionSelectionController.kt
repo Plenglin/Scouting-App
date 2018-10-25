@@ -2,8 +2,9 @@ package com.ironpanthers.scouting.desktop.controller
 
 import com.ironpanthers.scouting.common.CompetitionDescription
 import javafx.fxml.FXML
-import javafx.scene.control.*
-import tornadofx.singleAssign
+import javafx.scene.control.Button
+import javafx.scene.control.SelectionMode
+import javafx.scene.control.TableView
 
 class CompetitionSelectionController {
 

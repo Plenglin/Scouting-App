@@ -10,7 +10,7 @@ interface DatabaseBackend {
 
     fun close()
 
-    fun listCompetitions(cb: (CompetitionDescription) -> Unit)
+    fun listCompetitions(cb: (List<CompetitionDescription>) -> Unit)
 
     fun getCompetitionDescription(id: Int, cb: (Competition) -> Unit)
 

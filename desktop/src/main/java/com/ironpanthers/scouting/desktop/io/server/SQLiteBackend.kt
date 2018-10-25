@@ -5,6 +5,7 @@ import com.ironpanthers.scouting.desktop.ioExecutor
 import com.ironpanthers.scouting.io.server.DatabaseBackend
 import org.apache.log4j.PropertyConfigurator
 import org.slf4j.LoggerFactory
+import tornadofx.multi
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
@@ -32,9 +33,21 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
         conn.close()
     }
 
-    override fun listCompetitions(cb: (CompetitionDescription) -> Unit) {
+    override fun listCompetitions(cb: (List<CompetitionDescription>) -> Unit) {
         ioExecutor.execute {
-            conn.prepareStatement(STM_LIST_COMP_DESC)
+            val results = conn.prepareStatement(STM_LIST_COMP_DESC).executeQuery()
+            val out = mutableListOf<CompetitionDescription>()
+            while (results.next()) {
+                val id = results.getInt(1)
+                val name = results.getString(2)
+                val date = results.getDate(3)
+                val gameDef = results.getString(4)
+
+                log.trace("listCompetitions: id={} name={} date={} gameDef={}", id, name, date, gameDef)
+
+                out.add(CompetitionDescription(id, name, date, gameDef))
+            }
+            cb(out)
         }
     }
 
@@ -44,14 +57,14 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
             st.setInt(1, id)
             st.setInt(2, id)
 
-            log.debug("executing query {}", st)
+            log.debug("getCompetitionDescription execute: {}", STM_GET_COMP_INFO)
 
             val results = st.executeQuery()
             results.next()
             val date = results.getDate(1)
             val gameDef = results.getString(2)
 
-            log.debug("date={} gameDef={}", date, gameDef)
+            log.debug("getCompetitionDescription: date={} gameDef={}", date, gameDef)
 
             val matchMap = mutableMapOf<Int, TempMatchDesc>()
 
@@ -61,13 +74,13 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
                 val color = results.getString(3)
                 val team = results.getInt(4)
 
-                log.trace("matchId={} matchNum={} color={} team={}", matchId, matchNum, color, team)
+                log.trace("getCompetitionDescription: matchId={} matchNum={} color={} team={}", matchId, matchNum, color, team)
 
                 val desc = matchMap.getOrPut(matchId) { TempMatchDesc(matchNum) }
                 desc.alliances[color]!!.add(team)
             }
 
-            log.debug("matchMap={}", matchMap)
+            log.debug("getCompetitionDescription: matchMap={}", matchMap)
 
             val matches = matchMap
                     .map { (id, desc) ->
