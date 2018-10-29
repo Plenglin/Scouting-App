@@ -39,7 +39,7 @@ data class Alliance(val color: TeamColor, val teams: List<MatchRobot>)
 
 data class MatchDescription(val number: Int, val red: Alliance, val blue: Alliance)
 
-data class CompetitionDescription(val id: Int, val name: String, val date: Date, val gameDef: String)
+data class CompetitionDescription(val id: Int, val name: String, val date: Date, val gameDef: String, val matchCount: Int)
 
 data class Competition(val id: Int, val date: Date, val gameDef: String, val matches: List<Match>)
 

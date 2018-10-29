@@ -1,6 +1,9 @@
 package com.ironpanthers.scouting.desktop
 
+import com.ironpanthers.scouting.desktop.controller.ServerMonitorController
 import com.ironpanthers.scouting.desktop.controller.Stages
+import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
+import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
@@ -25,18 +28,7 @@ class ScoutingSystemApplication : Application() {
             val root = FXMLLoader.load<Parent>(file)
             setScene(Scene(root))
         }
-        Stages.serverMonitor = Stage().apply {
-            title = "Server Monitor"
-            val url = cl.getResource("views/server-monitor-view.fxml")!!
-            val root = FXMLLoader.load<Parent>(url)
-            setScene(Scene(root))
-        }
-        Stages.competitionSelection = Stage().apply {
-            title = "Select competition..."
-            val url = cl.getResource("views/competition-selection-dialog.fxml")!!
-            val root = FXMLLoader.load<Parent>(url)
-            setScene(Scene(root))
-        }
+        Stages.serverMonitor = ServerMonitorController.create().first
 
         primaryStage.show()
         primaryStage.setOnCloseRequest {
@@ -47,5 +39,6 @@ class ScoutingSystemApplication : Application() {
 
 fun main(args: Array<String>) {
     PropertyConfigurator.configure("log4j.properties")
+    ServerEngine.dbBackend = SQLiteBackend("jdbc:sqlite:data.sqlite3")
     Application.launch(ScoutingSystemApplication::class.java, *args)
 }

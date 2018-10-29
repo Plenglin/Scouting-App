@@ -4,11 +4,7 @@ import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.CompetitionDescription
 import com.ironpanthers.scouting.common.MatchRobot
 
-interface DatabaseBackend {
-
-    fun initialize()
-
-    fun close()
+interface DatabaseBackend : AutoCloseable {
 
     fun listCompetitions(cb: (List<CompetitionDescription>) -> Unit)
 

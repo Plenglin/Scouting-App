@@ -1,23 +1,19 @@
 package com.ironpanthers.scouting.desktop.io.server
 
 import com.ironpanthers.scouting.common.*
-import com.ironpanthers.scouting.desktop.ioExecutor
+import com.ironpanthers.scouting.desktop.util.ioExecutor
 import com.ironpanthers.scouting.io.server.DatabaseBackend
-import org.apache.log4j.PropertyConfigurator
 import org.slf4j.LoggerFactory
-import tornadofx.multi
-import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 
-class SQLiteBackend(private val url: String) : DatabaseBackend {
+class SQLiteBackend(url: String) : DatabaseBackend {
 
-    lateinit var conn: Connection
-        private set
+    val conn: Connection
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun initialize() {
+    init {
         log.info("Initializing connection to {}", url)
         conn = DriverManager.getConnection(url)
 
@@ -45,7 +41,7 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
 
                 log.trace("listCompetitions: id={} name={} date={} gameDef={}", id, name, date, gameDef)
 
-                out.add(CompetitionDescription(id, name, date, gameDef))
+                out.add(CompetitionDescription(id, name, date, gameDef, 0))
             }
             cb(out)
         }
@@ -56,8 +52,7 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
             val st = conn.prepareStatement(STM_GET_COMP_INFO)
             st.setInt(1, id)
             st.setInt(2, id)
-
-            log.debug("getCompetitionDescription execute: {}", STM_GET_COMP_INFO)
+            st.setInt(3, id)
 
             val results = st.executeQuery()
             results.next()
@@ -73,8 +68,9 @@ class SQLiteBackend(private val url: String) : DatabaseBackend {
                 val matchNum = results.getInt(2)
                 val color = results.getString(3)
                 val team = results.getInt(4)
+                val count = results.getInt(5)
 
-                log.trace("getCompetitionDescription: matchId={} matchNum={} color={} team={}", matchId, matchNum, color, team)
+                log.trace("getCompetitionDescription: matchId={} matchNum={} color={} team={} count={}", matchId, matchNum, color, team, count)
 
                 val desc = matchMap.getOrPut(matchId) { TempMatchDesc(matchNum) }
                 desc.alliances[color]!!.add(team)
@@ -103,12 +99,4 @@ private class TempMatchDesc(val number: Int) {
             "RED" to mutableListOf(),
             "BLUE" to mutableListOf()
     )
-}
-
-fun main(args: Array<String>) {
-    PropertyConfigurator.configure("log4j.properties")
-    val path = File(".", "test.sqlite3").canonicalPath
-    val b = SQLiteBackend("jdbc:sqlite:$path")
-    b.initialize()
-
 }

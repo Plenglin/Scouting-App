@@ -10,18 +10,17 @@ object ServerEngine {
     private val clients = mutableListOf<BaseClient>()
     private val queue: LinkedBlockingQueue<ServerAction> = LinkedBlockingQueue()
 
-    lateinit var dbBackend: DatabaseBackend
     private val log = LoggerFactory.getLogger(javaClass)
     private lateinit var thread: Thread
-    var compId: Int = 0
 
-    fun start(compId: Int) {
-        this.compId = compId
+    lateinit var dbBackend: DatabaseBackend
+    var compId: Int = -1
+
+    fun start() {
         thread = thread(isDaemon = true) {
             try {
                 log.info("Server thread starting")
 
-                dbBackend.initialize()
                 while (true) {
                     val action = queue.take()
                     log.debug("Processing action {}", action)

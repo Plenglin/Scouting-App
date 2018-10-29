@@ -17,11 +17,14 @@ apply plugin: 'idea'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'no.tornado:tornadofx:1.7.17'
+
+    compile 'org.jetbrains.exposed:exposed:0.11.1'
 
     // https://mvnrepository.com/artifact/org.controlsfx/controlsfx
     api group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
@@ -51,7 +54,7 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.6"
+        jvmTarget = "1.8"
     }
 }
 

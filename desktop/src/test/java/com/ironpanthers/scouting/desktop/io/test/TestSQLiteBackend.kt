@@ -20,7 +20,6 @@ class TestSQLiteBackend {
         val cl = javaClass.classLoader
         PropertyConfigurator.configure(cl.getResource("log4j-test.properties"))
         db = SQLiteBackend("jdbc:sqlite::memory:")
-        db.initialize()
 
         val runner = SqlScriptRunner(db.conn, false)
         runner.runScript(InputStreamReader(cl.getResourceAsStream("sql/insert_test.sql")))
@@ -36,7 +35,7 @@ class TestSQLiteBackend {
         val latch = CountDownLatch(1)
         db.listCompetitions {
             Assert.assertEquals(
-                    CompetitionDescription(1, "test competition", java.sql.Date.valueOf("2018-10-24"), "2018-power-up"),
+                    CompetitionDescription(1, "test competition", java.sql.Date.valueOf("2018-10-24"), "2018-power-up", 4),
                     it[0]
             )
             latch.countDown()

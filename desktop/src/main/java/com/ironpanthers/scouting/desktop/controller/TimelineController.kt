@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.controller
 
-import com.ironpanthers.scouting.desktop.lerp
+import com.ironpanthers.scouting.desktop.util.lerp
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas

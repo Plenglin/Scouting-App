@@ -2,7 +2,7 @@ package com.ironpanthers.scouting.desktop.controller.frc2018
 
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.desktop.controller.RobotEventPanelController
-import com.ironpanthers.scouting.desktop.getAllNodes
+import com.ironpanthers.scouting.desktop.util.getAllNodes
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.layout.Pane

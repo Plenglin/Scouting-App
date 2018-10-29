@@ -3,9 +3,8 @@ package com.ironpanthers.scouting.desktop.controller
 import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.common.RobotEventDef
-import com.ironpanthers.scouting.common.MatchRobot
-import com.ironpanthers.scouting.desktop.getFXViewData
-import com.ironpanthers.scouting.desktop.test
+import com.ironpanthers.scouting.desktop.util.getFXViewData
+import com.ironpanthers.scouting.desktop.util.test
 import com.ironpanthers.scouting.util.UNDO
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXML

@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop
+package com.ironpanthers.scouting.desktop.util
 
 import com.ironpanthers.scouting.common.GameDef
 import com.ironpanthers.scouting.frc2018.GameDef2018
