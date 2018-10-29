@@ -49,7 +49,9 @@ class CompetitionCreationWizard : View() {
                         }
                         row {
                             label("Date")
-                            datepicker { LocalDate.now() }
+                            datepicker {
+                                value = LocalDate.now()
+                            }
                         }
                     }
 

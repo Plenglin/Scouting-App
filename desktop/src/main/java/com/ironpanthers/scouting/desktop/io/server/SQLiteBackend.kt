@@ -52,14 +52,15 @@ class SQLiteBackend(url: String) : DatabaseBackend {
             val st = conn.prepareStatement(STM_GET_COMP_INFO)
             st.setInt(1, id)
             st.setInt(2, id)
-            st.setInt(3, id)
+            //st.setInt(3, id)
 
             val results = st.executeQuery()
             results.next()
             val date = results.getDate(1)
             val gameDef = results.getString(2)
+            val count = results.getInt(3)
 
-            log.debug("getCompetitionDescription: date={} gameDef={}", date, gameDef)
+            log.debug("getCompetitionDescription: date={} gameDef={} count={}", date, gameDef, count)
 
             val matchMap = mutableMapOf<Int, TempMatchDesc>()
 
@@ -68,9 +69,8 @@ class SQLiteBackend(url: String) : DatabaseBackend {
                 val matchNum = results.getInt(2)
                 val color = results.getString(3)
                 val team = results.getInt(4)
-                val count = results.getInt(5)
 
-                log.trace("getCompetitionDescription: matchId={} matchNum={} color={} team={} count={}", matchId, matchNum, color, team, count)
+                log.trace("getCompetitionDescription: matchId={} matchNum={} color={} team={}", matchId, matchNum, color, team)
 
                 val desc = matchMap.getOrPut(matchId) { TempMatchDesc(matchNum) }
                 desc.alliances[color]!!.add(team)

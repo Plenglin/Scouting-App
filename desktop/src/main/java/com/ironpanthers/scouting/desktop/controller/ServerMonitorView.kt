@@ -1,18 +1,10 @@
 package com.ironpanthers.scouting.desktop.controller
 
-import com.ironpanthers.scouting.desktop.util.ViewStageFactory
+import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.io.server.BaseClient
 import com.ironpanthers.scouting.io.server.ServerEngine
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.fxml.FXML
+import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
-import javafx.scene.control.Button
-import javafx.scene.control.MenuItem
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableView
-import javafx.scene.layout.Pane
-import javafx.util.Callback
 import org.slf4j.LoggerFactory
 import tornadofx.*
 
@@ -20,6 +12,9 @@ class ServerMonitorView : View() {
 
     override val root: Parent
     private val logger = LoggerFactory.getLogger(javaClass)
+
+    val currentCompetitionProperty = SimpleObjectProperty<Competition>(null)
+    var currentCompetition by currentCompetitionProperty
 
     init {
         root = stackpane {
@@ -35,6 +30,9 @@ class ServerMonitorView : View() {
                             logger.debug("Received result {}", rs)
                             if (rs != null) {
                                 ServerEngine.start(rs.id)
+                                ServerEngine.dbBackend.getCompetitionDescription(rs.id) { c ->
+                                    currentCompetition = c
+                                }
                             }
                         }
                         openWindow()
@@ -50,6 +48,9 @@ class ServerMonitorView : View() {
                             logger.debug("Received result {}", rs)
                             if (rs != null) {
                                 ServerEngine.start(rs.id)
+                                ServerEngine.dbBackend.getCompetitionDescription(rs.id) { c ->
+                                    currentCompetition = c
+                                }
                             }
                         }
                         openWindow()
@@ -58,7 +59,7 @@ class ServerMonitorView : View() {
             }
 
             borderpane {
-                isVisible = false
+                visibleProperty().bind(currentCompetitionProperty.isNotNull)
                 center = tableview<BaseClient> {
                     /*colNames.cellValueFactory = Callback {
                         SimpleStringProperty(it.value.displayName)

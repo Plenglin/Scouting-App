@@ -34,7 +34,7 @@ class CompetitionSelectionView : View() {
                     column<CompetitionDescription, String>("Name") {
                         SimpleStringProperty(it.value.name)
                     }
-                    val sdf = SimpleDateFormat("yyyy-MM-DD")
+                    val sdf = SimpleDateFormat("yyyy-MM-dd")
                     column<CompetitionDescription, String>("Date") {
                         SimpleStringProperty(sdf.format(it.value.date))
                     }
