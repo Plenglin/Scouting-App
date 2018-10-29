@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.ironpanthers.scouting.desktop.controller.ServerMonitorView"
+           fx:controller="com.ironpanthers.scouting.desktop.controller.server.ServerMonitorView"
            prefWidth="600.0" prefHeight="800.0">
 
     <VBox alignment="CENTER">

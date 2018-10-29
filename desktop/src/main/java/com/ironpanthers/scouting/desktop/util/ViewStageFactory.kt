@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.util
 
-import com.ironpanthers.scouting.desktop.controller.ServerMonitorView
+import com.ironpanthers.scouting.desktop.controller.server.ServerMonitorView
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene

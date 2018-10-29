@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.controller
+package com.ironpanthers.scouting.desktop.controller.server
 
 import com.ironpanthers.scouting.common.CompetitionDescription
 import javafx.scene.control.RadioButton
@@ -65,7 +65,5 @@ class CompetitionCreationWizard : View() {
             }
         }
     }
-
-    //companion object : ViewStageFactory<CompetitionCreationWizard>("views/competition-creation-wizard.fxml")
 
 }

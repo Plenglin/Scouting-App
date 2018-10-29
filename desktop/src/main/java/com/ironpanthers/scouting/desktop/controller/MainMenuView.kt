@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop.controller
 
+import com.ironpanthers.scouting.desktop.controller.server.ServerMonitorView
 import javafx.scene.layout.BorderPane
 import org.slf4j.LoggerFactory
 import tornadofx.*

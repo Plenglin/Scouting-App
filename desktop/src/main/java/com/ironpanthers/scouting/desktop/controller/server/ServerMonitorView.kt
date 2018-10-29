@@ -1,6 +1,5 @@
-package com.ironpanthers.scouting.desktop.controller
+package com.ironpanthers.scouting.desktop.controller.server
 
-import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.io.server.BaseClient
 import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.beans.property.SimpleBooleanProperty

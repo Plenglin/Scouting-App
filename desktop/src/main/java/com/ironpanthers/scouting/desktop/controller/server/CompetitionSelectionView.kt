@@ -1,15 +1,12 @@
-package com.ironpanthers.scouting.desktop.controller
+package com.ironpanthers.scouting.desktop.controller.server
 
 import com.ironpanthers.scouting.common.CompetitionDescription
 import com.ironpanthers.scouting.io.server.ServerEngine
-import javafx.beans.binding.ListBinding
 import javafx.beans.property.*
-import javafx.collections.ObservableList
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
 import javafx.scene.layout.BorderPane
 import org.slf4j.LoggerFactory
-import tornadofx.Fragment
 import tornadofx.View
 import tornadofx.*
 import java.text.SimpleDateFormat

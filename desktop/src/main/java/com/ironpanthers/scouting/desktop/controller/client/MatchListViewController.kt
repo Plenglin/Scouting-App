@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.controller
+package com.ironpanthers.scouting.desktop.controller.client
 
 import com.ironpanthers.scouting.common.MatchDescription
 import javafx.beans.property.SimpleStringProperty
