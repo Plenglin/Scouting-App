@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop
 
+import com.ironpanthers.scouting.desktop.controller.MainMenuController
 import com.ironpanthers.scouting.desktop.controller.ServerMonitorController
 import com.ironpanthers.scouting.desktop.controller.Stages
 import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
@@ -11,9 +12,10 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
 import org.apache.log4j.PropertyConfigurator
+import tornadofx.App
 
-class ScoutingSystemApplication : Application() {
-    override fun start(primaryStage: Stage) {
+class ScoutingSystemApplication : App(MainMenuController::class) {
+    /*override fun start(primaryStage: Stage) {
         val cl = javaClass.classLoader
         val file = cl.getResource("views/main-menu-view.fxml")!!
         val pane = FXMLLoader.load<Parent>(file)
@@ -34,7 +36,7 @@ class ScoutingSystemApplication : Application() {
         primaryStage.setOnCloseRequest {
             Platform.exit()
         }
-    }
+    }*/
 }
 
 fun main(args: Array<String>) {
