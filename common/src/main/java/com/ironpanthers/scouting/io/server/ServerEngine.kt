@@ -27,24 +27,30 @@ object ServerEngine {
                     val action = queue.take()
                     log.debug("Processing action {}", action)
                     when (action) {
+                        is StopServer -> {
+                            log.info("Received request to stop server thread, halting")
+                            return@thread
+                        }
                         is UpdateRobotPerformance -> {
                             dbBackend.updateRobotPerformance(action.rp)
                         }
                     }
                 }
             } catch (e: InterruptedException) {
-                log.info("Received interrupt, server thread stopping")
+                log.warn("Received interrupt, server thread stopping")
             } finally {
                 dbBackend.close()
             }
         }
     }
 
-    private fun stop() {
-        thread.interrupt()
+    fun stop() {
+        log.info("Sent request to stop server")
+        scheduleAction(StopServer)
     }
 
     fun scheduleAction(action: ServerAction) {
+        log.debug("Adding {} to queue", action)
         queue.put(action)
     }
 
@@ -57,5 +63,5 @@ object ServerEngine {
 }
 
 sealed class ServerAction
-
+object StopServer : ServerAction()
 data class UpdateRobotPerformance(val rp: MatchRobot) : ServerAction()
