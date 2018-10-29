@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane
 import tornadofx.*
 import java.time.LocalDate
 
-class CompetitionCreationController : View() {
+class CompetitionCreationWizard : View() {
     override val root: BorderPane
 
     private val creationToggleGroup = ToggleGroup()
@@ -44,9 +44,17 @@ class CompetitionCreationController : View() {
                             textfield()
                         }
                         row {
+                            label("Number of Matches")
+                            spinner(editable = true, min = 1)
+                        }
+                        row {
                             label("Date")
                             datepicker { LocalDate.now() }
                         }
+                    }
+
+                    button("Create") {
+
                     }
                 }
                 vbox {
@@ -56,6 +64,6 @@ class CompetitionCreationController : View() {
         }
     }
 
-    //companion object : ViewStageFactory<CompetitionCreationController>("views/competition-creation-wizard.fxml")
+    //companion object : ViewStageFactory<CompetitionCreationWizard>("views/competition-creation-wizard.fxml")
 
 }

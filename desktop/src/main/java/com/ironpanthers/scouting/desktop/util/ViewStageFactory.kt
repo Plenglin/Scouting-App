@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.util
 
-import com.ironpanthers.scouting.desktop.controller.ServerMonitorController
+import com.ironpanthers.scouting.desktop.controller.ServerMonitorView
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene
@@ -18,7 +18,7 @@ abstract class ViewStageFactory<C : ControllerWithStage>(val viewUrl: String) {
         loader.location = cl.getResource(viewUrl)!!
 
         val root = loader.load<Parent>()
-        val controller = loader.getController<ServerMonitorController>() as C
+        val controller = loader.getController<ServerMonitorView>() as C
 
         val stage = Stage().apply {
             title = "Server Monitor"

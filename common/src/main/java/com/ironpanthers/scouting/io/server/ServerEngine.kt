@@ -15,8 +15,10 @@ object ServerEngine {
 
     lateinit var dbBackend: DatabaseBackend
     var compId: Int = -1
+        private set
 
-    fun start() {
+    fun start(id: Int) {
+        compId = id
         thread = thread(isDaemon = true) {
             try {
                 log.info("Server thread starting")
