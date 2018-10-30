@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.ironpanthers.scouting.desktop.controller.client.MatchListViewController"
+            fx:controller="com.ironpanthers.scouting.desktop.controller.client.MatchListView"
             prefHeight="400.0" prefWidth="600.0">
 
     <TableView>

@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.io.test
 
-import com.ironpanthers.scouting.common.CompetitionDescription
+import com.ironpanthers.scouting.common.CompetitionSummary
 import com.ironpanthers.scouting.desktop.SqlScriptRunner
 import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
 import org.apache.log4j.PropertyConfigurator
@@ -35,7 +35,7 @@ class TestSQLiteBackend {
         val latch = CountDownLatch(1)
         db.listCompetitions {
             Assert.assertEquals(
-                    CompetitionDescription(1, "test competition", java.sql.Date.valueOf("2018-10-24"), "2018-power-up", 4),
+                    CompetitionSummary(1, "test competition", java.sql.Date.valueOf("2018-10-24"), "2018-power-up", 4),
                     it[0]
             )
             latch.countDown()

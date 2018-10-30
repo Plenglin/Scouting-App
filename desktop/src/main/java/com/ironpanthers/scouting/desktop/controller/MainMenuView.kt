@@ -1,6 +1,9 @@
 package com.ironpanthers.scouting.desktop.controller
 
+import com.ironpanthers.scouting.desktop.controller.client.MatchListView
 import com.ironpanthers.scouting.desktop.controller.server.ServerMonitorView
+import com.ironpanthers.scouting.desktop.io.client.LocalStrategy
+import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.scene.layout.BorderPane
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -27,6 +30,7 @@ class MainMenuView : View() {
                 button("Connect to Local") {
                     action {
                         logger.info("Opening local client")
+                        MatchListView(LocalStrategy(ServerEngine)).openWindow()
                     }
                 }
                 button("Connect to Bluetooth") {

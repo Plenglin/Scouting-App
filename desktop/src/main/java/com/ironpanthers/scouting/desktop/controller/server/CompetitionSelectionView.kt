@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.controller.server
 
-import com.ironpanthers.scouting.common.CompetitionDescription
+import com.ironpanthers.scouting.common.CompetitionSummary
 import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.beans.property.*
 import javafx.scene.control.SelectionMode
@@ -15,9 +15,9 @@ class CompetitionSelectionView : View() {
 
     override val root: BorderPane
 
-    var result: CompetitionDescription? = null
+    var result: CompetitionSummary? = null
     private val logger = LoggerFactory.getLogger(javaClass)
-    private lateinit var listCompetitions: TableView<CompetitionDescription>
+    private lateinit var listCompetitions: TableView<CompetitionSummary>
 
     init {
         root = borderpane {
@@ -28,14 +28,14 @@ class CompetitionSelectionView : View() {
             center {
                 listCompetitions = tableview {
                     selectionModel.selectionMode = SelectionMode.SINGLE
-                    column<CompetitionDescription, String>("Name") {
+                    column<CompetitionSummary, String>("Name") {
                         SimpleStringProperty(it.value.name)
                     }
                     val sdf = SimpleDateFormat("yyyy-MM-dd")
-                    column<CompetitionDescription, String>("Date") {
+                    column<CompetitionSummary, String>("Date") {
                         SimpleStringProperty(sdf.format(it.value.date))
                     }
-                    column<CompetitionDescription, Int>("Matches") {
+                    column<CompetitionSummary, Int>("Matches") {
                         SimpleObjectProperty<Int>(it.value.matchCount)
                     }
                     onUserSelect(2) {

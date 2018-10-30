@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.io.client
 
-import com.ironpanthers.scouting.common.Competition
+import com.ironpanthers.scouting.common.CompetitionMatchData
 import com.ironpanthers.scouting.common.MatchRobot
 import com.ironpanthers.scouting.io.client.ClientStrategy
 import com.ironpanthers.scouting.io.shared.NoClassNameException
@@ -11,7 +11,7 @@ import java.io.BufferedWriter
 import kotlin.concurrent.thread
 
 class BluetoothStrategy : ClientStrategy {
-    override fun getCompetitionDescription(cb: (Competition) -> Unit) {
+    override fun getCompetitionDescription(cb: (CompetitionMatchData) -> Unit) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

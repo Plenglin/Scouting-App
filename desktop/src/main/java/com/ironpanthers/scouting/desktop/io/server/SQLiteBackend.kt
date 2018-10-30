@@ -29,10 +29,10 @@ class SQLiteBackend(url: String) : DatabaseBackend {
         conn.close()
     }
 
-    override fun listCompetitions(cb: (List<CompetitionDescription>) -> Unit) {
+    override fun listCompetitions(cb: (List<CompetitionSummary>) -> Unit) {
         ioExecutor.execute {
             val results = conn.prepareStatement(STM_LIST_COMP_DESC).executeQuery()
-            val out = mutableListOf<CompetitionDescription>()
+            val out = mutableListOf<CompetitionSummary>()
             while (results.next()) {
                 val id = results.getInt(1)
                 val name = results.getString(2)
@@ -41,13 +41,13 @@ class SQLiteBackend(url: String) : DatabaseBackend {
 
                 log.trace("listCompetitions: id={} name={} date={} gameDef={}", id, name, date, gameDef)
 
-                out.add(CompetitionDescription(id, name, date, gameDef, 0))
+                out.add(CompetitionSummary(id, name, date, gameDef, 0))
             }
             cb(out)
         }
     }
 
-    override fun getCompetitionDescription(id: Int, cb: (Competition) -> Unit) {
+    override fun getCompetitionDescription(id: Int, cb: (CompetitionMatchData) -> Unit) {
         ioExecutor.execute {
             val st = conn.prepareStatement(STM_GET_COMP_INFO)
             st.setInt(1, id)
@@ -80,11 +80,11 @@ class SQLiteBackend(url: String) : DatabaseBackend {
 
             val matches = matchMap
                     .map { (id, desc) ->
-                        Match(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
+                        MatchSummary(id, desc.number, desc.alliances["RED"]!!, desc.alliances["BLUE"]!!)
                     }
                     .sortedBy { it.number }
             st.close()
-            cb(Competition(id, date, gameDef, matches))
+            cb(CompetitionMatchData(id, date, gameDef, matches))
         }
     }
 
