@@ -3,6 +3,7 @@ package com.ironpanthers.scouting.desktop
 import com.ironpanthers.scouting.desktop.controller.MainMenuView
 import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
 import com.ironpanthers.scouting.desktop.util.ioExecutor
+import com.ironpanthers.scouting.desktop.view.MainWindow
 import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.application.Application
 import javafx.application.Platform
@@ -10,7 +11,7 @@ import javafx.stage.Stage
 import org.apache.log4j.PropertyConfigurator
 import tornadofx.App
 
-class ScoutingSystemApplication : App(MainMenuView::class) {
+class ScoutingSystemApplication : App(MainWindow::class) {
 
     override fun start(stage: Stage) {
         super.start(stage)
