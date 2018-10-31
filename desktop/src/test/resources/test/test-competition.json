@@ -1,0 +1,128 @@
+{
+  "name": "Test Competition",
+  "date": "2018-10-30",
+  "gameType": "2018-power-up",
+  "matches": [{
+    "number": 1,
+    "time": 1540947142,
+    "blue": [{
+      "team": 2,
+      "events": [
+        {
+          "type": "pick_up_floor",
+          "time": 1540947142,
+          "data": {}
+        }
+      ],
+      "endState": null
+    }, {
+      "team": 20,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 23,
+      "events": [],
+      "endState": null
+    }],
+    "red": [{
+      "team": 1,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 10,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 13,
+      "events": [],
+      "endState": null
+    }]
+  }, {
+    "number": 2,
+    "time": 1540947142,
+    "blue": [{
+      "team": 4,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 40,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 43,
+      "events": [],
+      "endState": null
+    }],
+    "red": [{
+      "team": 3,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 30,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 33,
+      "events": [],
+      "endState": null
+    }]
+  }, {
+    "number": 3,
+    "time": 1540947142,
+    "blue": [{
+      "team": 6,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 60,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 63,
+      "events": [],
+      "endState": null
+    }],
+    "red": [{
+      "team": 5,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 50,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 53,
+      "events": [],
+      "endState": null
+    }]
+  }, {
+    "number": 4,
+    "time": 1540947142,
+    "blue": [{
+      "team": 8,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 80,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 83,
+      "events": [],
+      "endState": null
+    }],
+    "red": [{
+      "team": 7,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 70,
+      "events": [],
+      "endState": null
+    }, {
+      "team": 73,
+      "events": [],
+      "endState": null
+    }]
+  }]
+}
