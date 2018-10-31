@@ -19,15 +19,15 @@ data class MutableRobotEvent(var type: String, var time: Long, var data: JsonNod
     fun asImmutable() = RobotEvent(type, time, data, id)
 }
 
-data class MutableMatchRobot(var team: Int, val events: MutableList<MutableRobotEvent>, var endState: String? = null) {
+data class MutableMatchRobot(var team: Int, val events: MutableList<MutableRobotEvent> = mutableListOf(), var endState: String? = null) {
     fun asImmutable() = MatchRobot(team, events.map(MutableRobotEvent::asImmutable), endState)
 }
 
-data class MutableMatch(var number: Int, var time: Long, var red: MutableList<MutableMatchRobot>, var blue: List<MutableMatchRobot>) {
+data class MutableMatch(var number: Int, var time: Long, val red: List<MutableMatchRobot>, val blue: List<MutableMatchRobot>) {
     fun asImmutable() = Match(number, time, red.map(MutableMatchRobot::asImmutable), blue.map(MutableMatchRobot::asImmutable))
 }
 
-data class MutableCompetition(var name: String, var date: Date, var gameType: String, var matches: List<MutableMatch>) {
+data class MutableCompetition(var name: String, var date: Date, var gameType: String, val matches: MutableList<MutableMatch>) {
     fun asImmutable() = Competition(name, date, gameType, matches.map(MutableMatch::asImmutable))
 }
 
@@ -45,5 +45,5 @@ data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val
 }
 
 data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) {
-    fun asMutable() = MutableCompetition(name, date, gameType, matches.map(Match::asMutable))
+    fun asMutable() = MutableCompetition(name, date, gameType, matches.map(Match::asMutable).toMutableList())
 }

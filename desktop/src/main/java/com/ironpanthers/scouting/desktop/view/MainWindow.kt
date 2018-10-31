@@ -3,6 +3,8 @@ package com.ironpanthers.scouting.desktop.view
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.common.Competition
+import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
+import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.scene.Parent
 import javafx.scene.control.Alert
@@ -20,14 +22,21 @@ class MainWindow : View() {
     val connectionView = ConnectionView()
 
     private val logger = LoggerFactory.getLogger(javaClass)
-    private var competition: Competition? = null
+
+    private val competitionProperty = SimpleObjectProperty<Competition?>()
+    private var competition: Competition? by competitionProperty
 
     init {
 
         root = borderpane {
             top = menubar {
                 menu("File") {
-                    item("New")
+                    item("New") {
+                        action {
+                            val wizard = CompetitionCreationWizard()
+                            wizard.openModal()
+                        }
+                    }
                     item("Open...") {
                         action {
                             logger.info("Opening 'Open' menu")

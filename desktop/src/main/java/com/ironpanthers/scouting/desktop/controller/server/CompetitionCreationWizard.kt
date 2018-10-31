@@ -1,9 +1,10 @@
 package com.ironpanthers.scouting.desktop.controller.server
 
+import com.ironpanthers.scouting.common.Competition
+import javafx.geometry.Pos
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ToggleGroup
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.Pane
 import tornadofx.*
 import java.time.LocalDate
 
@@ -12,13 +13,10 @@ class CompetitionCreationWizard : View() {
 
     private val creationToggleGroup = ToggleGroup()
 
-    lateinit var radioCreate: RadioButton
-    lateinit var radioImport: RadioButton
+    private lateinit var radioCreate: RadioButton
+    private lateinit var radioImport: RadioButton
 
-    lateinit var paneCreation: Pane
-    lateinit var paneImportTBA: Pane
-
-    //var result: CompetitionSummary? = null
+    var result: Competition? = null
 
     init {
         root = borderpane {
@@ -33,6 +31,7 @@ class CompetitionCreationWizard : View() {
                     text = "Import from TheBlueAlliance"
                 }
             }
+
             center = stackpane {
                 vbox {
                     visibleWhen { radioCreate.selectedProperty() }
@@ -55,13 +54,26 @@ class CompetitionCreationWizard : View() {
                     }
 
                     button("Create") {
-
+                        alignment = Pos.BOTTOM_RIGHT
                     }
                 }
                 vbox {
                     visibleWhen { radioImport.selectedProperty() }
+                    gridpane {
+                        row {
+                            label("Event ID")
+                            textfield()
+                        }
+                    }
+                    button("Import") {
+                        action {
+                            khttp.get("https://")
+                        }
+                    }
                 }
+
             }
+
         }
     }
 
