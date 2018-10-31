@@ -15,8 +15,35 @@ enum class TeamColor {
     RED, BLUE
 }
 
+data class MutableRobotEvent(var type: String, var time: Long, var data: JsonNode, val id: UUID = UUID.randomUUID()) {
+    fun asImmutable() = RobotEvent(type, time, data, id)
+}
 
-data class RobotEvent(val id: UUID, val type: String, val time: Long, val data: JsonNode)
-data class MatchRobot(val team: Int, val events: List<RobotEvent>, val endState: String?)
-data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val blue: List<MatchRobot>)
-data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>)
+data class MutableMatchRobot(var team: Int, val events: MutableList<MutableRobotEvent>, var endState: String? = null) {
+    fun asImmutable() = MatchRobot(team, events.map(MutableRobotEvent::asImmutable), endState)
+}
+
+data class MutableMatch(var number: Int, var time: Long, var red: MutableList<MutableMatchRobot>, var blue: List<MutableMatchRobot>) {
+    fun asImmutable() = Match(number, time, red.map(MutableMatchRobot::asImmutable), blue.map(MutableMatchRobot::asImmutable))
+}
+
+data class MutableCompetition(var name: String, var date: Date, var gameType: String, var matches: List<MutableMatch>) {
+    fun asImmutable() = Competition(name, date, gameType, matches.map(MutableMatch::asImmutable))
+}
+
+
+data class RobotEvent(val type: String, val time: Long, val data: JsonNode, val id: UUID = UUID.randomUUID()) {
+    fun asMutable() = MutableRobotEvent(type, time, data, id)
+}
+
+data class MatchRobot(val team: Int, val events: List<RobotEvent>, val endState: String? = null) {
+    fun asMutable() = MutableMatchRobot(team, events.map(RobotEvent::asMutable).toMutableList(), endState)
+}
+
+data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val blue: List<MatchRobot>) {
+    fun asMutable() = MutableMatch(number, time, red.map(MatchRobot::asMutable).toMutableList(), blue.map(MatchRobot::asMutable).toMutableList())
+}
+
+data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) {
+    fun asMutable() = MutableCompetition(name, date, gameType, matches.map(Match::asMutable))
+}
