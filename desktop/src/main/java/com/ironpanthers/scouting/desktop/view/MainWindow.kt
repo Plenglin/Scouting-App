@@ -1,10 +1,14 @@
 package com.ironpanthers.scouting.desktop.view
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.ironpanthers.scouting.common.Competition
 import javafx.geometry.Orientation
-import javafx.geometry.Pos
 import javafx.scene.Parent
-import javafx.scene.input.MouseEvent
+import javafx.scene.control.Alert
 import javafx.scene.layout.Priority
+import javafx.stage.FileChooser
+import org.slf4j.LoggerFactory
 import tornadofx.*
 
 class MainWindow : View() {
@@ -15,12 +19,45 @@ class MainWindow : View() {
     val eventLogView = EventLogView()
     val connectionView = ConnectionView()
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+    private var competition: Competition? = null
+
     init {
 
         root = borderpane {
             top = menubar {
                 menu("File") {
+                    item("New")
+                    item("Open...") {
+                        action {
+                            logger.info("Opening 'Open' menu")
+                            val chooser = FileChooser()
+                            chooser.extensionFilters.addAll(
+                                    FileChooser.ExtensionFilter("JSON File", "*.json"),
+                                    FileChooser.ExtensionFilter("All Files", "*.*")
+                            )
+                            chooser.title = "Select competition data..."
+                            val file = chooser.showOpenDialog(currentWindow)
+                            logger.debug("got file: {}", file)
+                            if (file == null) {
+                                logger.debug("no file was selected")
+                                return@action
+                            }
 
+                            try {
+                                competition = jacksonObjectMapper().readValue(file)
+                                logger.debug("loaded competition data: {}", competition)
+                            } catch (e: Exception) {
+                                logger.warn("Error while attempting to load file!", e)
+                                Alert(Alert.AlertType.ERROR).apply {
+                                    title = "Could not read file!"
+                                    headerText = "We could not parse the file provided."
+                                    contentText = e.localizedMessage
+                                    showAndWait()
+                                }
+                            }
+                        }
+                    }
                 }
                 menu("Edit") {
 
