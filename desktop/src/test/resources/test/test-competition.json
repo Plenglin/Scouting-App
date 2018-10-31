@@ -9,6 +9,7 @@
       "team": 2,
       "events": [
         {
+          "id": "09325cc5-4b67-48ee-9d68-5079d331b0a6",
           "type": "pick_up_floor",
           "time": 1540947142,
           "data": {}

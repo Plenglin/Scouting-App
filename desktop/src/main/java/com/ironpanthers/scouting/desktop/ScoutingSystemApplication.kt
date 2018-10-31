@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ironpanthers.scouting.desktop.controller.MainMenuView
 import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
 import com.ironpanthers.scouting.desktop.util.ioExecutor

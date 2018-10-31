@@ -22,9 +22,17 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
     implementation 'no.tornado:tornadofx:1.7.17'
 
-    compile 'org.jetbrains.exposed:exposed:0.11.1'
+    //implementation 'com.beust:klaxon:3.0.1'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: jackson_version
+
+    //compile 'org.jetbrains.exposed:exposed:0.11.1'
 
     // https://mvnrepository.com/artifact/org.controlsfx/controlsfx
     api group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
@@ -32,7 +40,7 @@ dependencies {
     implementation 'net.sf.bluecove:bluecove:2.1.0'
 
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
 
     // https://mvnrepository.com/artifact/log4j/log4j
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
