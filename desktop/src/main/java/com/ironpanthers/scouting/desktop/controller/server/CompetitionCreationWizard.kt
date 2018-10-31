@@ -1,6 +1,5 @@
 package com.ironpanthers.scouting.desktop.controller.server
 
-import com.ironpanthers.scouting.common.CompetitionSummary
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ToggleGroup
 import javafx.scene.layout.BorderPane
@@ -19,7 +18,7 @@ class CompetitionCreationWizard : View() {
     lateinit var paneCreation: Pane
     lateinit var paneImportTBA: Pane
 
-    var result: CompetitionSummary? = null
+    //var result: CompetitionSummary? = null
 
     init {
         root = borderpane {

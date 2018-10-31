@@ -13,7 +13,7 @@ object ServerEngine {
     private val log = LoggerFactory.getLogger(javaClass)
     private lateinit var thread: Thread
 
-    lateinit var dbBackend: DatabaseBackend
+    //lateinit var dbBackend: DatabaseBackend
     var compId: Int = -1
         private set
 
@@ -32,14 +32,14 @@ object ServerEngine {
                             return@thread
                         }
                         is UpdateRobotPerformance -> {
-                            dbBackend.updateRobotPerformance(action.rp)
+                            //dbBackend.updateRobotPerformance(action.rp)
                         }
                     }
                 }
             } catch (e: InterruptedException) {
                 log.warn("Received interrupt, server thread stopping")
             } finally {
-                dbBackend.close()
+                //dbBackend.close()
             }
         }
     }

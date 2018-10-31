@@ -27,7 +27,7 @@ class ServerMonitorView : View() {
                     action {
                         logger.debug("User wants to use an existing competition")
                         modalStage?.hide()
-                        CompetitionSelectionView().let {
+                        /*CompetitionSelectionView().let {
                             it.openWindow(block = true)
                             val rs = it.result
                             logger.debug("Received result {}", rs)
@@ -35,7 +35,7 @@ class ServerMonitorView : View() {
                                 ServerEngine.start(rs.id)
                                 serverEnabled = true
                             }
-                        }
+                        }*/
                         openWindow()
                     }
                 }
@@ -45,12 +45,12 @@ class ServerMonitorView : View() {
                         modalStage?.hide()
                         CompetitionCreationWizard().let {
                             it.openWindow(block = true)
-                            val rs = it.result
+                            /*val rs = it.result
                             logger.debug("Received result {}", rs)
                             if (rs != null) {
                                 ServerEngine.start(rs.id)
                                 serverEnabled = true
-                            }
+                            }*/
                         }
                         openWindow()
                     }

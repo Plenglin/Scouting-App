@@ -20,14 +20,14 @@ class PowerUpFXPanelController : RobotEventPanelController {
 
     @FXML
     fun initialize() {
-        buttons = getAllNodes(root).filter { it is Button }.map { it as Button }
+        /*buttons = getAllNodes(root).filter { it is Button }.map { it as Button }
 
         buttons.forEach { btn ->
             btn.setOnMouseClicked {
                 log.debug("clicked on {}", btn)
                 onEventOccurred(RobotEvent(btn.id, teamNumber))
             }
-        }
+        }*/
     }
 
 }

@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox
 import org.slf4j.LoggerFactory
 import java.util.*
 import tornadofx.*
-
+/*
 class ScoutingController {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -136,3 +136,4 @@ class ScoutingController {
 }
 
 data class RobotEventWrapper(val robotEvent: RobotEvent, val label: Label)
+*/

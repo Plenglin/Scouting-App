@@ -1,11 +1,7 @@
 package com.ironpanthers.scouting.desktop
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.ironpanthers.scouting.desktop.controller.MainMenuView
-import com.ironpanthers.scouting.desktop.io.server.SQLiteBackend
 import com.ironpanthers.scouting.desktop.util.ioExecutor
 import com.ironpanthers.scouting.desktop.view.MainWindow
-import com.ironpanthers.scouting.io.server.ServerEngine
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
@@ -47,6 +43,6 @@ class ScoutingSystemApplication : App(MainWindow::class) {
 
 fun main(args: Array<String>) {
     PropertyConfigurator.configure("log4j.properties")
-    ServerEngine.dbBackend = SQLiteBackend("jdbc:sqlite:data.sqlite3")
+    //ServerEngine.dbBackend = SQLiteBackend("jdbc:sqlite:data.sqlite3")
     Application.launch(ScoutingSystemApplication::class.java, *args)
 }

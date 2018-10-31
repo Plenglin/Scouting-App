@@ -1,6 +1,8 @@
 package com.ironpanthers.scouting.common
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.ironpanthers.scouting.util.KeyCombo
+import java.util.*
 
 abstract class GameDef(val name: String, val id: String, val version: Int) {
     val events: MutableList<RobotEventDef> = mutableListOf()
@@ -17,3 +19,12 @@ abstract class GameDef(val name: String, val id: String, val version: Int) {
     }
 
 }
+
+data class RobotEventDef(val id: String, val name: String, val stage: Int, val keyCombo: KeyCombo, val maxTimes: Int = -1, val icon: String? = null) {
+    fun createEventInstance(team: Int): RobotEvent {
+        return RobotEvent(UUID.randomUUID(), id, System.currentTimeMillis(), JsonNodeFactory.instance.objectNode())
+    }
+}
+
+data class RobotEndState(val id: String, val name: String, val icon: String? = null)
+

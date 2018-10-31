@@ -1,22 +1,19 @@
 package com.ironpanthers.scouting.desktop.controller.client
 
-import com.ironpanthers.scouting.common.MatchSummary
-import com.ironpanthers.scouting.common.MatchDescription
-import com.ironpanthers.scouting.io.client.ClientStrategy
-import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
-import javafx.scene.control.TableView
-import tornadofx.*
+import tornadofx.View
+import tornadofx.borderpane
+import tornadofx.center
 
-class MatchListView(private val client: ClientStrategy) : View() {
+class MatchListView : View() {
 
     override val root: Parent
-    private lateinit var table: TableView<MatchSummary>
+    //private lateinit var table: TableView<MatchSummary>
 
     init {
         root = borderpane {
             center {
-                table = tableview {
+                /*table = tableview {
                     column<MatchSummary, Int>("#") {
                         SimpleObjectProperty<Int>(it.value.number)
                     }
@@ -38,13 +35,13 @@ class MatchListView(private val client: ClientStrategy) : View() {
                     column<MatchSummary, Int>("B3") {
                         SimpleObjectProperty<Int>(it.value.blue[2])
                     }
-                }
+                }*/
             }
         }
 
-        client.getCompetitionDescription {
+        /*client.getCompetitionDescription {
             table.items.addAll(it.matches)
-        }
+        }*/
 
     }
 }
