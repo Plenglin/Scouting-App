@@ -1,10 +1,13 @@
 package com.ironpanthers.scouting.desktop.controller.server
 
 import com.ironpanthers.scouting.common.Competition
+import com.ironpanthers.scouting.desktop.util.importTBAData
 import javafx.geometry.Pos
 import javafx.scene.control.RadioButton
+import javafx.scene.control.TextField
 import javafx.scene.control.ToggleGroup
 import javafx.scene.layout.BorderPane
+import org.slf4j.LoggerFactory
 import tornadofx.*
 import java.time.LocalDate
 
@@ -16,9 +19,13 @@ class CompetitionCreationWizard : View() {
     private lateinit var radioCreate: RadioButton
     private lateinit var radioImport: RadioButton
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     var result: Competition? = null
 
     init {
+        var tbaMatchName: TextField? = null
+
         root = borderpane {
             left = vbox {
                 label("Select an initialization method...")
@@ -62,12 +69,16 @@ class CompetitionCreationWizard : View() {
                     gridpane {
                         row {
                             label("Event ID")
-                            textfield()
+                            tbaMatchName = textfield()
                         }
                     }
                     button("Import") {
                         action {
-                            khttp.get("https://")
+                            val id = tbaMatchName!!.text
+                            logger.info("Attempting to get {} from TBA", id)
+                            result = importTBAData(id, System.getProperty("tba-api-key"))
+                            logger.debug("recieved: {}", result)
+                            modalStage?.close()
                         }
                     }
                 }

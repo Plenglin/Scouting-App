@@ -34,7 +34,9 @@ class MainWindow : View() {
                     item("New") {
                         action {
                             val wizard = CompetitionCreationWizard()
-                            wizard.openModal()
+                            wizard.openModal(block = true)
+                            competition = wizard.result
+                            logger.debug("competition is now set to {}", competition)
                         }
                     }
                     item("Open...") {
@@ -61,6 +63,40 @@ class MainWindow : View() {
                                 Alert(Alert.AlertType.ERROR).apply {
                                     title = "Could not read file!"
                                     headerText = "We could not parse the file provided."
+                                    contentText = e.localizedMessage
+                                    showAndWait()
+                                }
+                            }
+                        }
+                    }
+                    item("Save") {
+                        disableWhen { competitionProperty.isNull }
+                    }
+                    item("Save As...") {
+                        disableWhen { competitionProperty.isNull }
+                        action {
+                            logger.info("Opening 'Save As' menu")
+                            val chooser = FileChooser()
+                            chooser.extensionFilters.addAll(
+                                    FileChooser.ExtensionFilter("JSON File", "*.json"),
+                                    FileChooser.ExtensionFilter("All Files", "*.*")
+                            )
+                            chooser.title = "Save competition data..."
+                            val file = chooser.showSaveDialog(currentWindow)
+                            logger.debug("dest file: {}", file)
+                            if (file == null) {
+                                logger.debug("no file was selected")
+                                return@action
+                            }
+
+                            try {
+                                jacksonObjectMapper().writeValue(file, competition)
+                                logger.debug("wrote competition data: {}", competition)
+                            } catch (e: Exception) {
+                                logger.warn("Error while attempting to save file!", e)
+                                Alert(Alert.AlertType.ERROR).apply {
+                                    title = "Could not save file!"
+                                    headerText = "We could not save the file."
                                     contentText = e.localizedMessage
                                     showAndWait()
                                 }
