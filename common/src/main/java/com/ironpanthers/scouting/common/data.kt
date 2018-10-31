@@ -37,13 +37,13 @@ data class RobotEvent(val type: String, val time: Long, val data: JsonNode, val 
 }
 
 data class MatchRobot(val team: Int, val events: List<RobotEvent>, val endState: String? = null) {
-    fun asMutable() = MutableMatchRobot(team, events.map(RobotEvent::asMutable).toMutableList(), endState)
+    fun asMutable() = MutableMatchRobot(team, events.asSequence().map(RobotEvent::asMutable).toMutableList(), endState)
 }
 
 data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val blue: List<MatchRobot>) {
-    fun asMutable() = MutableMatch(number, time, red.map(MatchRobot::asMutable).toMutableList(), blue.map(MatchRobot::asMutable).toMutableList())
+    fun asMutable() = MutableMatch(number, time, red.map(MatchRobot::asMutable), blue.map(MatchRobot::asMutable))
 }
 
 data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) {
-    fun asMutable() = MutableCompetition(name, date, gameType, matches.map(Match::asMutable).toMutableList())
+    fun asMutable() = MutableCompetition(name, date, gameType, matches.asSequence().map(Match::asMutable).toMutableList())
 }

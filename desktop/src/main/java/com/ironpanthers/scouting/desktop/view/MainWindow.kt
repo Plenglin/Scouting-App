@@ -3,6 +3,8 @@ package com.ironpanthers.scouting.desktop.view
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.common.Competition
+import com.ironpanthers.scouting.common.MutableCompetition
+import com.ironpanthers.scouting.desktop.controller.client.MatchListView
 import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
@@ -20,13 +22,16 @@ class MainWindow : View() {
     val chatView: ChatView = ChatView()
     val eventLogView = EventLogView()
     val connectionView = ConnectionView()
+    val matchListView = MatchListView()
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val competitionProperty = SimpleObjectProperty<Competition?>()
-    private var competition: Competition? by competitionProperty
+    private val competitionProperty = SimpleObjectProperty<MutableCompetition?>()
+    private var competition: MutableCompetition? by competitionProperty
 
     init {
+
+        matchListView.competitionProperty.bind(competitionProperty)
 
         root = borderpane {
             top = menubar {
@@ -35,7 +40,7 @@ class MainWindow : View() {
                         action {
                             val wizard = CompetitionCreationWizard()
                             wizard.openModal(block = true)
-                            competition = wizard.result
+                            competition = wizard.result?.asMutable()
                             logger.debug("competition is now set to {}", competition)
                         }
                     }
@@ -134,7 +139,7 @@ class MainWindow : View() {
                     hbox {
                         vgrow = Priority.ALWAYS
                         pane {
-
+                            add(matchListView)
                         }
                     }
 

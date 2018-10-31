@@ -86,12 +86,21 @@ fun importTBAData(eventId: String, apiKey: String): Competition {
     }
 
 
-    val matches = (0 until matchData.length()).map { i ->
-        val row = matchData.getJSONObject(i).getJSONObject("alliances")
-        val redRaw = row.getJSONObject("red").getJSONArray("team_keys")
-        val blueRaw = row.getJSONObject("blue").getJSONArray("team_keys")
+    var n = 0
+    val matches = (0 until matchData.length()).mapNotNull { i ->
+        val obj = matchData.getJSONObject(i)
 
-        Match(i + 1, -1, extractAlliance(redRaw), extractAlliance(blueRaw))
+        if (obj.get("comp_level") != "qm") {
+            null
+        } else {
+
+            val row = obj.getJSONObject("alliances")
+            val redRaw = row.getJSONObject("red").getJSONArray("team_keys")
+            val blueRaw = row.getJSONObject("blue").getJSONArray("team_keys")
+
+            n += 1
+            Match(n, -1, extractAlliance(redRaw), extractAlliance(blueRaw))
+        }
     }
 
     return Competition(
