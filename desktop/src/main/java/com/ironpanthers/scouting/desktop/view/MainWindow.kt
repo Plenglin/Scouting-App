@@ -171,6 +171,13 @@ class MainWindow : View() {
             }
 
         }
+
+        competitionProperty.onChange {
+            when (it) {
+                null -> eventLogView.appendMessage("Closed last competition")
+                else -> eventLogView.appendMessage("Competition changed to ${it.name}")
+            }
+        }
     }
 
 }
