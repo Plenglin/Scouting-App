@@ -76,8 +76,14 @@ private fun addAllDescendents(parent: Parent, nodes: ArrayList<Node>) {
 
 fun importTBAData(eventId: String, apiKey: String): Competition {
     val headers = mapOf("X-TBA-Auth-Key" to apiKey, "Content-Type" to "application/json")
-    val eventData = khttp.get("https://www.thebluealliance.com/api/v3/event/$eventId", headers = headers).jsonObject
-    val matchData = khttp.get("https://www.thebluealliance.com/api/v3/event/$eventId/matches", headers = headers).jsonArray
+    val eventData = khttp.get("https://www.thebluealliance.com/api/v3/event/$eventId", headers = headers).let {
+        it.encoding = Charsets.UTF_8
+        it.jsonObject
+    }
+    val matchData = khttp.get("https://www.thebluealliance.com/api/v3/event/$eventId/matches", headers = headers).let {
+        it.encoding = Charsets.UTF_8
+        it.jsonArray
+    }
 
 
     val matches = (0 until matchData.length()).map { i ->

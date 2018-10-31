@@ -66,8 +66,10 @@ compileTestKotlin {
     }
 }
 
-task test {
-    systemProperty("")
+test {
+    Properties properties = new Properties()
+    properties.load(new File(project.rootDir, "local.properties").newDataInputStream())
+    systemProperties(properties)
 }
 
 task run(type: JavaExec, dependsOn: build) {
