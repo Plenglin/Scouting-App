@@ -3,8 +3,12 @@ package com.ironpanthers.scouting.desktop.controller.client
 import com.ironpanthers.scouting.common.MutableCompetition
 import com.ironpanthers.scouting.common.MutableMatch
 import javafx.beans.property.SimpleObjectProperty
+import javafx.collections.FXCollections
 import javafx.scene.Parent
+import javafx.scene.control.Label
 import javafx.scene.control.TableView
+import javafx.scene.layout.Priority
+import org.slf4j.LoggerFactory
 import tornadofx.*
 
 class MatchListView : View() {
@@ -15,23 +19,43 @@ class MatchListView : View() {
     val competitionProperty = SimpleObjectProperty<MutableCompetition?>()
     var competition by competitionProperty
 
+    private val displayedMatches = FXCollections.observableArrayList<MatchModel>()
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     init {
+        val searchBar = textfield {
+            promptText = "Search by team..."
+        }
+        searchBar.textProperty().onChange { text ->
+            val team = text!!
+            val matches = competition?.matches?.filter { match ->
+                match.red.any { it.team.toString().contains(team) } || match.blue.any { it.team.toString().contains(team) } || match.number.toString().contains(text)
+            } ?: return@onChange
+            displayedMatches.setAll(matches.map { MatchModel(it) })
+        }
+
         root = borderpane {
+            vgrow = Priority.ALWAYS
+            hgrow = Priority.ALWAYS
+            top = hbox {
+                label("Matches")
+                add(searchBar)
+            }
             center {
                 table = tableview {
                     column<MatchModel, Int>("#") {
                         it.value.number
                     }
-                    column<MatchModel, Int>("R1") {
+                    column<MatchModel, Int>("Red 1") {
                         it.value.red[0]
                     }
-                    column<MatchModel, Int>("R2") {
+                    column<MatchModel, Int>("Red 2") {
                         it.value.red[1]
                     }
-                    column<MatchModel, Int>("R3") {
+                    column<MatchModel, Int>("Red 3") {
                         it.value.red[2]
                     }
-                    column<MatchModel, Int>("B1") {
+                    column<MatchModel, Int>("Bed 1") {
                         it.value.blue[0]
                     }
                     column<MatchModel, Int>("B2") {
@@ -44,14 +68,17 @@ class MatchListView : View() {
             }
         }
 
-        competitionProperty.onChange {
-            if (it != null) {
-                table.items.setAll(it.matches.map { MatchModel(it) })
+        competitionProperty.onChange { comp ->
+            searchBar.clear()
+            if (comp != null) {
+                displayedMatches.setAll(comp.matches.map { MatchModel(it) })
             } else {
-                table.items.clear()
+                displayedMatches.clear()
             }
 
         }
+
+        table.items.bind(displayedMatches) {it}
 
     }
 }

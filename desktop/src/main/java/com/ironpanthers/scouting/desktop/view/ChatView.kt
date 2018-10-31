@@ -8,13 +8,14 @@ class ChatView : View() {
     override val root: Parent
 
     init {
-        root = vbox {
+        root = borderpane {
             hgrow = Priority.ALWAYS
             vgrow = Priority.ALWAYS
-            textarea {
+            top = label("Chat")
+            center = textarea {
                 isEditable = false
             }
-            hbox {
+            bottom = hbox {
                 hgrow = Priority.ALWAYS
                 textfield {
                     isEditable = true

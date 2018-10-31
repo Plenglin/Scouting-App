@@ -2,7 +2,6 @@ package com.ironpanthers.scouting.desktop.view
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.MutableCompetition
 import com.ironpanthers.scouting.desktop.controller.client.MatchListView
 import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
@@ -171,8 +170,14 @@ class MainWindow : View() {
                 val btnChat = togglebutton("Chat")
                 val btnEventLog = togglebutton("Event Log")
 
-                chatView.root.visibleProperty().bind(btnChat.selectedProperty())
-                eventLogView.root.visibleProperty().bind(btnEventLog.selectedProperty())
+                chatView.root.apply {
+                    hgrow = Priority.ALWAYS
+                    visibleProperty().bind(btnChat.selectedProperty())
+                }
+                eventLogView.root.apply {
+                    hgrow = Priority.ALWAYS
+                    visibleProperty().bind(btnEventLog.selectedProperty())
+                }
             }
 
         }

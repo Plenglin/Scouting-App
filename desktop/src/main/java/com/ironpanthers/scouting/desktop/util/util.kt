@@ -93,7 +93,6 @@ fun importTBAData(eventId: String, apiKey: String): Competition {
         if (obj.get("comp_level") != "qm") {
             null
         } else {
-
             val row = obj.getJSONObject("alliances")
             val redRaw = row.getJSONObject("red").getJSONArray("team_keys")
             val blueRaw = row.getJSONObject("blue").getJSONArray("team_keys")
