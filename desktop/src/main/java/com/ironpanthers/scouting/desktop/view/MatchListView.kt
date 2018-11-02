@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.controller.client
+package com.ironpanthers.scouting.desktop.view
 
 import com.ironpanthers.scouting.common.*
 import javafx.beans.property.SimpleObjectProperty
@@ -19,6 +19,7 @@ class MatchListView : View() {
     var competition by competitionProperty
 
     var onRobotSelected: (MatchRobotWrapper) -> Unit = {}
+    var onMatchSelected: (MutableMatch) -> Unit = {}
 
     private val displayedMatches = FXCollections.observableArrayList<MatchModel>()
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -70,7 +71,7 @@ class MatchListView : View() {
                         val col = selectionModel.selectedCells[0].column
                         logger.debug("user double clicked on col {} of {}", col, it)
                         when (col) {
-                            0 -> logger.debug("unfortunately it was the match #")
+                            0 -> onMatchSelected(it.data)
                             1 -> onRobotSelected(it.data.getRedWrapper(0))
                             2 -> onRobotSelected(it.data.getRedWrapper(1))
                             3 -> onRobotSelected(it.data.getRedWrapper(2))

@@ -3,12 +3,13 @@ package com.ironpanthers.scouting.desktop.view
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.common.MutableCompetition
-import com.ironpanthers.scouting.desktop.controller.client.MatchListView
 import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.scene.Parent
 import javafx.scene.control.Alert
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
 import org.slf4j.LoggerFactory
@@ -30,25 +31,25 @@ class MainWindow : View() {
     private var competition: MutableCompetition? by competitionProperty
     private var saveDest: File? = null
 
-    init {
+    private lateinit var editorPane: TabPane
 
+    init {
         matchListView.competitionProperty.bind(competitionProperty)
         matchListView.onRobotSelected = {
             logger.info("Opening editor for {}", it)
+            val tab = Tab("#${it.parent.number}: ${it.robot.team}", MatchRobotEditorView(it).root)
+            editorPane.tabs.add(tab)
+            editorPane.selectionModel.select(tab)
         }
 
         root = borderpane {
             top = menubar {
                 menu("File") {
                     item("New") {
-                        action {
-                            doCreateNew()
-                        }
+                        action { doCreateNew() }
                     }
                     item("Open...") {
-                        action {
-                            doOpen()
-                        }
+                        action { doOpen() }
                     }
                     item("Save") {
                         disableWhen { competitionProperty.isNull }
@@ -99,9 +100,7 @@ class MainWindow : View() {
                         }
                     }
 
-                    pane {
-
-                    }
+                    editorPane = tabpane {  }
 
                     hbox {
                         vgrow = Priority.ALWAYS
