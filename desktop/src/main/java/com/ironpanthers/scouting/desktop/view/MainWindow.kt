@@ -13,6 +13,7 @@ import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
 import org.slf4j.LoggerFactory
 import tornadofx.*
+import java.io.File
 
 class MainWindow : View() {
 
@@ -27,84 +28,40 @@ class MainWindow : View() {
 
     private val competitionProperty = SimpleObjectProperty<MutableCompetition?>()
     private var competition: MutableCompetition? by competitionProperty
+    private var saveDest: File? = null
 
     init {
 
         matchListView.competitionProperty.bind(competitionProperty)
+        matchListView.onRobotSelected = {
+            logger.info("Opening editor for {}", it)
+        }
 
         root = borderpane {
             top = menubar {
                 menu("File") {
                     item("New") {
                         action {
-                            val wizard = CompetitionCreationWizard()
-                            wizard.openModal(block = true)
-                            competition = wizard.result?.asMutable()
-                            logger.debug("competition is now set to {}", competition)
+                            doCreateNew()
                         }
                     }
                     item("Open...") {
                         action {
-                            logger.info("Opening 'Open' menu")
-                            val chooser = FileChooser()
-                            chooser.extensionFilters.addAll(
-                                    FileChooser.ExtensionFilter("JSON File", "*.json"),
-                                    FileChooser.ExtensionFilter("All Files", "*.*")
-                            )
-                            chooser.title = "Select competition data..."
-                            val file = chooser.showOpenDialog(currentWindow)
-                            logger.debug("got file: {}", file)
-                            if (file == null) {
-                                logger.debug("no file was selected")
-                                return@action
-                            }
-
-                            try {
-                                competition = jacksonObjectMapper().readValue(file)
-                                logger.debug("loaded competition data: {}", competition)
-                            } catch (e: Exception) {
-                                logger.warn("Error while attempting to load file!", e)
-                                Alert(Alert.AlertType.ERROR).apply {
-                                    title = "Could not read file!"
-                                    headerText = "We could not parse the file provided."
-                                    contentText = e.localizedMessage
-                                    showAndWait()
-                                }
-                            }
+                            doOpen()
                         }
                     }
                     item("Save") {
                         disableWhen { competitionProperty.isNull }
+                        action {
+                            logger.info("Attempting to save file")
+                            doSave()
+                        }
                     }
                     item("Save As...") {
                         disableWhen { competitionProperty.isNull }
                         action {
-                            logger.info("Opening 'Save As' menu")
-                            val chooser = FileChooser()
-                            chooser.extensionFilters.addAll(
-                                    FileChooser.ExtensionFilter("JSON File", "*.json"),
-                                    FileChooser.ExtensionFilter("All Files", "*.*")
-                            )
-                            chooser.title = "Save competition data..."
-                            val file = chooser.showSaveDialog(currentWindow)
-                            logger.debug("dest file: {}", file)
-                            if (file == null) {
-                                logger.debug("no file was selected")
-                                return@action
-                            }
-
-                            try {
-                                jacksonObjectMapper().writeValue(file, competition)
-                                logger.debug("wrote competition data: {}", competition)
-                            } catch (e: Exception) {
-                                logger.warn("Error while attempting to save file!", e)
-                                Alert(Alert.AlertType.ERROR).apply {
-                                    title = "Could not save file!"
-                                    headerText = "We could not save the file."
-                                    contentText = e.localizedMessage
-                                    showAndWait()
-                                }
-                            }
+                            chooseSaveDest()
+                            doSave()
                         }
                     }
                 }
@@ -187,6 +144,80 @@ class MainWindow : View() {
                 null -> eventLogView.appendMessage("Closed last competition")
                 else -> eventLogView.appendMessage("Competition changed to ${it.name}")
             }
+        }
+    }
+
+    private fun doCreateNew() {
+        val wizard = CompetitionCreationWizard()
+        wizard.openModal(block = true)
+        competition = wizard.result?.asMutable()
+        logger.debug("competition is now set to {}", competition)
+    }
+
+    private fun doOpen() {
+        logger.info("Opening 'Open' menu")
+        val chooser = FileChooser()
+        chooser.extensionFilters.addAll(
+                FileChooser.ExtensionFilter("JSON File", "*.json"),
+                FileChooser.ExtensionFilter("All Files", "*.*")
+        )
+        chooser.title = "Select competition data..."
+        val file = chooser.showOpenDialog(currentWindow)
+        logger.debug("got file: {}", file)
+        if (file == null) {
+            logger.debug("no file was selected")
+            return
+        }
+
+        try {
+            competition = jacksonObjectMapper().readValue(file)
+            saveDest = file
+            logger.debug("loaded competition data: {}", competition)
+        } catch (e: Exception) {
+            logger.warn("Error while attempting to load file!", e)
+            Alert(Alert.AlertType.ERROR).apply {
+                title = "Could not read file!"
+                headerText = "We could not parse the file provided."
+                contentText = e.localizedMessage
+                showAndWait()
+            }
+        }
+    }
+
+    private fun doSave() {
+        if (saveDest == null) {
+            logger.debug("We do not have a save destination")
+            chooseSaveDest()
+        }
+        try {
+            logger.debug("file is {}", saveDest)
+            jacksonObjectMapper().writeValue(saveDest, competition)
+            logger.debug("wrote competition data: {}", competition)
+        } catch (e: Exception) {
+            logger.warn("Error while attempting to save file!", e)
+            Alert(Alert.AlertType.ERROR).apply {
+                title = "Could not save file!"
+                headerText = "We could not save the file."
+                contentText = e.localizedMessage
+                showAndWait()
+            }
+        }
+    }
+
+    private fun chooseSaveDest() {
+        logger.info("Opening 'Save As' menu")
+        val chooser = FileChooser()
+        chooser.extensionFilters.addAll(
+                FileChooser.ExtensionFilter("JSON File", "*.json"),
+                FileChooser.ExtensionFilter("All Files", "*.*")
+        )
+        chooser.title = "Save competition data..."
+        val file = chooser.showSaveDialog(currentWindow)
+        logger.debug("dest file: {}", file)
+        if (file == null) {
+            logger.debug("no file was selected")
+        } else {
+            saveDest = file
         }
     }
 
