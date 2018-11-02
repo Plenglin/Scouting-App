@@ -3,6 +3,7 @@ package com.ironpanthers.scouting.desktop.view
 import com.ironpanthers.scouting.common.*
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
+import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
@@ -61,12 +62,16 @@ class MatchListView : View() {
                 label("Matches")
                 add(searchBar)
             }
-            center {
+            center = stackpane {
+                label("No competition selected") {
+                    alignment = Pos.CENTER
+                }
                 table = tableview {
                     selectionModel.apply {
                         isCellSelectionEnabled = true
                         selectionMode = SelectionMode.SINGLE
                     }
+                    visibleProperty().bind(competitionProperty.isNotNull)
                     onUserSelect(2) {
                         val col = selectionModel.selectedCells[0].column
                         logger.debug("user double clicked on col {} of {}", col, it)
@@ -85,22 +90,22 @@ class MatchListView : View() {
                     }
                     column<MatchModel, Int>("Red 1") {
                         it.value.red[0]
-                    }
+                    }.isSortable = false
                     column<MatchModel, Int>("Red 2") {
                         it.value.red[1]
-                    }
+                    }.isSortable = false
                     column<MatchModel, Int>("Red 3") {
                         it.value.red[2]
-                    }
-                    column<MatchModel, Int>("Bed 1") {
+                    }.isSortable = false
+                    column<MatchModel, Int>("Blue 1") {
                         it.value.blue[0]
-                    }
-                    column<MatchModel, Int>("B2") {
+                    }.isSortable = false
+                    column<MatchModel, Int>("Blue 2") {
                         it.value.blue[1]
-                    }
-                    column<MatchModel, Int>("B3") {
+                    }.isSortable = false
+                    column<MatchModel, Int>("Blue 3") {
                         it.value.blue[0]
-                    }
+                    }.isSortable = false
                 }
             }
         }
@@ -109,10 +114,10 @@ class MatchListView : View() {
             searchBar.clear()
             if (comp != null) {
                 displayedMatches.setAll(comp.matches.map { MatchModel(it) })
+                table.resizeColumnsToFitContent(table.columns) {  }
             } else {
                 displayedMatches.clear()
             }
-
         }
 
         table.items.bind(displayedMatches) {it}
