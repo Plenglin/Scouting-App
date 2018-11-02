@@ -1,6 +1,7 @@
 package com.ironpanthers.scouting.common
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import java.util.*
 
 
@@ -33,7 +34,7 @@ data class MutableCompetition(var name: String, var date: Date, var gameType: St
 }
 
 
-data class RobotEvent(val type: String, val time: Long, val data: JsonNode, val id: UUID = UUID.randomUUID()) {
+data class RobotEvent(val type: String, val time: Long, val data: JsonNode = JsonNodeFactory.instance.objectNode(), val id: UUID = UUID.randomUUID()) {
     fun asMutable() = MutableRobotEvent(type, time, data, id)
 }
 

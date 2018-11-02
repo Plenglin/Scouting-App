@@ -19,6 +19,8 @@ object GameDef2018 : GameDef("Power Up", "2018-power-up", 0) {
         addEventDef("pick_up_exchange", "Picked Up Cube from Exchange", ANY_GAME_PHASE, KeyCombo(KeyCode.E))
         addEventDef("pick_up_portal", "Picked Up Cube from Portal", ANY_GAME_PHASE, KeyCombo(KeyCode.P))
 
+        addEventDef("drop", "Dropped Cube", ANY_GAME_PHASE, KeyCombo(KeyCode.P))
+
         addEventDef("hit_vault", "Added Cube to Vault", ANY_GAME_PHASE, KeyCombo(KeyCode.V))
         addEventDef("hit_scale", "Added Cube to Scale", ANY_GAME_PHASE, KeyCombo(KeyCode.C))
         addEventDef("hit_switch", "Added Cube to Switch", ANY_GAME_PHASE, KeyCombo(KeyCode.W))

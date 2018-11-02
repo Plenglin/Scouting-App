@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.common.MutableCompetition
 import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.scene.Parent
@@ -31,15 +32,27 @@ class MainWindow : View() {
     private var competition: MutableCompetition? by competitionProperty
     private var saveDest: File? = null
 
-    private lateinit var editorPane: TabPane
+    // For when it's being used as a slave
+    private val areMatchesEditableProperty = SimpleBooleanProperty(true)
+    private val editableMatchProperty = SimpleObjectProperty<Tab>(null)
+
+    private lateinit var editorTabPane: TabPane
 
     init {
         matchListView.competitionProperty.bind(competitionProperty)
         matchListView.onRobotSelected = {
             logger.info("Opening editor for {}", it)
-            val tab = Tab("#${it.parent.number}: ${it.robot.team}", MatchRobotEditorView(it).root)
-            editorPane.tabs.add(tab)
-            editorPane.selectionModel.select(tab)
+            val editor = MatchRobotEditorView(it)
+            val tab = Tab("#${it.parent.number}: ${it.robot.team}", editor.root)
+            editor.canBeginRecordProperty.bind(areMatchesEditableProperty)
+            tab.userData = editor
+            editorTabPane.tabs.add(tab)
+            editorTabPane.selectionModel.select(tab)
+
+            tab.closableProperty().bind(editableMatchProperty.isNotEqualTo(tab))
+            eventLogView.appendMessage("Opened Match ${it.parent.number} Team ${it.robot.team}") {
+                editorTabPane.selectionModel.select(tab)
+            }
         }
 
         root = borderpane {
@@ -67,7 +80,22 @@ class MainWindow : View() {
                     }
                 }
                 menu("Edit") {
-
+                    item("Undo") {
+                        action {
+                            val current = editorTabPane.selectionModel.selectedItem.userData
+                            when (current) {
+                                is MatchRobotEditorView -> current.undo()
+                            }
+                        }
+                    }
+                    item("Redo") {
+                        action {
+                            val current = editorTabPane.selectionModel.selectedItem.userData
+                            when (current) {
+                                is MatchRobotEditorView -> current.redo()
+                            }
+                        }
+                    }
                 }
             }
 
@@ -100,7 +128,7 @@ class MainWindow : View() {
                         }
                     }
 
-                    editorPane = tabpane {  }
+                    editorTabPane = tabpane {  }
 
                     hbox {
                         vgrow = Priority.ALWAYS

@@ -12,7 +12,7 @@ abstract class GameDef(val name: String, val id: String, val version: Int) {
         events.add(RobotEventDef(createId(id), name, stage, keyCombo, maxTimes, icon))
     }
 
-    private fun createId(base: String): String = "${this.id}:$version:$base"
+    fun createId(base: String): String = "${this.id}:$version:$base"
 
     protected fun addEndState(id: String, name: String, icon: String? = null) {
         endStates.add(RobotEndState(createId(id), name, icon))
