@@ -1,11 +1,10 @@
 package com.ironpanthers.scouting.desktop.controller.client
 
-import com.ironpanthers.scouting.common.MutableCompetition
-import com.ironpanthers.scouting.common.MutableMatch
+import com.ironpanthers.scouting.common.*
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
-import javafx.scene.control.Label
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import org.slf4j.LoggerFactory
@@ -18,6 +17,8 @@ class MatchListView : View() {
 
     val competitionProperty = SimpleObjectProperty<MutableCompetition?>()
     var competition by competitionProperty
+
+    var onRobotSelected: (MatchRobotWrapper) -> Unit = {}
 
     private val displayedMatches = FXCollections.observableArrayList<MatchModel>()
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -61,6 +62,23 @@ class MatchListView : View() {
             }
             center {
                 table = tableview {
+                    selectionModel.apply {
+                        isCellSelectionEnabled = true
+                        selectionMode = SelectionMode.SINGLE
+                    }
+                    onUserSelect(2) {
+                        val col = selectionModel.selectedCells[0].column
+                        logger.debug("user double clicked on col {} of {}", col, it)
+                        when (col) {
+                            0 -> logger.debug("unfortunately it was the match #")
+                            1 -> onRobotSelected(it.data.getRedWrapper(0))
+                            2 -> onRobotSelected(it.data.getRedWrapper(1))
+                            3 -> onRobotSelected(it.data.getRedWrapper(2))
+                            4 -> onRobotSelected(it.data.getBlueWrapper(0))
+                            5 -> onRobotSelected(it.data.getBlueWrapper(1))
+                            6 -> onRobotSelected(it.data.getBlueWrapper(2))
+                        }
+                    }
                     column<MatchModel, Int>("#") {
                         it.value.number
                     }

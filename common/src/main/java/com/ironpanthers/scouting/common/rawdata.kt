@@ -1,15 +1,16 @@
 package com.ironpanthers.scouting.common
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.ironpanthers.scouting.util.KeyCombo
 import java.util.*
 
 
-const val AUTO = 0x1
-const val TELEOP = 0x2
-const val ENDGAME_ONLY = 0x4
-const val ENDGAME = TELEOP or ENDGAME_ONLY
-const val ANY = AUTO or TELEOP or ENDGAME_ONLY
+typealias Team = Int
+
+const val AUTO_ONLY: Int = 0x1
+const val TELEOP_ONLY: Int = 0x2
+const val ENDGAME_ONLY: Int = 0x4
+const val ENTIRE_TELEOP: Int = TELEOP_ONLY or ENDGAME_ONLY
+const val ANY_GAME_PHASE: Int = AUTO_ONLY or TELEOP_ONLY or ENDGAME_ONLY
 
 enum class TeamColor {
     RED, BLUE
@@ -19,7 +20,7 @@ data class MutableRobotEvent(var type: String, var time: Long, var data: JsonNod
     fun asImmutable() = RobotEvent(type, time, data, id)
 }
 
-data class MutableMatchRobot(var team: Int, val events: MutableList<MutableRobotEvent> = mutableListOf(), var endState: String? = null) {
+data class MutableMatchRobot(var team: Team, val events: MutableList<MutableRobotEvent> = mutableListOf(), var endState: String? = null) {
     fun asImmutable() = MatchRobot(team, events.map(MutableRobotEvent::asImmutable), endState)
 }
 
@@ -36,7 +37,7 @@ data class RobotEvent(val type: String, val time: Long, val data: JsonNode, val 
     fun asMutable() = MutableRobotEvent(type, time, data, id)
 }
 
-data class MatchRobot(val team: Int, val events: List<RobotEvent>, val endState: String? = null) {
+data class MatchRobot(val team: Team, val events: List<RobotEvent>, val endState: String? = null) {
     fun asMutable() = MutableMatchRobot(team, events.asSequence().map(RobotEvent::asMutable).toMutableList(), endState)
 }
 
