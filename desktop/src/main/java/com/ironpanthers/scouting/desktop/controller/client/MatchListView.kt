@@ -26,12 +26,30 @@ class MatchListView : View() {
         val searchBar = textfield {
             promptText = "Search by team..."
         }
-        searchBar.textProperty().onChange { text ->
-            val team = text!!
-            val matches = competition?.matches?.filter { match ->
-                match.red.any { it.team.toString().contains(team) } || match.blue.any { it.team.toString().contains(team) } || match.number.toString().contains(text)
-            } ?: return@onChange
-            displayedMatches.setAll(matches.map { MatchModel(it) })
+        searchBar.textProperty().addListener { _, old, new ->
+            val current = displayedMatches.asSequence().map { it.number.get() }.toSortedSet()
+            val matches = if (new.length > old.length) {
+                // Narrowing the search criteria
+                displayedMatches.filter { match ->
+                        match.red.any { it.toString().contains(new) }
+                                || match.blue.any { it.toString().contains(new) }
+                }
+            } else {
+                // Expanding the search criteria
+                competition?.matches
+                        ?.asSequence()
+                        ?.filter { match ->
+                            current.contains(match.number)
+                                    || match.red.any { it.team.toString().contains(new) }
+                                    || match.blue.any { it.team.toString().contains(new) }
+                        }
+                        ?.map { match ->
+                            MatchModel(match)
+                        }
+                        ?.toList() ?: emptyList<MatchModel>()
+            }
+
+            displayedMatches.setAll(matches)
         }
 
         root = borderpane {
@@ -95,5 +113,6 @@ private class MatchModel(data: MutableMatch) {
 
     val blue: List<SimpleObjectProperty<Int>> = data.blue.map { SimpleObjectProperty<Int>(it.team) }
     val red: List<SimpleObjectProperty<Int>> = data.red.map { SimpleObjectProperty<Int>(it.team) }
-    val number: SimpleObjectProperty<Int> = SimpleObjectProperty<Int>(data.number)
+    val number: SimpleObjectProperty<Int> = SimpleObjectProperty(data.number)
+
 }
