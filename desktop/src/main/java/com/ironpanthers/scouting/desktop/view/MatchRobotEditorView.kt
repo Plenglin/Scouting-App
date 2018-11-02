@@ -2,6 +2,7 @@ package com.ironpanthers.scouting.desktop.view
 
 import com.ironpanthers.scouting.common.MatchRobotWrapper
 import com.ironpanthers.scouting.common.RobotEvent
+import javafx.animation.Timeline
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Orientation
 import javafx.scene.Parent
@@ -40,7 +41,10 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
                     canRecordEventsProperty.bind(selectedProperty().not().and(isRecordingProperty))
                 }
             }
-            center = controlPane.root
+
+            center = TimelineView().root
+
+            bottom = controlPane.root
         }
 
         isRecordingProperty.onChange {

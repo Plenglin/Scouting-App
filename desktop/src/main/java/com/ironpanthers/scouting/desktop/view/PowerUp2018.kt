@@ -2,13 +2,14 @@ package com.ironpanthers.scouting.desktop.view
 
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.frc2018.GameDef2018
-import javafx.event.ActionEvent
-import javafx.event.EventHandler
 import javafx.scene.Parent
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import org.slf4j.LoggerFactory
-import tornadofx.*
+import tornadofx.action
+import tornadofx.anchorpane
+import tornadofx.anchorpaneConstraints
+import tornadofx.gridpane
 
 class PowerUp2018 : EditorPanel() {
     override val root: Parent
