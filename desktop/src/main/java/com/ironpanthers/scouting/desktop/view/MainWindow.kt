@@ -128,7 +128,7 @@ class MainWindow : View() {
                         }
                     }
 
-                    editorTabPane = tabpane {  }
+                    editorTabPane = tabpane()
 
                     hbox {
                         vgrow = Priority.ALWAYS

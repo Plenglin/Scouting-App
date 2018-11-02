@@ -26,6 +26,7 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
     init {
         val controlPane = PowerUp2018()
         controlPane.editorParent = this
+        controlPane.root.disableProperty().bind(isRecordingProperty.and(canRecordEventsProperty).not())
         root = borderpane {
             top = toolbar {
                 orientation = Orientation.HORIZONTAL
