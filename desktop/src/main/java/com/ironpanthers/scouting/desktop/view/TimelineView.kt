@@ -3,20 +3,20 @@ package com.ironpanthers.scouting.desktop.view
 import com.ironpanthers.scouting.common.RobotEvent
 import com.ironpanthers.scouting.desktop.util.toFXColor
 import com.ironpanthers.scouting.frc2018.GameDef2018
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleLongProperty
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
-import javafx.scene.Parent
-import javafx.scene.shape.Circle
-import org.slf4j.LoggerFactory
-import tornadofx.*
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
-import javafx.geometry.Insets
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableSet
+import javafx.collections.SetChangeListener
+import javafx.scene.Parent
+import javafx.scene.shape.Circle
 import javafx.util.Duration
+import org.slf4j.LoggerFactory
+import tornadofx.*
+import java.util.*
 
 
 class TimelineView : View() {
@@ -28,48 +28,27 @@ class TimelineView : View() {
     val initialTimeProperty = SimpleLongProperty(0)
     var initialTime by initialTimeProperty
 
-    val robotEvents: ObservableList<RobotEvent> = FXCollections.observableArrayList()
+    val robotEvents: ObservableSet<RobotEvent> = FXCollections.observableSet()
 
-    private val totalTimeProperty = SimpleDoubleProperty(150000.0)
+    internal val totalTimeProperty = SimpleDoubleProperty(150000.0)
     private val widthProperty = SimpleDoubleProperty()
-    private val heightProperty = SimpleDoubleProperty()
-    private val innerWidthProperty = widthProperty.multiply(zoomProperty)
+    internal val heightProperty = SimpleDoubleProperty()
+    internal val innerWidthProperty = widthProperty.multiply(zoomProperty)
 
     private val logger = LoggerFactory.getLogger(javaClass)
+
+    internal val eventRadiusProperty = SimpleDoubleProperty(5.0)
+    internal val eventSeparationProperty = eventRadiusProperty.add(1.0)
+
+    private val eventModelSet = TreeSet<RobotEventModel>()
+    private val eventModelSetProperty = FXCollections.observableSet(eventModelSet)
 
     init {
         root = scrollpane {
             heightProperty.bind(heightProperty())
             pane {
                 prefWidthProperty().bind(innerWidthProperty)
-                bindChildren(robotEvents) { ev ->
-                    val circle = Circle().apply {
-                        tooltip(ev.type) {
-                            // disgusting reflection
-                            try {
-                                val fieldBehavior = this@tooltip.javaClass.getDeclaredField("BEHAVIOR")
-                                fieldBehavior.isAccessible = true
-                                val objBehavior = fieldBehavior.get(tooltip)
-
-                                val fieldTimer = objBehavior.javaClass.getDeclaredField("activationTimer")
-                                fieldTimer.isAccessible = true
-                                val objTimer = fieldTimer.get(objBehavior) as Timeline
-
-                                objTimer.keyFrames.clear()
-                                objTimer.keyFrames.add(KeyFrame(Duration(0.0)))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                        radius = 10.0
-                        fill = GameDef2018.events.find { it.id == ev.type }!!.color.toFXColor()  // TODO make it not retard
-                        centerXProperty().bind(initialTimeProperty.subtract(ev.time).multiply(innerWidthProperty).divide(totalTimeProperty).negate())
-                        centerYProperty().bind(heightProperty.divide(2))
-                        logger.trace("circle at ({}, {})", centerX, centerY)
-                    }
-                    logger.trace("converting {} to {}", ev, circle)
-                    circle
-                }
+                bindChildren(eventModelSetProperty, RobotEventModel::circle)
             }
 
             setOnScroll {
@@ -83,6 +62,56 @@ class TimelineView : View() {
         }
         widthProperty.bind(root.widthProperty())
 
+        robotEvents.addListener(SetChangeListener<RobotEvent> { change ->
+            eventModelSetProperty.remove(RobotEventModel(change.elementAdded, this))
+            eventModelSetProperty.add(RobotEventModel(change.elementAdded, this))
+        })
+
+    }
+
+}
+
+private class RobotEventModel(val event: RobotEvent, parent: TimelineView) : Comparable<RobotEventModel> {
+    val rankProperty = SimpleIntegerProperty(0)
+    val rank by rankProperty
+
+    val xProperty = SimpleDoubleProperty()
+
+    val circle: Circle by lazy {
+        Circle().apply {
+            tooltip(event.type) {
+                // disgusting reflection
+                try {
+                    val fieldBehavior = this@tooltip.javaClass.getDeclaredField("BEHAVIOR")
+                    fieldBehavior.isAccessible = true
+                    val objBehavior = fieldBehavior.get(this@tooltip)
+
+                    val fieldTimer = objBehavior.javaClass.getDeclaredField("activationTimer")
+                    fieldTimer.isAccessible = true
+                    val objTimer = fieldTimer.get(objBehavior) as Timeline
+
+                    objTimer.keyFrames.clear()
+                    objTimer.keyFrames.add(KeyFrame(Duration(0.0)))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            radiusProperty().bind(parent.eventRadiusProperty)
+            fill = GameDef2018.events.find { it.id == event.type }!!.color.toFXColor()  // TODO make it not retard
+            centerXProperty().bind(parent.initialTimeProperty.subtract(event.time).multiply(parent.innerWidthProperty).divide(parent.totalTimeProperty).negate())
+            centerYProperty().bind(parent.heightProperty.divide(2).add(parent.eventSeparationProperty.multiply(rankProperty)))
+            xProperty.bind(centerXProperty())
+        }
+    }
+
+    override fun compareTo(other: RobotEventModel): Int {
+        val a = event.time
+        val b = other.event.time
+        return when {
+            a < b -> -1
+            a > b -> 1
+            else -> 0
+        }
     }
 
 }
