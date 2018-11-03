@@ -12,6 +12,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import javafx.stage.FileChooser
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -121,12 +122,8 @@ class MainWindow : View() {
 
             center = splitpane(Orientation.VERTICAL) {
                 splitpane(Orientation.HORIZONTAL) {
-                    hbox {
-                        vgrow = Priority.ALWAYS
-                        pane {
-                            add(matchListView)
-                        }
-                    }
+                    vgrow = Priority.ALWAYS
+                    add(matchListView)
 
                     editorTabPane = tabpane()
 
@@ -138,13 +135,20 @@ class MainWindow : View() {
                     }
                 }
 
-                vbox {
+                vgrow = Priority.ALWAYS
+                prefHeight = 0.0
+                splitpane(Orientation.HORIZONTAL) {
                     vgrow = Priority.ALWAYS
-                    prefHeight = 0.0
-                    splitpane(Orientation.HORIZONTAL) {
-                        add(chatView)
-                        add(eventLogView)
+                    /*(chatView.root as Region).apply {
+                        prefHeightProperty().bind(heightProperty())
+                        vgrow = Priority.ALWAYS
                     }
+                    (eventLogView.root as Region).apply {
+                        prefHeightProperty().bind(heightProperty())
+                        vgrow = Priority.ALWAYS
+                    }*/
+                    add(chatView)
+                    add(eventLogView)
                 }
 
             }

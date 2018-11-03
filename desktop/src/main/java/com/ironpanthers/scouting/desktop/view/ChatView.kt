@@ -9,8 +9,6 @@ class ChatView : View() {
 
     init {
         root = borderpane {
-            hgrow = Priority.ALWAYS
-            vgrow = Priority.ALWAYS
             top = label("Chat")
             center = textarea {
                 isEditable = false
