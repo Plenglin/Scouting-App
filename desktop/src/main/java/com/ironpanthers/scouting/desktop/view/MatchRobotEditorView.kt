@@ -4,6 +4,7 @@ import com.ironpanthers.scouting.common.MatchRobotWrapper
 import com.ironpanthers.scouting.common.RobotEvent
 import javafx.animation.Timeline
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.geometry.Orientation
 import javafx.scene.Parent
 import javafx.scene.control.ToggleButton
@@ -23,11 +24,17 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
     private val undoStack = LinkedList<RobotEvent>()
     private val redoStack = LinkedList<RobotEvent>()
     private val events = TreeMap<Int, RobotEvent>()
+    private val eventTimeline = TimelineView()
+
+    private val initialTimeProperty = SimpleLongProperty()
+    private var initialTime by initialTimeProperty
 
     init {
         val controlPane = PowerUp2018()
         controlPane.editorParent = this
         controlPane.root.disableProperty().bind(isRecordingProperty.and(canRecordEventsProperty).not())
+        eventTimeline.initialTimeProperty.bind(initialTimeProperty)
+
         root = borderpane {
             top = toolbar {
                 orientation = Orientation.HORIZONTAL
@@ -35,15 +42,14 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
                     disableProperty().bind(canBeginRecordProperty.not())
                     isSelected = false
                     isRecordingProperty.bind(selectedProperty())
+                    initialTime = System.currentTimeMillis()
                 }
                 btnDC = togglebutton("Robot DC") {
                     enableWhen { isRecordingProperty }
                     canRecordEventsProperty.bind(selectedProperty().not().and(isRecordingProperty))
                 }
             }
-
-            center = TimelineView().root
-
+            center = eventTimeline.root
             bottom = controlPane.root
         }
 
@@ -57,6 +63,7 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
         logger.debug("Received event {}", event)
         undoStack.push(event)
         redoStack.clear()
+        eventTimeline.robotEvents.add(event)
     }
 
     fun undo() {
