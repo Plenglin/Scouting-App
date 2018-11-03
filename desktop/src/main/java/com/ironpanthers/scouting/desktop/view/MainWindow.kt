@@ -12,7 +12,6 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
-import javafx.scene.layout.Region
 import javafx.stage.FileChooser
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -127,12 +126,7 @@ class MainWindow : View() {
 
                     editorTabPane = tabpane()
 
-                    hbox {
-                        vgrow = Priority.ALWAYS
-                        pane {
-
-                        }
-                    }
+                    add(connectionView)
                 }
 
                 vgrow = Priority.ALWAYS
