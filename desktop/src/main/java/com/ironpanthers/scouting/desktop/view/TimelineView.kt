@@ -1,20 +1,22 @@
 package com.ironpanthers.scouting.desktop.view
 
 import com.ironpanthers.scouting.common.RobotEvent
+import com.ironpanthers.scouting.desktop.util.toFXColor
+import com.ironpanthers.scouting.frc2018.GameDef2018
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.shape.Circle
 import org.slf4j.LoggerFactory
 import tornadofx.*
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
+import javafx.geometry.Insets
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.CornerRadii
 import javafx.util.Duration
-import java.lang.reflect.AccessibleObject.setAccessible
-
 
 
 class TimelineView : View() {
@@ -54,12 +56,13 @@ class TimelineView : View() {
                                 val objTimer = fieldTimer.get(objBehavior) as Timeline
 
                                 objTimer.keyFrames.clear()
-                                objTimer.keyFrames.add(KeyFrame(Duration(250.0)))
+                                objTimer.keyFrames.add(KeyFrame(Duration(0.0)))
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                         }
                         radius = 10.0
+                        fill = GameDef2018.events.find { it.id == ev.type }!!.color.toFXColor()  // TODO make it not retard
                         centerXProperty().bind(initialTimeProperty.subtract(ev.time).multiply(innerWidthProperty).divide(totalTimeProperty).negate())
                         centerYProperty().bind(heightProperty.divide(2))
                         logger.trace("circle at ({}, {})", centerX, centerY)

@@ -116,3 +116,7 @@ fun extractAlliance(arr: JSONArray): List<MatchRobot> {
         MatchRobot(it.substring(3).toInt(), listOf())
     }
 }
+
+fun Color.toFXColor(): javafx.scene.paint.Color {
+    return javafx.scene.paint.Color(r, g, b, a)
+}
