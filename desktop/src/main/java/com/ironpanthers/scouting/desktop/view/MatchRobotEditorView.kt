@@ -67,15 +67,20 @@ class MatchRobotEditorView(val match: MatchRobotWrapper) : View() {
     }
 
     fun undo() {
-        val event = undoStack.pop()
-        logger.debug("Undid action {}", event)
+        val event = undoStack.poll()
+        if (event != null) {
+            logger.debug("Undoing action {}", event)
+            eventTimeline.robotEvents.remove(event)
+            redoStack.push(event)
+        }
     }
 
     fun redo() {
-        val obj = redoStack.pop()
-        if (obj != null) {
-            logger.debug("Redoing")
-            undoStack.push(obj)
+        val event = redoStack.poll()
+        if (event != null) {
+            logger.debug("Redoing action {}", event)
+            eventTimeline.robotEvents.add(event)
+            undoStack.push(event)
         }
     }
 
