@@ -1,19 +1,17 @@
 package com.ironpanthers.scouting.desktop.view
 
-import javafx.scene.Parent
-import tornadofx.View
-import tornadofx.listview
 import javax.bluetooth.*
 
+/*
 class ServerConnectionWizard : View() {
     override val root: Parent
 
     init {
-        root = listview<Any> {
+        //root = listview<Any> {
 
-        }
+
     }
-}
+}*/
 
 fun main(args: Array<String>) {
     LocalDevice.getLocalDevice().discoveryAgent.startInquiry(DiscoveryAgent.GIAC, object : DiscoveryListener {
