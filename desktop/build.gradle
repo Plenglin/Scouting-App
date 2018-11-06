@@ -69,8 +69,21 @@ task run(type: JavaExec, dependsOn: build) {
     main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
 }
 
+task runEmulator1(type: JavaExec, dependsOn: build) {
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty("bluecove.stack", "emulator")
+    main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
+}
+
+task runEmulator2(type: JavaExec, dependsOn: build) {
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty("bluecove.stack", "emulator")
+    main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
+}
+
 // java -cp bluecove-2.1.0.jar;bluecove-emu-2.1.0.jar com.intel.bluetooth.emu.EmuServer
 task bluecoveEmulator(type: JavaExec) {
     classpath = fileTree(dir: "lib", include: "*.jar")
     main = "com.intel.bluetooth.emu.EmuServer"
 }
+
