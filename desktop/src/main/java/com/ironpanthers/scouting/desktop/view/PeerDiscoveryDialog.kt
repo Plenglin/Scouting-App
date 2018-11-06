@@ -1,23 +1,19 @@
 package com.ironpanthers.scouting.desktop.view
 
-import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
 import javafx.scene.control.SelectionMode
 import org.slf4j.LoggerFactory
 import tornadofx.*
-import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import javax.bluetooth.*
-import javax.bluetooth.UUID
 
-class ServerConnectionWizard : View(), DiscoveryListener {
+class PeerDiscoveryDialog : View(), DiscoveryListener {
     override val root: Parent
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val services = FXCollections.observableArrayList<ServiceRecord>()
-    var result: ServiceRecord? = null
+    private val devices = FXCollections.observableArrayList<RemoteDevice>()
+    var result: RemoteDevice? = null
 
     private val isSearchingProperty = SimpleBooleanProperty(false)
     private var isSearching by isSearchingProperty
@@ -33,14 +29,14 @@ class ServerConnectionWizard : View(), DiscoveryListener {
                     }
                 }
             }
-            listview<ServiceListing> {
-                items.bind(services) {
-                    ServiceListing(it)
+            listview<DeviceListing> {
+                items.bind(devices) {
+                    DeviceListing(it)
                 }
                 selectionModel.selectionMode = SelectionMode.SINGLE
                 onUserSelect {
                     logger.info("User selected $it")
-                    result = it.serviceRecord
+                    result = it.dev
                     modalStage?.close()
                 }
             }
@@ -57,31 +53,31 @@ class ServerConnectionWizard : View(), DiscoveryListener {
         }
     }
 
-    override fun serviceSearchCompleted(transID: Int, respCode: Int) {
-        logger.debug("Finished service search, attempting to search next device")
-        trySearchNextDevice()
-    }
-
-    private val devices = ConcurrentLinkedQueue<RemoteDevice>()
-    private var currentDevice: RemoteDevice? = null
+    //private val devices = ConcurrentLinkedQueue<RemoteDevice>()
+    //private var currentDevice: RemoteDevice? = null
 
     override fun deviceDiscovered(btDevice: RemoteDevice, cod: DeviceClass) {
         logger.debug("Discovered $btDevice of class $cod")
         devices.add(btDevice)
-        //services.add(btDevice)
-    }
-
-    override fun servicesDiscovered(transID: Int, servRecord: Array<out ServiceRecord>) {
-        logger.debug("Discovered services: {}", Arrays.toString(servRecord))
-        services.addAll(servRecord)
     }
 
     override fun inquiryCompleted(discType: Int) {
         logger.debug("Inquiry complete $discType")
-        trySearchNextDevice()
+        //trySearchNextDevice()
     }
 
-    private fun trySearchNextDevice() {
+    override fun servicesDiscovered(transID: Int, servRecord: Array<out ServiceRecord>) {
+        //logger.debug("Discovered devices: {}", Arrays.toString(servRecord))
+        //services.addAll(servRecord)
+        //services.add()
+    }
+
+    override fun serviceSearchCompleted(transID: Int, respCode: Int) {
+        //logger.debug("Finished service search, attempting to search next device")
+        //trySearchNextDevice()
+    }
+
+/*private fun trySearchNextDevice() {
         if (devices.isNotEmpty()) {
             searchNextDevice()
         } else {
@@ -99,12 +95,12 @@ class ServerConnectionWizard : View(), DiscoveryListener {
                 dev,
                 this
         )
-    }
+    }*/
 
 }
 
-private data class ServiceListing(val serviceRecord: ServiceRecord) {
+private data class DeviceListing(val dev: RemoteDevice) {
     override fun toString(): String {
-        return "${serviceRecord.hostDevice}"
+        return "${dev.getFriendlyName(true)} (${dev.bluetoothAddress})"
     }
 }

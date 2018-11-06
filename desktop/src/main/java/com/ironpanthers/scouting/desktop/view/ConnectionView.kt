@@ -7,7 +7,6 @@ import javafx.scene.Parent
 import org.controlsfx.control.ToggleSwitch
 import org.slf4j.LoggerFactory
 import tornadofx.*
-import javax.bluetooth.ServiceRecord
 
 class ConnectionView : View() {
 
@@ -25,10 +24,10 @@ class ConnectionView : View() {
                 })
                 button("+") {
                     action {
-                        val wizard = find<ServerConnectionWizard>()
+                        val wizard = find<PeerDiscoveryDialog>()
                         wizard.openModal(block = true)
-                        logger.info("Got servicerecord {}", wizard.result)
-                        logger.debug("Connecting to URL {}", wizard.result?.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false))
+                        logger.info("Got device {}", wizard.result)
+                        //logger.debug("Connecting to URL {}", wizard.result?.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false))
                     }
                 }
                 button("Refresh")
