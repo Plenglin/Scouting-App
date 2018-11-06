@@ -22,8 +22,8 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(include: "*.jar", dir: "lib")
-    
+    implementation fileTree(dir: "lib", include: "*.jar")
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
@@ -64,4 +64,10 @@ test {
 
 task run(type: JavaExec, dependsOn: build) {
     main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
+}
+
+// java -cp bluecove-2.1.0.jar;bluecove-emu-2.1.0.jar com.intel.bluetooth.emu.EmuServer
+task bluecoveEmulator(type: JavaExec) {
+    classpath = fileTree(dir: "lib", include: "*.jar")
+    main = "com.intel.bluetooth.emu.EmuServer"
 }
