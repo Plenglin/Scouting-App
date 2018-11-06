@@ -7,10 +7,15 @@ import java.util.*
 
 val PROTOCOL_VERSION = 0
 
-private val BLUETOOTH_SERVER_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
+private val BLUETOOTH_MAIN_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
+private val BLUETOOTH_CHAT_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
 
-val BLUETOOTH_SERVER_UUID = UUID.nameUUIDFromBytes(BLUETOOTH_SERVER_UUID_STRING.toByteArray())
-val BLUETOOTH_SERVER_UUID_RAW = BLUETOOTH_SERVER_UUID.toString().replace("-", "")
+val BLUETOOTH_MAIN_UUID = UUID.nameUUIDFromBytes(BLUETOOTH_MAIN_UUID_STRING.toByteArray())
+val BLUETOOTH_MAIN_UUID_RAW = BLUETOOTH_MAIN_UUID.toString().replace("-", "")
+
+val BLUETOOTH_CHAT_UUID = UUID.nameUUIDFromBytes(BLUETOOTH_CHAT_UUID_STRING.toByteArray())
+val BLUETOOTH_CHAT_UUID_RAW = BLUETOOTH_CHAT_UUID.toString().replace("-", "")
+
 val BLUETOOTH_NAME = "panther-scout"
 
 val YEAR_TO_GAME_DEF = mapOf<Int, GameDef>(

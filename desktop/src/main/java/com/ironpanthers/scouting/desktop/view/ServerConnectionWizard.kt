@@ -1,6 +1,6 @@
 package com.ironpanthers.scouting.desktop.view
 
-import com.ironpanthers.scouting.BLUETOOTH_SERVER_UUID_RAW
+import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
@@ -95,7 +95,7 @@ class ServerConnectionWizard : View(), DiscoveryListener {
         logger.debug("Querying {} for services", dev)
         LocalDevice.getLocalDevice().discoveryAgent.searchServices(
                 intArrayOf(),
-                arrayOf(UUID(BLUETOOTH_SERVER_UUID_RAW, false)),
+                arrayOf(UUID(BLUETOOTH_MAIN_UUID_RAW, false)),
                 dev,
                 this
         )
