@@ -10,6 +10,8 @@ val PROTOCOL_VERSION = 0
 private val BLUETOOTH_SERVER_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
 
 val BLUETOOTH_SERVER_UUID = UUID.nameUUIDFromBytes(BLUETOOTH_SERVER_UUID_STRING.toByteArray())
+val BLUETOOTH_SERVER_UUID_RAW = BLUETOOTH_SERVER_UUID.toString().replace("-", "")
+val BLUETOOTH_NAME = "panther-scout"
 
 val YEAR_TO_GAME_DEF = mapOf<Int, GameDef>(
         2018 to GameDef2018

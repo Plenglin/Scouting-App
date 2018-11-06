@@ -170,6 +170,9 @@ class MainWindow : View() {
                 else -> eventLogView.appendMessage("Competition changed to ${it.name}")
             }
         }
+        connectionView.serverEnabledProperty.onChange {
+            eventLogView.appendMessage(if (it) "Server enabled" else "Server disabled")
+        }
     }
 
     private fun doCreateNew() {
