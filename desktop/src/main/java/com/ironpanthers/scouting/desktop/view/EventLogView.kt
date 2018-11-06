@@ -15,14 +15,16 @@ class EventLogView : View() {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     init {
-        root = anchorpane {
-            listview<Event>(events) {
-                anchorpaneConstraints {
-                    topAnchor = 0.0
-                    bottomAnchor = 0.0
-                    leftAnchor = 0.0
-                    rightAnchor = 0.0
+        root = vbox {
+            toolbar {
+                button("Clear") {
+                    action {
+                        events.clear()
+                    }
                 }
+            }
+
+            listview<Event>(events) {
 
                 hgrow = Priority.ALWAYS
                 vgrow = Priority.ALWAYS

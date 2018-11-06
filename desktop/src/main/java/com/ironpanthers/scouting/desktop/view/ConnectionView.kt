@@ -1,12 +1,12 @@
 package com.ironpanthers.scouting.desktop.view
 
 import com.ironpanthers.scouting.desktop.io.server.BluetoothServer
-import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.Parent
 import org.controlsfx.control.ToggleSwitch
 import org.slf4j.LoggerFactory
 import tornadofx.*
+import javax.bluetooth.ServiceRecord
 
 class ConnectionView : View() {
 
@@ -22,9 +22,10 @@ class ConnectionView : View() {
                 })
                 button("+") {
                     action {
-                        val wizard = ServerConnectionWizard()
+                        val wizard = find<ServerConnectionWizard>()
                         wizard.openModal(block = true)
-                        logger.info("Got server device {}", wizard.result)
+                        logger.info("Got servicerecord {}", wizard.result)
+                        logger.debug("Connecting to URL {}", wizard.result?.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false))
                     }
                 }
                 button("Refresh")
