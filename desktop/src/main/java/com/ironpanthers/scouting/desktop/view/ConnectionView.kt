@@ -3,8 +3,7 @@ package com.ironpanthers.scouting.desktop.view
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.intel.bluetooth.MicroeditionConnector
 import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
-import com.ironpanthers.scouting.BLUETOOTH_NAME
-import com.ironpanthers.scouting.desktop.io.server.BluetoothServer
+import com.ironpanthers.scouting.desktop.io.util.BluetoothServer
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.Parent

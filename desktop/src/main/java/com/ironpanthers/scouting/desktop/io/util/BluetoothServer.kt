@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.io.server
+package com.ironpanthers.scouting.desktop.io.util
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonNode
