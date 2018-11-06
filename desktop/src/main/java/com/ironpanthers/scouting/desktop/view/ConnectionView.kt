@@ -1,6 +1,9 @@
 package com.ironpanthers.scouting.desktop.view
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.intel.bluetooth.MicroeditionConnector
+import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
+import com.ironpanthers.scouting.BLUETOOTH_NAME
 import com.ironpanthers.scouting.desktop.io.server.BluetoothServer
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
@@ -10,6 +13,9 @@ import org.controlsfx.control.ToggleSwitch
 import org.slf4j.LoggerFactory
 import tornadofx.*
 import javax.bluetooth.RemoteDevice
+import javax.microedition.io.StreamConnectionNotifier
+
+typealias UserClickListener = () -> Unit
 
 class ConnectionView : View() {
 
@@ -18,7 +24,7 @@ class ConnectionView : View() {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val server = BluetoothServer()
     private val mapper = jacksonObjectMapper()
-    private val peers = observableList<DeviceConnection>()
+    private val peers = observableList<RemoteDevice>()
 
     init {
         root = vbox {
@@ -33,26 +39,45 @@ class ConnectionView : View() {
                         val dev = wizard.result
                         logger.info("Got device {}", dev)
                         if (dev != null) {
-                            peers.add(DeviceConnection(dev))
+                            peers.add(dev)
                         }
                         //logger.debug("Connecting to URL {}", wizard.result?.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false))
                     }
                 }
                 button("Refresh")
             }
-            val rootTreeItem = TreeItem<String>()
+            val rootTreeItem = TreeItem<DeviceNodeData>()
             rootTreeItem.isExpanded = true
             rootTreeItem.children.bind(peers) { dev ->
-                TreeItem(dev.dev.bluetoothAddress).apply {
-                    userData = dev
-                    treeitem("Connect Chat Relay")
-                    treeitem("Connect Match Manager")
+                TreeItem(DeviceNodeData(dev, NodeType.ROOT)).apply {
+                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_CHAT))
+                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_MASTER)) {
+                        /*userData = {
+                            val notif = MicroeditionConnector.open(dev.url) as StreamConnectionNotifier
+                            val conn = notif.acceptAndOpen()
+                            logger.debug("conn: {}", conn)
+                        }*/
+                    }
                 }
             }
             treetableview(rootTreeItem) {
                 isShowRoot = false
-                column<String, String>("Name") {
-                    it.value.valueProperty()
+                column<DeviceNodeData, String>("Name") {
+                    val nodeData = it.value.value
+                    nodeData.nodeTitleProperty
+                }
+                onUserSelect(2) {
+                    logger.info("User selected node {}", it)
+                    when (it.type) {
+                        NodeType.CONNECT_MASTER -> {
+                            logger.debug("Connecting to {}", it.url)
+                            val notif = MicroeditionConnector.open(it.url) as StreamConnectionNotifier
+                            val conn = notif.acceptAndOpen()
+                            logger.debug("conn: {}", conn)
+                        }
+                        NodeType.CONNECT_CHAT -> TODO()
+                        NodeType.ROOT -> TODO()
+                    }
                 }
             }
         }
@@ -79,7 +104,21 @@ class ConnectionView : View() {
     }
 }
 
-data class DeviceConnection(val dev: RemoteDevice) {
+data class DeviceNodeData(val dev: RemoteDevice, val type: NodeType) {
+    val url = "btspp://${dev.bluetoothAddress}:$BLUETOOTH_MAIN_UUID_RAW;authenticate=false;encrypt=false;master=false"
     val nameProperty = SimpleStringProperty(dev.bluetoothAddress)
     val isConnectedProperty = SimpleBooleanProperty(false)
+
+    val nodeTitleProperty by lazy {
+        SimpleStringProperty(when (type) {
+            NodeType.ROOT -> dev.bluetoothAddress
+            NodeType.CONNECT_CHAT -> "Connect Chat Relay"
+            NodeType.CONNECT_MASTER -> "Connect Match Manager"
+        })
+    }
+
+}
+
+enum class NodeType {
+    ROOT, CONNECT_CHAT, CONNECT_MASTER
 }
