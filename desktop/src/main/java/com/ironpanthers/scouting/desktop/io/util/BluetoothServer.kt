@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.intel.bluetooth.MicroeditionConnector
-import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
 import com.ironpanthers.scouting.BLUETOOTH_NAME
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CopyOnWriteArrayList
@@ -18,13 +17,13 @@ import kotlin.concurrent.thread
 
 typealias DataListener = (JsonNode?) -> Unit
 
-class BluetoothServer : AutoCloseable {
+class BluetoothServer(val uuid: String) : AutoCloseable {
 
     internal val msgQueue = LinkedBlockingDeque<JsonNode>()
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private val connectionAcceptorThread: Thread = thread(start = false, isDaemon = true) {
-        val url = "btspp://localhost:$BLUETOOTH_MAIN_UUID_RAW;name=$BLUETOOTH_NAME"
+        val url = "btspp://localhost:$uuid;name=$BLUETOOTH_NAME"
         val c = MicroeditionConnector.open(url, Connector.READ_WRITE, false) as StreamConnectionNotifier
         logger.info("Waiting for client connections on $url")
         try {

@@ -50,13 +50,7 @@ class ConnectionView : View() {
             rootTreeItem.children.bind(peers) { dev ->
                 TreeItem(DeviceNodeData(dev, NodeType.ROOT)).apply {
                     treeitem(DeviceNodeData(dev, NodeType.CONNECT_CHAT))
-                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_MASTER)) {
-                        /*userData = {
-                            val notif = MicroeditionConnector.open(dev.url) as StreamConnectionNotifier
-                            val conn = notif.acceptAndOpen()
-                            logger.debug("conn: {}", conn)
-                        }*/
-                    }
+                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_MASTER))
                 }
             }
             treetableview(rootTreeItem) {
@@ -94,6 +88,10 @@ class ConnectionView : View() {
         }
     }
 
+    private fun findServices() {
+
+    }
+
     private fun startServer() {
         server.start()
     }
@@ -101,6 +99,10 @@ class ConnectionView : View() {
     private fun stopServer() {
         server.close()
     }
+}
+
+data class DeviceNodeWrapper(val dev: RemoteDevice) {
+    val nameProperty = SimpleStringProperty(dev.bluetoothAddress)
 }
 
 data class DeviceNodeData(val dev: RemoteDevice, val type: NodeType) {
