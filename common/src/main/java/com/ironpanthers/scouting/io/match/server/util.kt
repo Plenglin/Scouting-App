@@ -1,17 +1,37 @@
 package com.ironpanthers.scouting.io.match.server
 
-import com.ironpanthers.scouting.io.match.common.Message
 import java.util.*
 
-interface ServerCommStrategy : AutoCloseable {
+abstract class ClientInterface : AutoCloseable {
 
-    var queue: Deque<Message>
+    val id = UUID.randomUUID()!!
+    protected var listener: ClientInputListener? = null
 
-    abstract fun onStart(): Boolean
-    abstract fun sendObject(obj: Any)
+    abstract val displayName: String
+
+    abstract fun start()
+    abstract fun send(msg: String)
+
+    fun attachClientInputListener(listener: ClientInputListener) {
+        this.listener = listener
+    }
+
+    val clientInfo get() = ClientInfo(id, displayName)
+
 }
 
-interface CommStrategyListener {
-    fun onReceivedObject(obj: Any)
-    fun onDisconnect()
+interface ClientInputListener {
+
+    /**
+     * Called when the client sends over an object.
+     */
+    fun onReceivedFromClient(client: ClientInterface, data: String)
+
+    /**
+     * Called when the client socket is closed, either intentionally or not.
+     */
+    fun onClientDisconnected(client: ClientInterface)
+
 }
+
+data class ClientInfo(val id: UUID, val displayName: String)
