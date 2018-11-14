@@ -3,7 +3,6 @@ package com.ironpanthers.scouting.desktop.view
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.intel.bluetooth.MicroeditionConnector
 import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
-import com.ironpanthers.scouting.desktop.io.util.BluetoothServer
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.Parent
@@ -21,7 +20,7 @@ class ConnectionView : View() {
     override val root: Parent
     val serverEnabledProperty = SimpleBooleanProperty()
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val server = BluetoothServer()
+    //private val server = BluetoothServer()
     private val mapper = jacksonObjectMapper()
     private val peers = observableList<RemoteDevice>()
 
@@ -83,9 +82,9 @@ class ConnectionView : View() {
             }
         }
 
-        server.endpoint("robot-performance") {
+        //server.endpoint("robot-performance") {
             //mapper.treeToValue()
-        }
+        //}
     }
 
     private fun findServices() {
@@ -93,11 +92,11 @@ class ConnectionView : View() {
     }
 
     private fun startServer() {
-        server.start()
+        //server.start()
     }
 
     private fun stopServer() {
-        server.close()
+        //server.close()
     }
 }
 
