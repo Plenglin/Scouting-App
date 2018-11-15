@@ -4,7 +4,8 @@ import java.util.*
 
 abstract class ClientInterface : AutoCloseable {
 
-    val id = UUID.randomUUID()!!
+    var isHandshakeCompleted = false
+    lateinit var id: UUID
     protected var listener: ClientInputListener? = null
 
     abstract val displayName: String
