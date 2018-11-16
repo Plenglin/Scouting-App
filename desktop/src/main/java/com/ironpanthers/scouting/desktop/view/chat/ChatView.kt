@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.view
+package com.ironpanthers.scouting.desktop.view.chat
 
 import javafx.scene.Parent
 import javafx.scene.layout.Priority

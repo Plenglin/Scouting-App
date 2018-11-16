@@ -4,6 +4,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.common.MutableCompetition
 import com.ironpanthers.scouting.desktop.controller.server.CompetitionCreationWizard
+import com.ironpanthers.scouting.desktop.view.chat.ChatView
+import com.ironpanthers.scouting.desktop.view.connection.ConnectionView
+import com.ironpanthers.scouting.desktop.view.match.MatchListView
+import com.ironpanthers.scouting.desktop.view.match.MatchRobotEditorView
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation

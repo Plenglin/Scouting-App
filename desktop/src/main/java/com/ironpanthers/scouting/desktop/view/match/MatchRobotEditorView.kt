@@ -1,8 +1,7 @@
-package com.ironpanthers.scouting.desktop.view
+package com.ironpanthers.scouting.desktop.view.match
 
 import com.ironpanthers.scouting.common.MatchRobotWrapper
 import com.ironpanthers.scouting.common.RobotEvent
-import javafx.animation.Timeline
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.geometry.Orientation

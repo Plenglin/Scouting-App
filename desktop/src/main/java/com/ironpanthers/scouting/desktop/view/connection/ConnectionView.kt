@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.view
+package com.ironpanthers.scouting.desktop.view.connection
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.intel.bluetooth.MicroeditionConnector

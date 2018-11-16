@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.view
+package com.ironpanthers.scouting.desktop.view.match
 
 import tornadofx.View
 

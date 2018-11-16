@@ -1,4 +1,4 @@
 rootProject.name = 'scout-system'
-//include 'app-android'
+include 'app-android'
 include 'common'
 include 'desktop'

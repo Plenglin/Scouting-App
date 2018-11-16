@@ -1,4 +1,4 @@
-package com.ironpanthers.scouting.desktop.view
+package com.ironpanthers.scouting.desktop.view.connection
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
