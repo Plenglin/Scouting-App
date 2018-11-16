@@ -25,13 +25,14 @@ class MatchClient(input: InputStream, output: OutputStream) : AutoCloseable {
 
     private var serverId: UUID? = null
 
-    private var running = true
+    private var running = false
     private var isHandshakeCompleted = false
 
     private lateinit var receiver: Thread
 
     fun start() {
         send(MSG_HANDSHAKE)
+        running = true
         receiver = thread(isDaemon = true) {
             logger.info("{} thread started", id)
             while (true) {
