@@ -1,15 +1,14 @@
-package com.ironpanthers.scouting.desktop.io.matchmaster.server
+package com.ironpanthers.scouting.desktop.io.match.server
 
 import com.ironpanthers.scouting.io.match.server.ClientInterface
 import org.slf4j.LoggerFactory
 import java.io.PrintWriter
-import javax.bluetooth.RemoteDevice
 import javax.microedition.io.StreamConnection
 import kotlin.concurrent.thread
 
-class DesktopBluetoothClientInterface(val device: RemoteDevice, val conn: StreamConnection) : ClientInterface() {
+class DesktopBluetoothClientInterface(conn: StreamConnection) : ClientInterface() {
 
-    override val displayName: String = device.getFriendlyName(true)
+    override val displayName: String = "asdf"
 
     private val logger = LoggerFactory.getLogger(javaClass)
 

@@ -8,8 +8,6 @@ import com.ironpanthers.scouting.io.match.MSG_HANDSHAKE
 import com.ironpanthers.scouting.io.match.MSG_MATCH_BEGIN
 import com.ironpanthers.scouting.io.match.Message
 import org.slf4j.LoggerFactory
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
@@ -56,6 +54,7 @@ class MatchServerEngine : AutoCloseable, ClientInputListener {
     }
 
     fun addClient(client: ClientInterface) {
+        client.start()
         logger.info("Adding client with UUID ${client.id}: $client")
         client.attachClientInputListener(this)
         clientsMap[client.id] = client
