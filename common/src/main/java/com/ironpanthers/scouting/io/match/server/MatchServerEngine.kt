@@ -13,9 +13,9 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
 
-class MatchServerEngine : AutoCloseable, ClientInputListener {
+class MatchServerEngine : AutoCloseable, ClientConnectionListener {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val id = UUID.randomUUID()
+    val id = UUID.randomUUID()
 
     private val clientsMap = ConcurrentHashMap<UUID, ClientInterface>()
     private val msgQueue = ArrayBlockingQueue<Message>(8)
@@ -53,11 +53,17 @@ class MatchServerEngine : AutoCloseable, ClientInputListener {
         }
     }
 
-    fun addClient(client: ClientInterface) {
-        client.start()
+    private fun addClient(client: ClientInterface) {
         logger.info("Adding client with UUID ${client.id}: $client")
         client.attachClientInputListener(this)
         clientsMap[client.id] = client
+    }
+
+    fun connectToClient(client: BeforeHandshakeClientInterface) {
+        logger.info("Attempting to handshake with {}", client)
+        client.initiateHandshake {
+            addClient(it)
+        }
     }
 
     fun broadcast(msg: Message) {
@@ -85,12 +91,7 @@ class MatchServerEngine : AutoCloseable, ClientInputListener {
             val parsed = mapper.readValue<Message>(data)
             logger.trace("Parsed message to {}", parsed)
 
-            if (!client.isHandshakeCompleted && parsed.type == MSG_HANDSHAKE) {
-                client.id = parsed.sender
-                logger.debug("{} sent a handshake", client.id)
-            } else {
-                msgQueue.put(parsed)
-            }
+            msgQueue.put(parsed)
         } catch (e: JsonParseException) {
             logger.error("Parsing JSON failed!", e)
         } catch (e: JsonMappingException) {

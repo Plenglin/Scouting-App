@@ -2,18 +2,18 @@ package com.ironpanthers.scouting.desktop.io.match.server
 
 import com.ironpanthers.scouting.io.match.server.ClientInterface
 import org.slf4j.LoggerFactory
+import java.io.BufferedReader
 import java.io.PrintWriter
+import java.util.*
 import javax.microedition.io.StreamConnection
 import kotlin.concurrent.thread
 
-class DesktopBluetoothClientInterface(conn: StreamConnection) : ClientInterface() {
+class BluetoothClientInterface(override val id: UUID, val rx: BufferedReader, val tx: PrintWriter, val conn: StreamConnection) : ClientInterface() {
 
     override val displayName: String = "asdf"
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val rx = conn.openInputStream().bufferedReader()
-    private val tx = PrintWriter(conn.openOutputStream().bufferedWriter())
     private var running = false
 
     private val streamReadingThread = thread(start = false, isDaemon = true) {
@@ -31,12 +31,16 @@ class DesktopBluetoothClientInterface(conn: StreamConnection) : ClientInterface(
         }
     }
 
-    override fun start() {
+    init {
+        logger.info("{} CliInterface created", id)
         running = true
         streamReadingThread.start()
     }
 
     override fun send(msg: String) {
+        if (!running) {
+            throw IllegalStateException("Not running! Can't send message!")
+        }
         logger.trace("Sending to {}: {}", id, msg)
         tx.println(msg)
     }
@@ -44,5 +48,8 @@ class DesktopBluetoothClientInterface(conn: StreamConnection) : ClientInterface(
     override fun close() {
         running = false
         streamReadingThread.interrupt()
+        rx.close()
+        tx.close()
+        conn.close()
     }
 }

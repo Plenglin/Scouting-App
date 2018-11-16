@@ -9,8 +9,7 @@ import javax.microedition.io.Connector
 import javax.microedition.io.StreamConnectionNotifier
 import kotlin.concurrent.thread
 
-object BluetoothMatchServer {
-
+object BluetoothMatchServer : AutoCloseable {
     private var server = MatchServerEngine()
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -24,7 +23,8 @@ object BluetoothMatchServer {
         }
 
         server.start()
-        acceptorThread = thread(isDaemon = true, start = false) {
+
+        acceptorThread = thread(isDaemon = true) {
             logger.debug("listener thread starting")
             val local = LocalDevice.getLocalDevice()
             local.discoverable = DiscoveryAgent.GIAC
@@ -32,16 +32,31 @@ object BluetoothMatchServer {
             val notifier = Connector.open(url) as StreamConnectionNotifier
 
             while (true) {
-                val conn = notifier.acceptAndOpen()
-                logger.info("received connection {}", conn)
-                server.addClient(DesktopBluetoothClientInterface(conn))
+                try {
+                    val conn = notifier.acceptAndOpen()
+                    logger.info("received connection {}", conn)
+                    server.connectToClient(BluetoothPreHandshake(server.id, conn))
+                } catch (e: InterruptedException) {
+                    if (running) {
+                        logger.warn("Connection acceptor interrupted while still running! Ignoring interrupt.")
+                    } else {
+                        break
+                    }
+                } catch (e: Exception) {
+                    logger.error("Error in connection acceptor thread thread", e)
+                }
             }
+
+            notifier.close()
+            logger.info("Listener thread stopped")
         }
-        acceptorThread.start()
     }
 
-    fun stop() {
+    override fun close() {
         logger.info("Stopping BMS")
+        running = false
+        acceptorThread.interrupt()
+        server.close()
     }
 
 }

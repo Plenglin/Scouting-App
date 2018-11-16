@@ -2,26 +2,30 @@ package com.ironpanthers.scouting.io.match.server
 
 import java.util.*
 
+typealias HandshakeCompletedListener = (ClientInterface) -> Unit
+
+interface BeforeHandshakeClientInterface {
+    fun initiateHandshake(listener: HandshakeCompletedListener)
+}
+
 abstract class ClientInterface : AutoCloseable {
 
-    var isHandshakeCompleted = false
-    lateinit var id: UUID
-    protected var listener: ClientInputListener? = null
-
     abstract val displayName: String
+    abstract val id: UUID
 
-    abstract fun start()
-    abstract fun send(msg: String)
+    protected var listener: ClientConnectionListener? = null
 
-    fun attachClientInputListener(listener: ClientInputListener) {
+    fun attachClientInputListener(listener: ClientConnectionListener) {
         this.listener = listener
     }
 
-    val clientInfo get() = ClientInfo(id, displayName)
+    abstract fun send(msg: String)
+
+    val clientInfo by lazy { ClientInfo(id, displayName) }
 
 }
 
-interface ClientInputListener {
+interface ClientConnectionListener {
 
     /**
      * Called when the client sends over an object.
