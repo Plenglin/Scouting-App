@@ -22,7 +22,6 @@ class ConnectionView : View() {
     override val root: Parent
     val serverEnabledProperty = SimpleBooleanProperty()
     private val logger = LoggerFactory.getLogger(javaClass)
-    //private val server = BluetoothServer()
     private val mapper = jacksonObjectMapper()
     private val peers = observableList<RemoteDevice>()
 
