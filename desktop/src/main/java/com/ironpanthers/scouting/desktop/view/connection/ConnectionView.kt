@@ -2,15 +2,17 @@ package com.ironpanthers.scouting.desktop.view.connection
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.intel.bluetooth.MicroeditionConnector
-import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
+import javafx.collections.FXCollections
 import javafx.scene.Parent
 import javafx.scene.control.TreeItem
 import org.controlsfx.control.ToggleSwitch
 import org.slf4j.LoggerFactory
 import tornadofx.*
 import javax.bluetooth.RemoteDevice
+import javax.bluetooth.ServiceRecord
 import javax.microedition.io.StreamConnectionNotifier
 
 typealias UserClickListener = () -> Unit
@@ -44,37 +46,61 @@ class ConnectionView : View() {
                 }
                 button("Refresh")
             }
-            val rootTreeItem = TreeItem<DeviceNodeData>()
+
+            val rootTreeItem = TreeItem<ConnectionTreeNode>(Root())
             rootTreeItem.isExpanded = true
-            rootTreeItem.children.bind(peers) { dev ->
-                TreeItem(DeviceNodeData(dev, NodeType.ROOT)).apply {
-                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_CHAT))
-                    treeitem(DeviceNodeData(dev, NodeType.CONNECT_MASTER))
-                }
+            rootTreeItem.children.bind(peers) { dev: RemoteDevice ->
+                val wrapper = Device(dev)
+                val tree = TreeItem<ConnectionTreeNode>(wrapper)
+                tree.children.bind(wrapper.children) { TreeItem(it) }
+                tree
             }
-            treetableview(rootTreeItem) {
+
+            treeview(rootTreeItem) {
                 isShowRoot = false
-                column<DeviceNodeData, String>("Name") {
+                /*column<ConnectionTreeNode, String>("Name") {
                     val nodeData = it.value.value
-                    nodeData.nodeTitleProperty
-                }
-                onUserSelect(2) {
+                    nodeData.nameProperty
+                }*/
+                /*onUserSelect(2) {
                     logger.info("User selected node {}", it)
-                    when (it.type) {
-                        NodeType.CONNECT_MASTER -> {
-                            logger.debug("Connecting to {}", it.url)
-                            val notif = MicroeditionConnector.open(it.url) as StreamConnectionNotifier
+                    when (it) {
+                        is MatchMaster -> {
+                            val service = it.serviceRecord
+                            val url = service.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false)
+
+                            logger.info("Connecting to {}", url)
+                            val notif = MicroeditionConnector.open(url) as StreamConnectionNotifier
                             val conn = notif.acceptAndOpen()
                             logger.debug("conn: {}", conn)
                         }
-                        NodeType.CONNECT_CHAT -> TODO()
-                        NodeType.ROOT -> TODO()
+                        is Chat -> {
+
+                        }
+                    }
+                }*/
+                onUserSelect {
+                    logger.info("User selected node {}", it)
+                    when (it) {
+                        is MatchMaster -> {
+                            val service = it.serviceRecord
+                            val url = service.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false)
+
+                            logger.info("Connecting to {}", url)
+                            val notif = MicroeditionConnector.open(url) as StreamConnectionNotifier
+                            val conn = notif.acceptAndOpen()
+                            logger.debug("conn: {}", conn)
+                        }
+                        is Chat -> {
+
+                        }
                     }
                 }
             }
         }
 
         serverEnabledProperty.onChange {
+            logger.debug("Setting server enabled to {}")
             if (it) {
                 startServer()
             } else {
@@ -104,21 +130,49 @@ data class DeviceNodeWrapper(val dev: RemoteDevice) {
     val nameProperty = SimpleStringProperty(dev.bluetoothAddress)
 }
 
-data class DeviceNodeData(val dev: RemoteDevice, val type: NodeType) {
-    val url = "btspp://${dev.bluetoothAddress}:$BLUETOOTH_MAIN_UUID_RAW;authenticate=false;encrypt=false;master=false"
-    val nameProperty = SimpleStringProperty(dev.bluetoothAddress)
-    val isConnectedProperty = SimpleBooleanProperty(false)
-
-    val nodeTitleProperty by lazy {
-        SimpleStringProperty(when (type) {
-            NodeType.ROOT -> dev.bluetoothAddress
-            NodeType.CONNECT_CHAT -> "Connect Chat Relay"
-            NodeType.CONNECT_MASTER -> "Connect Match Manager"
-        })
-    }
-
+sealed class ConnectionTreeNode {
+    abstract val nameProperty: StringProperty
 }
 
-enum class NodeType {
-    ROOT, CONNECT_CHAT, CONNECT_MASTER
+private class Root : ConnectionTreeNode() {
+    override val nameProperty: StringProperty = SimpleStringProperty()
+}
+
+private class Device(dev: RemoteDevice) : ConnectionTreeNode() {
+    override val nameProperty: StringProperty = SimpleStringProperty(dev.getFriendlyName(true))
+    val isSearchingProperty = SimpleBooleanProperty(false)
+
+    var foundMatch: ServiceRecord? = null
+    var foundChat: ServiceRecord? = null
+
+    val children = FXCollections.observableArrayList<ConnectionTreeNode>()
+
+    init {
+        isSearchingProperty.onChange { searching ->
+            if (searching) {
+                children.setAll(Loading())
+            } else {
+                foundChat?.let {
+                    children.add(Chat(it))
+                }
+                foundMatch?.let {
+                    children.add(MatchMaster(it))
+                }
+            }
+        }
+    }
+}
+
+private class Loading : ConnectionTreeNode() {
+    override val nameProperty: StringProperty = SimpleStringProperty("Loading...")
+}
+
+private class Chat(val serviceRecord: ServiceRecord) : ConnectionTreeNode() {
+    val connectedProperty = SimpleBooleanProperty(false)
+    override val nameProperty: StringProperty = SimpleStringProperty("Chat Relay")
+}
+
+private class MatchMaster(val serviceRecord: ServiceRecord) : ConnectionTreeNode() {
+    val connectedProperty = SimpleBooleanProperty(false)
+    override val nameProperty: StringProperty = SimpleStringProperty()
 }
