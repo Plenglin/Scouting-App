@@ -9,7 +9,7 @@ import javax.microedition.io.Connector
 import javax.microedition.io.StreamConnectionNotifier
 import kotlin.concurrent.thread
 
-object BluetoothMatchServer : AutoCloseable {
+object BluetoothMatchServer {
     private var server = MatchServerEngine()
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -52,7 +52,7 @@ object BluetoothMatchServer : AutoCloseable {
         }
     }
 
-    override fun close() {
+    fun stop() {
         logger.info("Stopping BMS")
         running = false
         acceptorThread.interrupt()

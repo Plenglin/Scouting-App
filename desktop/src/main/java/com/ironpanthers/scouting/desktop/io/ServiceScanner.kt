@@ -2,6 +2,8 @@ package com.ironpanthers.scouting.desktop.io
 
 import com.ironpanthers.scouting.BLUETOOTH_CHAT_UUID_RAW
 import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID_RAW
+import com.ironpanthers.scouting.desktop.util.BT_CHAT
+import com.ironpanthers.scouting.desktop.util.BT_MATCH
 import java.lang.IllegalStateException
 import javax.bluetooth.*
 import javax.microedition.io.Connector
@@ -14,7 +16,7 @@ class ServiceScanner(val device: RemoteDevice, val onSearchCompleted: (List<Serv
         records.clear()
         LocalDevice.getLocalDevice().discoveryAgent.searchServices(
                 intArrayOf(),
-                arrayOf(UUID(BLUETOOTH_MAIN_UUID_RAW, false), UUID(BLUETOOTH_CHAT_UUID_RAW, false)),
+                arrayOf(BT_MATCH, BT_CHAT),
                 device, this)
         //Connector.open()
     }
