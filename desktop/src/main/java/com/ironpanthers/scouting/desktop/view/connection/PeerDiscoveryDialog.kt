@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.desktop.view.connection
 
+import com.ironpanthers.scouting.desktop.io.BluetoothPeer
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
@@ -13,7 +14,7 @@ class PeerDiscoveryDialog : View(), DiscoveryListener {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val devices = FXCollections.observableArrayList<RemoteDevice>()
-    var result: RemoteDevice? = null
+    private var result: RemoteDevice? = null
 
     private val isSearchingProperty = SimpleBooleanProperty(false)
     private var isSearching by isSearchingProperty
@@ -53,16 +54,22 @@ class PeerDiscoveryDialog : View(), DiscoveryListener {
         }
     }
 
-    //private val devices = ConcurrentLinkedQueue<RemoteDevice>()
-    //private var currentDevice: RemoteDevice? = null
+    fun consumeResult(): BluetoothPeer? {
+        val out = result
+        result = null
+        if (out == null) {
+            return null
+        }
+        return BluetoothPeer(out)
+    }
 
     override fun deviceDiscovered(btDevice: RemoteDevice, cod: DeviceClass) {
-        logger.debug("Discovered $btDevice of class $cod")
+        logger.debug("Discovered {} of class {}", btDevice, cod)
         devices.add(btDevice)
     }
 
     override fun inquiryCompleted(discType: Int) {
-        logger.debug("Inquiry complete $discType")
+        logger.debug("Inquiry complete {}", discType)
         //trySearchNextDevice()
     }
 
@@ -76,26 +83,6 @@ class PeerDiscoveryDialog : View(), DiscoveryListener {
         //logger.debug("Finished service search, attempting to search next device")
         //trySearchNextDevice()
     }
-
-/*private fun trySearchNextDevice() {
-        if (devices.isNotEmpty()) {
-            searchNextDevice()
-        } else {
-            isSearching = false
-        }
-    }
-
-    private fun searchNextDevice() {
-        val dev = devices.remove()
-        currentDevice = dev
-        logger.debug("Querying {} for services", dev)
-        LocalDevice.getLocalDevice().discoveryAgent.searchServices(
-                intArrayOf(),
-                arrayOf(UUID(BLUETOOTH_MAIN_UUID_RAW, false)),
-                dev,
-                this
-        )
-    }*/
 
 }
 

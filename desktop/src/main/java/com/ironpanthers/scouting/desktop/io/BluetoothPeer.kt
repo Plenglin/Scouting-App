@@ -4,6 +4,7 @@ import com.ironpanthers.scouting.desktop.util.BT_CHAT
 import com.ironpanthers.scouting.desktop.util.BT_MATCH
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
+import org.slf4j.LoggerFactory
 import tornadofx.getValue
 import tornadofx.setValue
 import javax.bluetooth.*
@@ -16,12 +17,14 @@ class BluetoothPeer(val device: RemoteDevice) : DiscoveryListener {
 
     val searchingProperty = SimpleBooleanProperty(false)
     var searching by searchingProperty
+    private val logger = LoggerFactory.getLogger(javaClass)
     private val records = mutableListOf<ServiceRecord>()
 
     fun findServices() {
         if (searching) {
             throw IllegalStateException()
         }
+        logger.debug("Initiating servicce search")
         searching = true
         records.clear()
         LocalDevice.getLocalDevice().discoveryAgent.searchServices(
@@ -32,6 +35,9 @@ class BluetoothPeer(val device: RemoteDevice) : DiscoveryListener {
     }
 
     override fun servicesDiscovered(p0: Int, p1: Array<out ServiceRecord>) {
+        if (logger.isDebugEnabled) {
+            logger.debug("Discovered services {}", p1.contentToString())
+        }
         records.addAll(p1)
     }
 

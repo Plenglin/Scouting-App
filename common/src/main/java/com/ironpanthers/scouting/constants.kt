@@ -7,8 +7,8 @@ import java.util.*
 
 val PROTOCOL_VERSION = 0
 
-private val BLUETOOTH_MAIN_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
-private val BLUETOOTH_CHAT_UUID_STRING = "Iron_Panthers_Scouting_App_$PROTOCOL_VERSION"
+private val BLUETOOTH_MAIN_UUID_STRING = "Iron_Panthers_Scouting_App_MATCH_$PROTOCOL_VERSION"
+private val BLUETOOTH_CHAT_UUID_STRING = "Iron_Panthers_Scouting_App_CHAT_$PROTOCOL_VERSION"
 
 val BLUETOOTH_MAIN_UUID = UUID.nameUUIDFromBytes(BLUETOOTH_MAIN_UUID_STRING.toByteArray())
 val BLUETOOTH_MAIN_UUID_RAW = BLUETOOTH_MAIN_UUID.toString().replace("-", "")

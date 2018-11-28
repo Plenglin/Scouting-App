@@ -46,6 +46,17 @@ class ConnectionView : View() {
                         }
                     }
                 }
+                button("Add unpaired device") {
+                    action {
+                        logger.info("Opening a PDD")
+                        val pdd = find<PeerDiscoveryDialog>()
+                        pdd.openWindow(block = true, escapeClosesWindow = true)
+
+                        val res = pdd.consumeResult()
+                        logger.debug("PDD returned result {}", res)
+                        PeerDiscoveryManager.peers.add(res)
+                    }
+                }
             }
 
             val rootTreeItem = TreeItem<ConnectionTreeNode>(Root())
@@ -108,6 +119,10 @@ data class DeviceNodeWrapper(val dev: RemoteDevice) {
 
 sealed class ConnectionTreeNode {
     abstract val nameProperty: StringProperty
+
+    override fun toString(): String {
+        return nameProperty.get()
+    }
 }
 
 private class Root : ConnectionTreeNode() {
@@ -115,6 +130,8 @@ private class Root : ConnectionTreeNode() {
 }
 
 private class Device(dev: BluetoothPeer) : ConnectionTreeNode() {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     override val nameProperty: StringProperty = SimpleStringProperty(dev.device.getFriendlyName(true))
     val isSearchingProperty = SimpleBooleanProperty(false)
 
@@ -126,9 +143,11 @@ private class Device(dev: BluetoothPeer) : ConnectionTreeNode() {
     init {
         isSearchingProperty.bind(dev.searchingProperty)
         isSearchingProperty.onChange { searching ->
+            logger.debug("{} search status changed to {}", dev, searching)
             if (searching) {
                 children.setAll(Text("Loading..."))
             } else {
+                children.clear()
                 foundChat?.let {
                     children.add(Chat(it))
                 }
