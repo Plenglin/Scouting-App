@@ -72,12 +72,21 @@ task run(type: JavaExec, dependsOn: build) {
 task runEmulator1(type: JavaExec, dependsOn: build) {
     classpath = sourceSets.main.runtimeClasspath
     systemProperty("bluecove.stack", "emulator")
+    systemProperty("com.ironpanthers.scouting.desktop.tag", "emu1")
     main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
 }
 
 task runEmulator2(type: JavaExec, dependsOn: build) {
     classpath = sourceSets.main.runtimeClasspath
     systemProperty("bluecove.stack", "emulator")
+    systemProperty("com.ironpanthers.scouting.desktop.tag", "emu2")
+    main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
+}
+
+task runEmulator3(type: JavaExec, dependsOn: build) {
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty("bluecove.stack", "emulator")
+    systemProperty("com.ironpanthers.scouting.desktop.tag", "emu3")
     main = "com.ironpanthers.scouting.desktop.ScoutingSystemApplicationKt"
 }
 

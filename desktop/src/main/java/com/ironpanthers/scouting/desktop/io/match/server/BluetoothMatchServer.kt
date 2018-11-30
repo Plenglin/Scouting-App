@@ -28,7 +28,7 @@ object BluetoothMatchServer {
             logger.debug("listener thread starting")
             val local = LocalDevice.getLocalDevice()
             local.discoverable = DiscoveryAgent.GIAC
-            val url = "btspp://localhost:$BLUETOOTH_MAIN_UUID_RAW;name=BluetoothMatchServer"
+            val url = "btspp://localhost:$BLUETOOTH_MAIN_UUID_RAW;name=BluetoothMatchServer;authenticate=false"
             val notifier = Connector.open(url) as StreamConnectionNotifier
 
             while (true) {

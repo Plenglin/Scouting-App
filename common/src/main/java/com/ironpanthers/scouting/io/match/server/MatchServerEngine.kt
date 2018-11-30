@@ -27,7 +27,7 @@ class MatchServerEngine : AutoCloseable, ClientConnectionListener {
     fun start() {
         logger.info("Server engine initializing with UUID {}", id)
         running = true
-        msgProcessingThread = thread(isDaemon = false) {
+        msgProcessingThread = thread(isDaemon = true) {
             logger.info("{} thread started", id)
             while (true) {
                 try {
