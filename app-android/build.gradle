@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'idea'
 
 
 buildscript {
@@ -44,7 +45,10 @@ android {
         }
     }
 
+}
 
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -64,12 +68,20 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4j_version
     implementation group: 'org.slf4j', name: 'slf4j-android', version: slf4j_version
 
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: jackson_version
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-repositories {
-    mavenCentral()
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 apply plugin: 'kotlin-android-extensions'

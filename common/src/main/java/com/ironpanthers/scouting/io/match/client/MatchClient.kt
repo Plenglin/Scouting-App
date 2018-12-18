@@ -1,5 +1,6 @@
 package com.ironpanthers.scouting.io.match.client
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ironpanthers.scouting.io.match.MSG_HANDSHAKE
@@ -59,8 +60,8 @@ class MatchClient(input: InputStream, output: OutputStream) : AutoCloseable {
         tx.println(serialized)
     }
 
-    fun send(type: String, data: Any? = null) {
-        send(Message(id, type, data = mapper.valueToTree(data)))
+    fun send(type: String, data: JsonNode? = null) {
+        send(Message(id, type, data = data))
     }
 
     private fun onMessageReceived(msg: Message) {

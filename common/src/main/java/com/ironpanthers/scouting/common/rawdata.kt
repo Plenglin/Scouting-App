@@ -2,6 +2,7 @@ package com.ironpanthers.scouting.common
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import java.io.Serializable
 import java.util.*
 
 
@@ -34,18 +35,18 @@ data class MutableCompetition(var name: String, var date: Date, var gameType: St
 }
 
 
-data class RobotEvent(val type: String, val time: Long, val data: JsonNode = JsonNodeFactory.instance.objectNode(), val id: UUID = UUID.randomUUID()) {
+data class RobotEvent(val type: String, val time: Long, val data: JsonNode = JsonNodeFactory.instance.objectNode(), val id: UUID = UUID.randomUUID()) : Serializable {
     fun asMutable() = MutableRobotEvent(type, time, data, id)
 }
 
-data class MatchRobot(val team: Team, val events: List<RobotEvent>, val endState: String? = null) {
+data class MatchRobot(val team: Team, val events: List<RobotEvent>, val endState: String? = null) : Serializable {
     fun asMutable() = MutableMatchRobot(team, events.asSequence().map(RobotEvent::asMutable).toMutableList(), endState)
 }
 
-data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val blue: List<MatchRobot>) {
+data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val blue: List<MatchRobot>) : Serializable {
     fun asMutable() = MutableMatch(number, time, red.map(MatchRobot::asMutable), blue.map(MatchRobot::asMutable))
 }
 
-data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) {
+data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) : Serializable {
     fun asMutable() = MutableCompetition(name, date, gameType, matches.asSequence().map(Match::asMutable).toMutableList())
 }
