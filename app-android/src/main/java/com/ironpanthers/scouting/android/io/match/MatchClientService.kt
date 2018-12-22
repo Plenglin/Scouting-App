@@ -9,14 +9,11 @@ import android.content.Intent
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import com.ironpanthers.scouting.BLUETOOTH_MAIN_UUID
-import com.ironpanthers.scouting.android.ScoutingApplication
 import com.ironpanthers.scouting.common.Match
 import com.ironpanthers.scouting.io.match.MSG_MATCH_ASSIGN
 import com.ironpanthers.scouting.io.match.MSG_MATCH_BEGIN
 import com.ironpanthers.scouting.io.match.client.MatchClient
 import org.slf4j.LoggerFactory
-import java.lang.IllegalArgumentException
-import kotlin.properties.Delegates
 
 private const val ACTION_SEND_MATCH_DATA = "com.ironpanthers.scouting.android.io.match.action.SEND_MATCH"
 private const val ACTION_REQUEST_MATCH_DATA = "com.ironpanthers.scouting.android.io.match.action.REQUEST_MATCH"
@@ -42,8 +39,8 @@ class MatchClientService : IntentService("MatchClientService") {
 
     var socket: BluetoothSocket? = null
     val adapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-    val app by lazy { application as ScoutingApplication }
-    var isConnected by Delegates.observable(app::isConnected)
+    //val app by lazy { application as ScoutingApplication }
+    var isConnected = false
 
     private var client: MatchClient? = null
 
@@ -103,6 +100,7 @@ class MatchClientService : IntentService("MatchClientService") {
         this.client = client
         this.socket = socket
         isConnected = true
+        sendBroadcast(Intent(EVENT_CONNECTED_TO_SERVER))
         logger.info("successfully connected to {}", host)
     }
 
