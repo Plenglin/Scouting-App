@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ironpanthers.scouting.android.MatchListAdapter
 import com.ironpanthers.scouting.android.R
-import com.ironpanthers.scouting.android.competitionList.dummy.DummyContent
-import kotlinx.android.synthetic.main.activity_competition_detail.*
+import com.ironpanthers.scouting.common.Competition
 import kotlinx.android.synthetic.main.competition_detail.view.*
 
 /**
@@ -18,21 +18,14 @@ import kotlinx.android.synthetic.main.competition_detail.view.*
  */
 class CompetitionDetailFragment : Fragment() {
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private var item: DummyContent.DummyItem? = null
+    private var item: Competition? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
-                // Load the dummy content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
-                item = DummyContent.ITEM_MAP[it.getString(ARG_ITEM_ID)]
-                activity?.toolbar_layout?.title = item?.content
+            if (it.containsKey(ARG_DATA)) {
+                item = it.getSerializable(ARG_DATA) as Competition?
             }
         }
     }
@@ -41,19 +34,14 @@ class CompetitionDetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.competition_detail, container, false)
 
-        // Show the dummy content as text in a TextView.
         item?.let {
-            rootView.competition_detail.text = it.details
+            rootView.competition_detail.list_matches.adapter = MatchListAdapter(inflater, it.matches)
         }
 
         return rootView
     }
 
     companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
-        const val ARG_ITEM_ID = "item_id"
+        const val ARG_DATA = "comp_data"
     }
 }

@@ -43,8 +43,8 @@ class CompetitionDetailActivity : AppCompatActivity() {
             // using a fragment transaction.
             val fragment = CompetitionDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(CompetitionDetailFragment.ARG_ITEM_ID,
-                            intent.getStringExtra(CompetitionDetailFragment.ARG_ITEM_ID))
+                    putString(CompetitionDetailFragment.ARG_DATA,
+                            intent.getStringExtra(CompetitionDetailFragment.ARG_DATA))
                 }
             }
 

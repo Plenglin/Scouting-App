@@ -14,9 +14,11 @@ import android.view.MenuItem
 import com.ironpanthers.scouting.android.R
 
 import com.ironpanthers.scouting.android.competitionList.dummy.DummyContent
+import com.ironpanthers.scouting.common.Competition
 import kotlinx.android.synthetic.main.activity_competition_list.*
-import kotlinx.android.synthetic.main.competition_list_content.view.*
+import kotlinx.android.synthetic.main.row_competition_list.view.*
 import kotlinx.android.synthetic.main.competition_list.*
+import java.text.SimpleDateFormat
 
 /**
  * An activity representing a list of Pings. This activity
@@ -56,7 +58,7 @@ class CompetitionListActivity : AppCompatActivity() {
             twoPane = true
         }
 
-        setupRecyclerView(competition_list)
+        setupRecyclerView(list_competitions)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -75,11 +77,11 @@ class CompetitionListActivity : AppCompatActivity() {
             }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, twoPane)
+        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, TODO(), twoPane)
     }
 
     class SimpleItemRecyclerViewAdapter(private val parentActivity: CompetitionListActivity,
-                                        private val values: List<DummyContent.DummyItem>,
+                                        private val values: List<Competition>,
                                         private val twoPane: Boolean) :
             RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
 
@@ -91,7 +93,7 @@ class CompetitionListActivity : AppCompatActivity() {
                 if (twoPane) {
                     val fragment = CompetitionDetailFragment().apply {
                         arguments = Bundle().apply {
-                            putString(CompetitionDetailFragment.ARG_ITEM_ID, item.id)
+                            putString(CompetitionDetailFragment.ARG_DATA, item.id)
                         }
                     }
                     parentActivity.supportFragmentManager
@@ -100,7 +102,7 @@ class CompetitionListActivity : AppCompatActivity() {
                             .commit()
                 } else {
                     val intent = Intent(v.context, CompetitionDetailActivity::class.java).apply {
-                        putExtra(CompetitionDetailFragment.ARG_ITEM_ID, item.id)
+                        putExtra(CompetitionDetailFragment.ARG_DATA, item.id)
                     }
                     v.context.startActivity(intent)
                 }
@@ -109,14 +111,14 @@ class CompetitionListActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.competition_list_content, parent, false)
+                    .inflate(R.layout.row_competition_list, parent, false)
             return ViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = values[position]
-            holder.idView.text = item.id
-            holder.contentView.text = item.content
+            holder.idView.text = item.name
+            holder.contentView.text = SimpleDateFormat.getInstance().format(item.date)
 
             with(holder.itemView) {
                 tag = item
