@@ -14,6 +14,7 @@ import android.widget.EditText
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ironpanthers.scouting.android.*
 import com.ironpanthers.scouting.android.competitionList.dummy.DummyContent
+import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.CompetitionFileSummary
 import kotlinx.android.synthetic.main.activity_competition_list.*
 import kotlinx.android.synthetic.main.competition_list.*
@@ -116,11 +117,12 @@ class CompetitionListActivity : AppCompatActivity() {
 
         init {
             onClickListener = View.OnClickListener { v ->
-                val item = v.tag as DummyContent.DummyItem
+                val header = v.tag as CompetitionFileSummary
+                val item = header.load(jacksonObjectMapper())
                 if (twoPane) {
                     val fragment = CompetitionDetailFragment().apply {
                         arguments = Bundle().apply {
-                            putString(CompetitionDetailFragment.ARG_DATA, item.id)
+                            putSerializable(CompetitionDetailFragment.ARG_DATA, item)
                         }
                     }
                     parentActivity.supportFragmentManager
@@ -129,7 +131,7 @@ class CompetitionListActivity : AppCompatActivity() {
                             .commit()
                 } else {
                     val intent = Intent(v.context, CompetitionDetailActivity::class.java).apply {
-                        putExtra(CompetitionDetailFragment.ARG_DATA, item.id)
+                        putExtra(CompetitionDetailFragment.ARG_DATA, item)
                     }
                     v.context.startActivity(intent)
                 }

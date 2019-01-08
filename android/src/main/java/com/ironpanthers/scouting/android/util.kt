@@ -5,6 +5,7 @@ import awaitStringResponse
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
@@ -20,6 +21,10 @@ import java.text.SimpleDateFormat
 
 fun loadCompetitionFileData(file: File, mapper: ObjectMapper): CompetitionFileSummary {
     return mapper.treeToValue<Competition>(mapper.readTree(file)).createFileSummary(file)
+}
+
+fun CompetitionFileSummary.load(mapper: ObjectMapper): Competition {
+    return mapper.readValue(file)
 }
 
 fun writeCompetitionFileData(file: File, competition: Competition, mapper: ObjectMapper) {
