@@ -9,6 +9,8 @@ import com.ironpanthers.scouting.android.MatchListAdapter
 import com.ironpanthers.scouting.android.R
 import com.ironpanthers.scouting.common.Competition
 import kotlinx.android.synthetic.main.competition_detail.view.*
+import org.slf4j.LoggerFactory
+import java.text.SimpleDateFormat
 
 /**
  * A fragment representing a single Competition detail screen.
@@ -26,6 +28,7 @@ class CompetitionDetailFragment : Fragment() {
         arguments?.let {
             if (it.containsKey(ARG_DATA)) {
                 item = it.getSerializable(ARG_DATA) as Competition?
+                logger.info("Displaying {}", item)
             }
         }
     }
@@ -35,13 +38,20 @@ class CompetitionDetailFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.competition_detail, container, false)
 
         item?.let {
-            rootView.competition_detail.list_matches.adapter = MatchListAdapter(inflater, it.matches)
-        }
+            val matchList = it.matches
+            logger.debug("Attaching recycler adapter for matches {}", matchList)
+            rootView.text_date.text = SimpleDateFormat.getInstance().format(it.date)
+            rootView.text_game.text = it.gameType
+            rootView.list_matches.adapter = MatchListAdapter(inflater, matchList)
 
+        }
         return rootView
     }
 
     companion object {
         const val ARG_DATA = "comp_data"
+
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(CompetitionDetailFragment::class.java)
     }
 }

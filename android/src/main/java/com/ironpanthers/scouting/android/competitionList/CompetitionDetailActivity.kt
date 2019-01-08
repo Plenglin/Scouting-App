@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.ironpanthers.scouting.android.R
+import com.ironpanthers.scouting.common.Competition
 import kotlinx.android.synthetic.main.activity_competition_detail.*
 
 /**
@@ -41,10 +42,12 @@ class CompetitionDetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
+            val item = intent.getSerializableExtra(CompetitionDetailFragment.ARG_DATA) as Competition
             val fragment = CompetitionDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(CompetitionDetailFragment.ARG_DATA, intent.getSerializableExtra(CompetitionDetailFragment.ARG_DATA))
+                    putSerializable(CompetitionDetailFragment.ARG_DATA, item)
                 }
+                title = item.name
             }
 
             supportFragmentManager.beginTransaction()

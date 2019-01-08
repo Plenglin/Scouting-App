@@ -13,8 +13,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ironpanthers.scouting.android.*
-import com.ironpanthers.scouting.android.competitionList.dummy.DummyContent
-import com.ironpanthers.scouting.common.Competition
 import com.ironpanthers.scouting.common.CompetitionFileSummary
 import kotlinx.android.synthetic.main.activity_competition_list.*
 import kotlinx.android.synthetic.main.competition_list.*

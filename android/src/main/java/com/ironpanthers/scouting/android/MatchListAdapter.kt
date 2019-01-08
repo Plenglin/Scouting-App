@@ -8,16 +8,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.ironpanthers.scouting.common.Match
 import kotlinx.android.synthetic.main.row_match_list.view.*
+import org.slf4j.LoggerFactory
 
 class MatchListAdapter(private val inflater: LayoutInflater, val matchList: List<Match>) : RecyclerView.Adapter<MatchViewHolder>() {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
         val view = inflater.inflate(R.layout.row_match_list, parent)
         return MatchViewHolder(view)
     }
 
-    override fun getItemCount(): Int = matchList.size
+    override fun getItemCount(): Int {
+        return matchList.size
+    }
 
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
+        logger.trace("Writing view for pos {} {}", position, matchList[position])
         holder.writeItemData(position + 1, matchList[position])
     }
 }
