@@ -2,22 +2,25 @@ package com.ironpanthers.scouting.android.competitionList
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.NavUtils
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
-import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.support.v4.app.NavUtils
-import android.view.MenuItem
-import com.ironpanthers.scouting.android.R
-
+import android.widget.EditText
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.ironpanthers.scouting.android.*
 import com.ironpanthers.scouting.android.competitionList.dummy.DummyContent
-import com.ironpanthers.scouting.common.Competition
+import com.ironpanthers.scouting.common.CompetitionFileSummary
 import kotlinx.android.synthetic.main.activity_competition_list.*
-import kotlinx.android.synthetic.main.row_competition_list.view.*
 import kotlinx.android.synthetic.main.competition_list.*
+import kotlinx.android.synthetic.main.row_competition_list.view.*
+import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
+import java.io.File
 import java.text.SimpleDateFormat
 
 /**
@@ -43,9 +46,25 @@ class CompetitionListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        btn_create.setOnClickListener {
+            logger.info("Clicked on create button, spawning dialog")
+            val editText = EditText(this)
+            AlertDialog.Builder(this)
+                    .setMessage("TBA Event ID")
+                    .setView(editText)
+                    .setPositiveButton("Create") { d, _ ->
+                        val id = editText.text.toString()
+                        logger.debug("fetching TBA data for {}", id)
+                        val result = runBlocking { fetchTBAData(id, TBA_API_KEY) }
+                        logger.info("retrieved {}", result)
+                        val dir = File(filesDir, "competitions/$id.json")
+                        writeCompetitionFileData(dir, result, jacksonObjectMapper())
+                        updateFileList(list_competitions)
+                        d.dismiss()
+                    }
+                    .setCancelable(true)
+                    .create()
+                    .show()
         }
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -57,8 +76,7 @@ class CompetitionListActivity : AppCompatActivity() {
             // activity should be in two-pane mode.
             twoPane = true
         }
-
-        setupRecyclerView(list_competitions)
+        updateFileList(list_competitions)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -76,14 +94,23 @@ class CompetitionListActivity : AppCompatActivity() {
                 else -> super.onOptionsItemSelected(item)
             }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, TODO(), twoPane)
+    private fun updateFileList(recyclerView: RecyclerView) {
+        recyclerView.adapter = CompetitionFileListAdapter(this, getCompetitions(), twoPane)
     }
 
-    class SimpleItemRecyclerViewAdapter(private val parentActivity: CompetitionListActivity,
-                                        private val values: List<Competition>,
-                                        private val twoPane: Boolean) :
-            RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+    private fun getCompetitions(): List<CompetitionFileSummary> {
+        val dir = File(filesDir, "competitions")
+        val mapper = jacksonObjectMapper()
+        dir.mkdirs()
+        return dir.listFiles().map {
+            loadCompetitionFileData(it, mapper)
+        }
+    }
+
+    inner class CompetitionFileListAdapter(private val parentActivity: CompetitionListActivity,
+                                     private val values: List<CompetitionFileSummary>,
+                                     private val twoPane: Boolean) :
+            RecyclerView.Adapter<CompetitionFileListAdapter.CompetitionFileViewHolder>() {
 
         private val onClickListener: View.OnClickListener
 
@@ -109,16 +136,15 @@ class CompetitionListActivity : AppCompatActivity() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompetitionFileViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.row_competition_list, parent, false)
-            return ViewHolder(view)
+            return CompetitionFileViewHolder(view)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: CompetitionFileViewHolder, position: Int) {
             val item = values[position]
-            holder.idView.text = item.name
-            holder.contentView.text = SimpleDateFormat.getInstance().format(item.date)
+            holder.writeData(item)
 
             with(holder.itemView) {
                 tag = item
@@ -128,9 +154,17 @@ class CompetitionListActivity : AppCompatActivity() {
 
         override fun getItemCount() = values.size
 
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val idView: TextView = view.id_text
-            val contentView: TextView = view.content
+        inner class CompetitionFileViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            fun writeData(item: CompetitionFileSummary) {
+                itemView.text_name.text = item.name
+                itemView.text_date.text = SimpleDateFormat.getInstance().format(item.date)
+            }
         }
+    }
+
+
+    companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(CompetitionListActivity::class.java)
     }
 }

@@ -2,6 +2,7 @@ package com.ironpanthers.scouting.common
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import java.io.File
 import java.io.Serializable
 import java.util.*
 
@@ -49,4 +50,7 @@ data class Match(val number: Int, val time: Long, val red: List<MatchRobot>, val
 
 data class Competition(val name: String, val date: Date, val gameType: String, val matches: List<Match>) : Serializable {
     fun asMutable() = MutableCompetition(name, date, gameType, matches.asSequence().map(Match::asMutable).toMutableList())
+    fun createFileSummary(file: File) = CompetitionFileSummary(name, date, gameType, file)
 }
+
+data class CompetitionFileSummary(val name: String, val date: Date, val gameType: String, val file: File) : Serializable

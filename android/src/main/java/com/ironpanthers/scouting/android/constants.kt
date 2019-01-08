@@ -1,0 +1,3 @@
+package com.ironpanthers.scouting.android
+
+const val TBA_API_KEY = "eeszr95mLfyCJkDqDrXAxsW93MgRYrmn8lLqrUJ76GfSYIWNxA8N5mCUILlX3dFN"

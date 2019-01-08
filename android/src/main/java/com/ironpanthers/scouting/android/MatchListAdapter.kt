@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ironpanthers.scouting.common.Match
+import kotlinx.android.synthetic.main.row_match_list.view.*
 
 class MatchListAdapter(private val inflater: LayoutInflater, val matchList: List<Match>) : RecyclerView.Adapter<MatchViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
@@ -25,14 +26,14 @@ class MatchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun writeItemData(number: Int, item: Match) {
         itemView.apply {
-            findViewById<TextView>(R.id.text_red0).text = item.red[0].team.toString()
-            findViewById<TextView>(R.id.text_red1).text = item.red[1].team.toString()
-            findViewById<TextView>(R.id.text_red2).text = item.red[2].team.toString()
-            findViewById<TextView>(R.id.text_blue0).text = item.blue[0].team.toString()
-            findViewById<TextView>(R.id.text_blue1).text = item.blue[1].team.toString()
-            findViewById<TextView>(R.id.text_blue2).text = item.blue[2].team.toString()
+            text_red0.text = item.red[0].team.toString()
+            text_red1.text = item.red[1].team.toString()
+            text_red2.text = item.red[2].team.toString()
+            text_blue0.text = item.blue[0].team.toString()
+            text_blue1.text = item.blue[1].team.toString()
+            text_blue2.text = item.blue[2].team.toString()
 
-            findViewById<TextView>(R.id.text_match_number).text = number.toString()
+            text_match_number.text = number.toString()
         }
 
     }
